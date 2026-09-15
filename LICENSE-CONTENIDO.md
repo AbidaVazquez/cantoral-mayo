@@ -1,6 +1,6 @@
 # Licencia del contenido del Cantoral Mayo
 
-**Recopilación y edición: Abidahi Vazquez Castro — 2026**
+**Recopilación y edición: Abidahí Vázquez Castro — 2026**
 
 El contenido de este cantoral (la selección, transcripción, edición, cifrado de
 acordes, ordenación y presentación de los cantos) se publica bajo:
@@ -17,7 +17,7 @@ acordes, ordenación y presentación de los cantos) se publica bajo:
 
 ### Bajo estas condiciones:
 
-- **Reconocimiento** — Debes citar la autoría de la recopilación (Abidahi Vazquez Castro)
+- **Reconocimiento** — Debes citar la autoría de la recopilación (Abidahí Vázquez Castro)
   y enlazar a esta licencia. Puedes hacerlo de cualquier forma razonable, pero no
   de una manera que sugiera que ella te respalda a ti o a tu uso.
 - **NoComercial** — **No puedes usar este material con fines comerciales.**
