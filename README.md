@@ -64,4 +64,6 @@ El sitio está construido como una aplicación web estática pura: ultra ligera,
 - `assets/mediapipe/` — Modelos y dependencias locales para el seguimiento de gestos sin conexión a internet.
 
 ### Despliegue y actualizaciones
-Cada vez que se suben cambios al repositorio, basta con incrementar el número de versión en el Service Worker. Los dispositivos que ya tengan la aplicación instalada detectarán el cambio en segundo plano y mostrarán un aviso para actualizar con un solo clic.
+Al subir cambios hay que incrementar el número de versión en dos lugares: en `sw.js` y en el `?v=` con el que `index.html` llama a los archivos. Son dos porque cumplen funciones distintas: el primero avisa de que hay algo nuevo, y el segundo hace que el teléfono descargue realmente el diseño y el código recién publicados. Si solo se cambia uno, el aviso aparece pero la aplicación sigue mostrando la versión anterior.
+
+Hecho esto, los dispositivos que ya tengan la aplicación instalada detectarán el cambio en segundo plano y mostrarán un aviso para actualizar con un solo clic.
