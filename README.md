@@ -1,87 +1,67 @@
-# Cantoral Mayo
+# Cantoral Mayo 📖✨
 
-### https://cantoralmayo.com
+> **Sitio web oficial:** [cantoralmayo.com](https://cantoralmayo.com) 🌐
 
-Un cantoral católico de más de 300 páginas, con sus letras y sus acordes, que se
-abre como un libro y cabe en el bolsillo. Gratuito, sin anuncios, sin registro y
-sin recoger datos de nadie.
+Un cantoral católico de más de 300 páginas con letras y acordes listos para tocar. Diseñado para sentirse como un libro físico, pero ligero, accesible y siempre a la mano en el bolsillo. 
 
----
-
-## De dónde viene
-
-Este cantoral existía antes en papel. Lo escribió **Abida Vázquez**, página por
-página, y mandó imprimir cientos de copias del libro completo **pagándolas de su
-bolsillo**, para repartirlas en su comunidad. No pidió nada a cambio ni esperaba
-recibirlo.
-
-Esta versión digital nació de ahí: para que ese mismo trabajo pueda llegar a
-quien lo necesite sin depender de cuántas copias se puedan costear, y sin que
-acaben en la basura las que nadie recoge.
-
-El cantoral, este sitio y todo lo relacionado con el proyecto **le pertenecen a
-ella**.
+Es un proyecto completamente libre, sin anuncios, sin registros y sin recopilación de datos de ningún tipo.
 
 ---
 
-## Qué tiene
+## Una dedicatoria especial 📖
+Las hojas de papel se maltratan, se pierden o a veces simplemente no alcanzan para todos. Esta versión digital existe para que el canto siga vivo, al alcance de la mano y sin límites.
 
-- **Los cantos, con acordes** — cifrados sobre la letra, para tocar directamente.
-- **Se lee como un libro** — las páginas se pasan con el dedo, no se hace scroll.
-- **Funciona sin internet** — se instala en el teléfono y sigue abriendo en una
-  iglesia sin cobertura. No hace falta señal para cantar.
-- **Buscador** — por título, por letra o por número de canto.
-- **Diccionario de acordes** — 85 acordes con su diagrama, y una guía para
-  aprender a leerlos (también para zurdos).
-- **Transposición** — sube o baja el tono del canto entero.
-- **Control por gestos** — pasa de página moviendo la mano frente a la cámara,
-  sin tocar la pantalla. Pensado para quien toca con las manos ocupadas en la
-  guitarra. Todo el reconocimiento ocurre dentro del teléfono: **el vídeo no sale
-  del dispositivo ni se envía a ningún sitio**.
-- **Modo noche**, tamaño de letra ajustable y listones para marcar páginas.
+Nació como un detalle hecho a medida: este cantoral, el código y cada detalle del proyecto están dedicados a Abi, y le pertenecen por completo. 🌟
 
 ---
 
-## Cómo se instala en el teléfono
+## ✨ Características principales
 
-No hace falta ninguna tienda de aplicaciones.
-
-1. Abre **https://cantoralmayo.com** en el navegador del teléfono.
-2. Toca el botón **Instalar** que aparece abajo.
-   - En iPhone: pulsa *Compartir* → *Añadir a pantalla de inicio*.
-3. Listo. Se abre como cualquier otra aplicación y funciona sin conexión.
+- 🎸 **Cantos con acordes al instante:** Cifrado alineado sobre la letra para acompañar y tocar sin rodeos.
+- 📖 **Experiencia de lectura natural:** Pasa las páginas con un toque, deslizamiento o animación tipo libro real.
+- 📴 **100% Offline (PWA):** Se instala directamente en el móvil y funciona perfecto en capillas o comunidades sin cobertura celular ni Wi-Fi.
+- 🔍 **Búsqueda rápida e intuitiva:** Encuentra cualquier canto al instante por título, fragmento de la letra o número de canto.
+- 🎼 **Diccionario interactivo:** Más de 85 acordes con diagramas visuales y soporte para personas zurdas.
+- 🔄 **Transposición en tiempo real:** Cambia el tono de cualquier canto con un solo toque para adaptarlo a tu voz o instrumento.
+- 🖐️ **Control por gestos sin contacto:** Cambia de página pasando la mano frente a la cámara frontal mientras tocas la guitarra. Todo el procesamiento de visión por computadora se realiza de forma local y privada en el dispositivo (el video nunca sale de tu teléfono).
+- 🌙 **Lectura cómoda:** Modo oscuro para veladas o misas con poca luz, ajuste dinámico de tamaño de texto y separadores/listones virtuales para marcar cantos clave.
 
 ---
 
-## Licencias
+## 📲 Cómo instalarlo en el teléfono
 
-Este proyecto tiene dos, porque son dos cosas distintas:
+No requiere descargar nada desde tiendas de aplicaciones:
 
-| | Licencia | Qué significa |
+1. Entra a **[cantoralmayo.com](https://cantoralmayo.com)** desde el navegador de tu móvil.
+2. Toca el botón **Instalar** que aparecerá en la pantalla.
+   - *En iPhone / iPad (Safari):* Presiona el botón **Compartir** (icono de cuadro con flecha) y selecciona **Añadir a pantalla de inicio**.
+3. ¡Listo! Se abrirá como una aplicación nativa, a pantalla completa y disponible siempre que la necesites.
+
+---
+
+## 📄 Licencias
+
+Este proyecto maneja dos esquemas de licencia según su naturaleza:
+
+| Ámbito | Licencia | Resumen |
 |---|---|---|
-| **El contenido** (los cantos) | [CC BY-NC-SA 4.0](LICENSE-CONTENIDO.md) | Compártelo y adáptalo citando la autoría. **Nunca con fines comerciales.** |
-| **El código** (el motor del libro) | [MIT](LICENSE) | Úsalo para lo que quieras, incluso para otro proyecto. |
+| **Contenido** (Letras y cifrados) | [CC BY-NC-SA 4.0](LICENSE-CONTENIDO.md) | Compártelo y adáptalo citando la fuente original. **Estrictamente sin fines comerciales.** |
+| **Código fuente** (Motor interactivo) | [MIT](LICENSE) | Código abierto y libre para estudiar, mejorar o reutilizar. |
 
-El cantoral nació como un regalo. La condición de **no comercial** está ahí para
-que siga siéndolo: nadie debería cobrar por esto.
+El cantoral nació como un regalo desinteresado. La cláusula no comercial protege la esencia del proyecto: el servicio litúrgico y la música compartida no deben venderse.
 
-Los cantos pertenecen a sus autores y compositores, reconocidos en la sección de
-créditos del propio cantoral. Si eres titular de los derechos de alguna obra y
-quieres una corrección en la atribución —o su retirada— basta con comunicarlo.
+> *Nota:* La titularidad de los cantos corresponde a sus respectivos autores y compositores, quienes se encuentran debidamente reconocidos en los créditos del proyecto. Si eres autor y deseas actualizar una atribución o solicitar un retiro, solo hazlo saber mediante un ticket o contacto directo.
 
 ---
 
-## Para quien mantiene el sitio
+## 🛠️ Arquitectura y mantenimiento
 
-Es un sitio estático: no hay servidor, ni base de datos, ni nada que se caiga.
+El sitio está construido como una aplicación web estática pura: ultra ligera, sin bases de datos remotas ni servidores complejos que puedan fallar:
 
-- `index.html` · `styles.css` · `script.js` — el libro entero.
-- `cantos.json` — **todos los cantos**. Para corregir una letra o un acorde, se
-  edita aquí; no hay que tocar el código.
-- `sw.js` — lo que permite que funcione sin internet.
-- `assets/mediapipe/` — el reconocimiento de gestos, servido desde el propio
-  sitio para que también funcione sin conexión.
+- `index.html` · `styles.css` · `script.js` — Estructura principal, diseño visual e interactividad del libro.
+- `cantos.json` — Base de datos local con todo el repertorio. Para corregir una letra o ajustar un tono, basta con editar este archivo sin tocar el código central.
+- `sw.js` — Service Worker encargado del almacenamiento en caché para garantizar funcionamiento sin conexión.
+- `assets/mediapipe/` — Modelos y dependencias locales para el seguimiento de gestos sin conexión a internet.
 
-Al publicar cambios, se sube el número de versión en `index.html` y en `sw.js`;
-quien tenga la aplicación instalada verá un aviso de **"Hay una versión nueva"**
-y la aplicará cuando quiera.
+### Despliegue y actualizaciones
+Cada vez que se suben cambios al repositorio, basta con incrementar el número de versión en el Service Worker. Los dispositivos que ya tengan la aplicación instalada detectarán el cambio en segundo plano y mostrarán un aviso para actualizar con un solo clic.
