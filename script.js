@@ -1,13 +1,4 @@
-// Hash con el que se ABRIÓ la app. Hay que capturarlo aquí: en cuanto corre
-// updatePaperVisibility() la URL se reescribe con la página actual, así que más
-// abajo ya no se puede distinguir "enlace directo" de "arranque normal".
-//
-// Refrescar o volver a entrar NO cambia nada: el navegador recuerda el hash y te
-// deja donde ibas. El ritual del listón lo dispara SÓLO el botón "cerrar libro",
-// que deja esta marca; entonces se arranca en la pasta aunque la URL traiga hash.
-// ── MODO LIGERO (lite): apaga animaciones/decorativos para equipos muy modestos.
-// Se aplica ANTES del intro para que ni se monte la animación de bienvenida.
-// Init: usa localStorage; si no hay preferencia guardada, hereda `prefers-reduced-motion`.
+// Hash con el que se ABRIÓ la app.
 (function initLiteEarly() {
     try {
         const stored = localStorage.getItem("cantoral-lite");
@@ -26,18 +17,10 @@ try {
     LAST_SAVED_HASH = localStorage.getItem("cantoral-last-hash") || "";
 } catch (e) {}
 // Prioridad al abrir la app:
-//   1) se cerró el libro con el botón del listón → pasta + ritual
-//   2) hash en la URL (refresh, enlace directo) → salto instantáneo
-//   3) auto-guardado de la última página → salto instantáneo (como antes de los
-//      listones; es lo que rige mientras el usuario no fije ninguno)
-//   4) nada → pasta
 const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_SAVED_HASH || "");
 
 // ═══════════════════════════════════════════════════════════════════
-// Bienvenida (intro). Dark = estrella cayendo con picos sobre cielo
-// estrellado (1.8s CSS). Light = mariposas saliendo del centro +
-// título SVG sobre atardecer aleatorio (3s canvas).
-// Después dispara cover-animate + FX sobre el libro real.
+// Bienvenida (intro). Dark = estrella cayendo con picos sobre cielo estrellado (1.8s CSS).
 // ═══════════════════════════════════════════════════════════════════
 (function welcomeIntro() {
     const intro = document.getElementById("welcomeIntro");
@@ -47,22 +30,15 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
         return;
     }
 
-    // Mientras el overlay de bienvenida cubre TODO el viewport, el libro que
-    // quedó montado detrás (en refresh sobre una página profunda) sigue
-    // animando su escena decorativa (árbol Plumeria + mariposas de .page-sky) y
-    // le roba frame budget al canvas del intro → stutter justo al emerger las
-    // mariposas del centro. Pausamos lo decorativo mientras no se ve; firePhase2
-    // quita la clase al revelar el libro y reanudan sin que se note.
+    // Mientras el overlay de bienvenida cubre TODO el viewport, el libro que quedó montado detrás
+    // (en refresh sobre una página profunda) sigue animando su
     document.body.classList.add("intro-active");
 
     let isDark = false;
     try { isDark = localStorage.getItem("cantoral-theme") === "dark"; } catch(e) {}
 
-    // Paleta pensada para CONTRASTAR sobre las 5 pastas litúrgicas (verde salvia,
-    // lavanda, morado, perla clara, terracota). Ningún color contrasta con las 5,
-    // pero el set es saturado y variado (magenta y azul son casi universales;
-    // sin pasteles que se pierden en la perla, sin verdes/morados que se funden
-    // con su propia pasta) → en cualquier fondo siempre resaltan varias.
+    // Paleta pensada para CONTRASTAR sobre las 5 pastas litúrgicas (verde salvia, lavanda, morado,
+    // perla clara, terracota).
     const BUTTERFLY_COLORS = [
         "#e8402f","#ff5a1f","#ff7a18","#ff9500","#f4b400","#ffd21e",
         "#c3e021","#3fd45f","#06d6a0","#12b5c9","#1f7be0","#3b5bff",
@@ -208,12 +184,10 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // MODO CLARO: canvas con mariposas saliendo del centro + título
+    // MODO CLARO: canvas con mariposas saliendo del centro +
     // ═══════════════════════════════════════════════════════════════
     if (!isDark) {
-        // Atardeceres realistas: cielo más frío arriba (cénit) que se calienta hacia
-        // el horizonte (abajo), terminando en un resplandor cálido — NUNCA en blanco.
-        // Cada paleta cubre 0→1 con 5 paradas [cénit, alto, medio, bajo, horizonte].
+        // Atardeceres realistas:
         const SUNSETS = [
             [[0,"#5b6aa8"],[0.34,"#c98aad"],[0.60,"#ff9d7a"],[0.82,"#ffb057"],[1,"#ffcf7a"]], // coral-oro
             [[0,"#6d6fae"],[0.34,"#d68f9e"],[0.60,"#ff9b6a"],[0.82,"#ff9f52"],[1,"#ffc266"]], // rosa-ámbar
@@ -242,13 +216,8 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
         // modo oscuro. La portada cerrada conserva su animación más larga.
         const DUR = bookClosed ? 3000 : 1800;
 
-        // ═══ Intro claro 100% CSS/compositor ═══════════════════════════════
-        // Antes esto era un canvas con requestAnimationFrame en el HILO PRINCIPAL,
-        // que competía con la construcción del libro al cargar (insertar cientos
-        // de páginas) → tirones al emerger las mariposas/título. Ahora mariposas
-        // y título animan por @keyframes (solo transform/opacity → capa GPU), así
-        // que siguen fluidos aunque el hilo principal esté ocupado, igual que la
-        // estrella del modo oscuro.
+        // ═══ Intro claro 100% CSS/compositor ═══════════════════════════════ Antes esto era un canvas
+        // con requestAnimationFrame en el HILO PRINCIPAL, que
         document.querySelectorAll(".wi-sky-stars,.wi-trail,.wi-lead-star").forEach(el => el.style.display = "none");
         document.getElementById("wiLightCanvas")?.remove();   // el canvas ya no se usa
 
@@ -303,10 +272,8 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
                 "<ellipse cx='12' cy='12' rx='.9' ry='4' fill='#2a1810'/></svg></div>";
         }
 
-        // ── Pétalos cayendo: SIEMPRE en el intro (portada o refresh en cualquier
-        //    canto/página) — el overlay del intro va encima de todo. En refresh
-        //    profundo el intro dura menos (1800ms), así que ahí acortamos el delay
-        //    para que se alcancen a ver cayendo dentro de la ventana corta.
+        // ── Pétalos cayendo: SIEMPRE en el intro (portada o refresh en cualquier canto/página) — el
+        // overlay del intro va encima de todo.
         {
             const petalMaxDelay = bookClosed ? 2.5 : 0.6;
             for (let i = 0; i < 12; i++) {
@@ -329,11 +296,7 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
         if (titleEl) {
             titleEl.style.display = "block";
             titleEl.style.willChange = "transform, opacity";
-            // Rasterizar el SVG a alta resolución en un bitmap y usarlo como
-            // fuente del <img>: la capa GPU (will-change) a veces rasteriza a 1×
-            // y el título salía algo suave. Con una fuente de ~2.5× el ancho de
-            // display, CSS la reduce a su tamaño → textura con píxeles de sobra,
-            // título bien nítido. Cae con gracia al SVG original si algo falla.
+            // Rasterizar el SVG a alta resolución en un bitmap y usarlo como fuente del <img>:
             const dispW = (intro.clientWidth || window.innerWidth) * 0.55;
             const rw = Math.max(600, Math.round(dispW * 2.5));
             const rh = Math.round(rw / (507 / 353));
@@ -381,7 +344,7 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
 
     } else {
         // ═══════════════════════════════════════════════════════════
-        // MODO OSCURO: estrella con picos (CSS puro, 1.8s)
+        // MODO OSCURO: estrella con picos (CSS puro,
         // ═══════════════════════════════════════════════════════════
         document.getElementById("wiLightCanvas")?.remove();
         document.getElementById("wiLightTitle")?.remove();
@@ -410,11 +373,9 @@ window.__killIntroFx = function() {
 
 (async function () {
 // ═══════════════════════════════════════════════════════════════════
-// FASE 1 — Cargar JSON y generar todas las páginas del libro
+// FASE 1 — Cargar JSON y generar todas las páginas del libro cache:"no-cache" → el navegador
+// REVALIDA cantos.json contra el servidor en cada carga (304
 // ═══════════════════════════════════════════════════════════════════
-// cache:"no-cache" → el navegador REVALIDA cantos.json contra el servidor en cada
-// carga (304 si no cambió, fresco si sí). Sin esto, una edición del contenido
-// podía quedar atrapada en la caché HTTP del navegador y no llegar al usuario.
 const DATA = await fetch("cantos.json", { cache: "no-cache" }).then(r => r.json());
 
 const SECTION_ALIASES = {
@@ -485,14 +446,7 @@ const SEPARATOR_TITLES = {
 };
 
 // ═══════════════════════════════════════════════════════════════════
-// Acordes ANCLADOS a la sílaba (fuente variable). Convierte un "pair"
-// (dos filas alineadas por columnas monoespaciadas) en una "line" con
-// segmentos: cada acorde queda anclado al INICIO del trozo de letra que le
-// toca. Como el ancla es estructural (hijo del glifo), el acorde se mantiene
-// sobre la sílaba exacta con CUALQUIER fuente, tamaño, negrita o cursiva, y
-// sigue a su sílaba aunque la línea haga wrap. La conversión es fiable porque
-// el ORIGEN es monoespaciado: la columna de arranque del acorde ES el índice
-// de carácter de la letra debajo.
+// Acordes ANCLADOS a la sílaba (fuente variable).
 // ═══════════════════════════════════════════════════════════════════
 function pairToLine(pair) {
     const chordStr = pair.chord || "";
@@ -507,10 +461,8 @@ function pairToLine(pair) {
         segments.push({ text: lyric });
         return { type: "line", segments, variant: pair.variant };
     }
-    // Rellena con espacios cuando la letra se acaba antes que los acordes, para que
-    // cada tramo conserve el ANCHO de columna del renglón de acordes. Sin esto, un
-    // acorde cuyo tramo de letra queda vacío o más corto que su nombre se encima con
-    // el acorde siguiente (típico al final del verso: "Em F G", "AG DAG", "D F#m Bm").
+    // Rellena con espacios cuando la letra se acaba antes que los acordes, para que cada tramo
+    // conserve el ANCHO de columna del renglón de acordes.
     const pad = (text, width) => (text.length < width ? text + " ".repeat(width - text.length) : text);
     if (chords[0].col > 0) segments.push({ text: pad(lyric.slice(0, chords[0].col), chords[0].col) });
     for (let i = 0; i < chords.length; i++) {
@@ -586,11 +538,7 @@ function makePaper(id, frontHTML) {
     return `<div class="paper" id="${id}"><div class="front">${frontHTML}</div><div class="back blank-page"></div></div>`;
 }
 
-// Contraportada (última hoja): al llegar al final el libro se cierra (translateX)
-// y esta cara trasera de pasta queda a la vista. Muestra sello de plumeria +
-// texto de cierre (lo pone el user) + QR de cantoralmayo.com + año, con fundido
-// suave (clase body.book-at-back). La correa "Volver al inicio" regresa a la
-// portada con el libro cerrado.
+// Contraportada (última hoja):
 function makeBackCoverPaper() {
     // Sello = la PLUMERIA REAL del árbol: mismo PETAL_PATH + gradiente de FLOWER_GRADS
     // (frangipani amarillo→rosa, índice 2) + centro cálido, igual que seedCoverFlowers.
@@ -604,9 +552,8 @@ function makeBackCoverPaper() {
         ["#ffd23f", "#ffb060", "#ff8a3c", "#f4632a"]
     ];
     const g = FG[Math.floor(Math.random() * FG.length)];
-    // DEBOSS: la flor se ve PRENSADA en la piel (sombra interior arriba + luz
-    // interior abajo, con la luz desde arriba) + desaturada para compartir el
-    // material de la pasta. La sombra de CONTACTO (pegada) va en el CSS de .bc-seal.
+    // DEBOSS: la flor se ve PRENSADA en la piel (sombra interior arriba + luz interior abajo, con
+    // la luz desde arriba) + desaturada para compartir el
     const petalsHtml = [0, 72, 144, 216, 288].map(a => `<path d="${PETAL}" fill="url(#bcSealG)" transform="rotate(${a})"/>`).join("");
     const seal = `<svg class="bc-seal" viewBox="-100 -100 200 200" aria-hidden="true">`
         + `<defs>`
@@ -634,13 +581,8 @@ function makeBackCoverPaper() {
         + `</defs>`
         + `<g filter="url(#bcDeboss)">${petalsHtml}<circle r="10" fill="url(#bcSealC)"/></g>`
         + `</svg>`;
-    // La contraportada va en la cara FRONTAL (es la última parada del libro; en
-    // móvil single-page queda a pantalla completa). La trasera queda de pasta lisa.
-    // Correa "Volver al inicio" = banda de piel horizontal ARRIBA, mismo estilo y
-    // posición que la correa de CIERRE (.rib-close). QR/URL/año abajo.
-    // Mariposas de PAPEL en ESPIRAL (animadas): las inyecta el módulo
-    // setupBackCoverButterflies() del final de script.js en ESTA cara
-    // (.contraportada), detrás del contenido. Reemplazaron a las repujadas estáticas.
+    // La contraportada va en la cara FRONTAL (es la última parada del libro; en móvil single-page
+    // queda a pantalla completa).
     return `<div class="paper" id="pCoverBack">`
         + `<div class="front cover-page contraportada">`
         +   `<div class="bc-spine" aria-hidden="true"></div>`
@@ -678,9 +620,7 @@ function makeDecorSep(title, sectionKey, isLong) {
     return `<div class="decor-section-page"><div class="decor-section-content"><div class="${cls}"${attr}>${esc(title)}</div><img class="decor-section-leaves" src="assets/hojasdis.png" alt=""></div></div>`;
 }
 
-// Botón "Aa" (zoom + negrita/cursiva). Reusable: vive en el pie de los cantos y
-// también, anclado directo, en páginas SIN pie (índice, presentación/dedicatoria)
-// para que los adultos mayores puedan agrandar la letra de esas páginas también.
+// Botón "Aa" (zoom + negrita/cursiva).
 function zoomBtnHtml(extraClass) {
     return `<button class="zoom-toggle${extraClass ? " " + extraClass : ""}" type="button" aria-label="Tamaño de letra" aria-expanded="false" data-tip="up">`
         + `<span class="aa-glyph"><span class="zoom-toggle-a small">A</span><span class="zoom-toggle-a big">A</span></span>`
@@ -700,10 +640,7 @@ function makeDictPage(idx) {
 function makeSongTitle(canto) {
     if (!canto.title) return "";
     let t = esc(canto.title);
-    // El selector de versiones "(A/B)" ya NO se muestra en el título: con la
-    // TRANSPOSICIÓN (botón «T») cualquier canto cambia de tono, así que las dos
-    // tonalidades fijas son redundantes. Se quita el "(…)" del título; el contenido
-    // sigue mostrando la variante activa (canto.variants.active) intacta.
+    // El selector de versiones "(A/B)" ya NO se muestra en el título:
     if (canto.variants) t = t.replace(/\s*\(.*$/, "").trim();
     t = wrapSongNum(t);
     return `<div class="song-title" data-song="${esc(canto.id)}">${t}</div>`;
@@ -714,16 +651,10 @@ function wrapSongNum(html) {
     return html.replace(/^(\s*)(\d+\.)/, '$1<span class="song-num" role="button" tabindex="0" aria-label="Mostrar u ocultar el subrayado de los títulos">$2</span>');
 }
 
-// Pie de página de cada canto: número de página + botón de zoom.
-// El botón vive DENTRO del papel (como el número de página) para que
-// voltee junto con la hoja al pasar página y no parezca que flota.
+// Pie de página de cada canto:
 function footerHtml(pageNum, noZoom) {
-    // La "aA" vive en el PIE (dentro del papel) para que gire con la hoja al pasar
-    // página y no parezca que flota. Es la aA visible en estado CERRADO; al abrir se
-    // oculta y su gemela idéntica del overlay (#overlayAA) la reemplaza dentro de la
-    // píldora (misma posición y glifo A+A, transición imperceptible).
-    // noZoom: páginas "limpias" (p. ej. CRÉDITOS) que no llevan el botón de zoom
-    // "Aa" ni sus controles; sólo conservan el número de página.
+    // La "aA" vive en el PIE (dentro del papel) para que gire con la hoja al pasar página y no
+    // parezca que flota.
     const zoomBtn = noZoom ? "" : zoomBtnHtml();
     return `<div class="footer">`
         + `<div class="footer-line-2">${esc(pageNum)}</div>`
@@ -776,11 +707,8 @@ function buildSongPage(cantos) {
 
     const c = first;
     const layout = c.layout === "continuation" ? "song-page" : c.layout;
-    // Página SIN TÍTULO (continuaciones de cantos de 2+ páginas y el caso especial
-    // del canto 137, cuya 2ª hoja es song-page sin título): marca para que el CSS le
-    // dé un padding-top y el primer acorde anclado no quede cortado bajo el encabezado
-    // (los acordes se posicionan por encima de la letra con bottom:100%). Se basa en la
-    // ausencia de título, no en el layout, para cubrir cualquier hoja sin título.
+    // Página SIN TÍTULO (continuaciones de cantos de 2+ páginas y el caso especial del canto 137,
+    // cuya 2ª hoja es song-page sin título):
     const contCls = !c.title ? " is-continuation" : "";
     const extra = c.classes.length ? " " + c.classes.join(" ") : "";
     const av = c.variants ? ` data-active-variant="${esc(c.variants.active)}"` : "";
@@ -835,10 +763,7 @@ function generatePages() {
         allHTML += makePaperShell(c.paperId);       // cáscara vacía (se llena al entrar al buffer)
     }
 
-    // Secciones ya declaradas pero aún sin cantos: se muestra su página
-    // divisora al final (en el orden de DATA.sections). Cuando se agreguen
-    // cantos a la sección, el bucle de arriba genera el separador y esta
-    // sección deja de estar "vacía", así que no se duplica.
+    // Secciones ya declaradas pero aún sin cantos:
     const sectionsWithSongs = new Set(DATA.cantos.map(c => c.section));
     for (const sec of DATA.sections) {
         if (sectionsWithSongs.has(sec.key)) continue;
@@ -878,8 +803,7 @@ try { if (localStorage.getItem("cantoral-title-underline") === "0") document.bod
 
 generatePages();
 // OPT arranque: populateIndexTemplate + buildIndex + collapse se difieren (ver
-// ensureIndexBuilt más abajo) para sacar del arranque el armado del índice (~292
-// entradas + medición de overflow). Se arma en idle o al abrir el índice.
+// ensureIndexBuilt más abajo) para sacar del arranque el armado del índice
 
 // Dispara la animación de la pasta (título + silueta) una vez que termine la intro de bienvenida.
 // Si la intro sigue viva, se registra el callback; si ya terminó o no existe, dispara al momento.
@@ -915,7 +839,7 @@ for (const c of DATA.cantos) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// FASE 2 — Inicialización del libro (lógica original adaptada)
+// FASE 2 — Inicialización del libro (lógica original
 // ═══════════════════════════════════════════════════════════════════
 
 const prevBtn = document.querySelector("#prevBtn");
@@ -925,14 +849,7 @@ const themeToggle = document.querySelector("#themeToggle");
 const papers = Array.from(document.querySelectorAll(".paper"));
 
 let currentLocation = 1;
-// maxLocation es `let` porque el índice es RESPONSIVE: buildIndex reparte las
-// entradas por overflow según la altura de pantalla, así que en pantallas altas
-// (p.ej. iPhone) puede sobrar la última hoja de índice en blanco. Tras construir
-// el índice, collapseEmptyIndexPages() saca del array esas hojas vacías y aquí
-// se recalcula el total. Ver collapseEmptyIndexPages().
-// La contraportada (pCoverBack) es la ÚLTIMA hoja real y la parada TERMINAL del
-// libro (antes había un estado "cerrado" extra en papers.length+1; ahora ese
-// destino ES la contraportada, que se ve a pantalla completa en móvil).
+// maxLocation es `let` porque el índice es RESPONSIVE:
 let maxLocation = papers.length;
 const pageTurnDuration = 1050;
 
@@ -941,8 +858,6 @@ papers.forEach((paper, index) => {
 });
 
 // Ubicación (1-index) del primer paper cuya cara frontal contiene el selector.
-// Sirve para no hardcodear posiciones que se corren al añadir páginas al frente
-// (dedicatoria, plumeria, índice).
 function locOfPaperWith(selector) {
     for (let i = 0; i < papers.length; i++) {
         if (papers[i].querySelector(selector)) return i + 1;
@@ -978,9 +893,7 @@ function getHashForLocation(loc) {
         return num + slug;
     }
 
-    // Continuation pages (page-content-wrap without song-title). OPT ventana: el canto
-    // padre se resuelve por DATOS (SONG_CONT: paperId de continuación → id del canto),
-    // no escaneando el DOM (el título del padre puede estar desmontado fuera del buffer).
+    // Continuation pages (page-content-wrap without song-title).
     if (face.querySelector(".page-content-wrap")) {
         const num = SONG_CONT.get(paper.id);
         if (num) return num + (SONG_SLUGS.get(num) || "") + "p2";
@@ -1098,10 +1011,7 @@ function updateHashFromLocation() {
         if (window.location.hash !== "#" + hash) {
             history.replaceState(null, null, "#" + hash);
         }
-        // Auto-guardado de la última página. Sigue vivo para quien no usa
-        // listones: al reabrir se vuelve a esa página sin ceremonia. Cuando el
-        // usuario cierra el libro con el botón del listón, la marca
-        // "cantoral-closed" tiene prioridad sobre esto (ver INITIAL_HASH).
+        // Auto-guardado de la última página.
         try {
             localStorage.setItem("cantoral-last-hash", hash);
         } catch (e) {}
@@ -1110,12 +1020,8 @@ function updateHashFromLocation() {
 
 const VIRTUAL_BUFFER = 6;
 
-// ── POC virtualización por VENTANA (solo EriTest) ─────────────────────────
-// Las páginas de CANTO se inyectan como cáscaras vacías (.vpage) y su contenido
-// (texto+acordes) se ARMA y monta al vuelo SOLO cuando la hoja entra en el buffer,
-// y se vacía al salir. Ahorra el parseo/layout de ~300 páginas al arrancar y baja
-// mucho la memoria (solo ~9 páginas con contenido a la vez). Los índices/diccionario/
-// separadores se quedan completos (son pocos y el salto al índice los necesita listos).
+// ── POC virtualización por VENTANA (solo EriTest) ───────────────────────── Las páginas de
+// CANTO se inyectan como cáscaras vacías (.vpage) y su
 function makePaperShell(id) {
     return `<div class="paper vpage" id="${id}"><div class="front"></div><div class="back blank-page"></div></div>`;
 }
@@ -1140,21 +1046,16 @@ function updatePaperVisibility() {
     for (let i = 0; i < papers.length; i++) {
         const visible = i >= center - VIRTUAL_BUFFER && i <= center + VIRTUAL_BUFFER;
         papers[i].style.display = visible ? "" : "none";
-        // Solo la hoja actual y sus vecinas (.near) mantienen sus animaciones
-        // decorativas corriendo; el CSS detiene el resto del buffer (que está
-        // con display:"" pero tapado por otras hojas).
+        // Solo la hoja actual y sus vecinas (.near) mantienen sus animaciones decorativas corriendo;
+        // el CSS detiene el resto del buffer (que está con
         papers[i].classList.toggle("near", i >= center - 1 && i <= center + 1);
-        // .onstage = SOLO la hoja realmente visible. Las vecinas .near (±1) quedan
-        // montadas pero se les congelan los decorativos (Q2); se reanudan durante
-        // el volteo. .near se mantiene para tener el DOM/fit listos.
+        // .onstage = SOLO la hoja realmente visible.
         papers[i].classList.toggle("onstage", i === center);
         // POC ventana: monta el contenido de canto al entrar al buffer, lo vacía al salir.
         if (visible) mountVPage(papers[i]); else unmountVPage(papers[i]);
         if (visible && fontsReady && !papers[i].dataset.fitted) fitPaper(papers[i]);
     }
-    // La primera vez que la pasta deja de estar cerca, fijamos su estado FINAL
-    // (.cover-drawn): si después vuelve de display:none (buffer virtual), las
-    // animaciones one-shot no se reinician desde cero y el arte aparece completo.
+    // La primera vez que la pasta deja de estar cerca, fijamos su estado FINAL (.cover-drawn):
     if (!coverDrawnDone) {
         const cp = document.getElementById("pCoverFront");
         if (cp && !cp.classList.contains("near")) {
@@ -1172,10 +1073,8 @@ function updatePaperVisibility() {
     if (currentLocation > 2 && window.__hideSwipeHint) window.__hideSwipeHint();  // avanzó: fuera la pista
 }
 
-// ── Pista "Desliza para avanzar" ──
-// Aparece en la portada al TERMINAR el intro (silueta/flores) y se retira sola en
-// cuanto el usuario avanza al primer contenido (currentLocation > 2). Sólo la 1ª
-// vez (localStorage): quien ya lo conoce no la vuelve a ver. NUNCA bloquea el gesto.
+// ── Pista "Desliza para avanzar" ── Aparece en la portada al TERMINAR el intro
+// (silueta/flores) y se retira sola en cuanto el usuario avanza al primer
 (function initSwipeHint() {
     const hint = document.getElementById("swipeHint");
     if (!hint) return;
@@ -1190,12 +1089,7 @@ function updatePaperVisibility() {
         hint.setAttribute("aria-hidden", "true");
         try { localStorage.setItem(SEEN, "1"); } catch (e) {}
     }
-    // Anclaje al TÍTULO REAL (no al viewport). El libro escala uniforme (scale(s)
-    // centrado), así que el título mantiene su fracción en TODA pantalla; medir su
-    // rect real y colgar la pista justo DEBAJO de la "O" es exacto en cualquier
-    // móvil (antes con top:% del viewport variaba por tamaño de pantalla).
-    // Fracciones medidas del titulopasta.svg: MAYO termina en 0.776 del alto, la
-    // "O" llega a 0.974 del ancho del título.
+    // Anclaje al TÍTULO REAL (no al viewport).
     const MAYO_BOT = 0.776, GAP_FRAC = 0.05, RIGHT_INSET = 0.015;
     function position() {
         const title = document.querySelector(".cover-title");
@@ -1232,12 +1126,8 @@ function updatePaperVisibility() {
     window.__hideSwipeHint = hide;
 })();
 
-// ── Tooltips personalizados (estilo DESK) ────────────────────────────────────
-// Burbuja global #tipBubble para cualquier control con [data-tip][aria-label].
-// Escritorio: al pasar el cursor. Móvil: LONG-PRESS (~500ms). El long-press SÓLO
-// muestra la etiqueta (suprime el click para no disparar la acción); el tap normal
-// funciona igual que siempre. No usa preventDefault en touchstart/move → NO afecta
-// swipe, scroll, listones ni el hit-test de acordes.
+// ── Tooltips personalizados (estilo DESK) ──────────────────────────────────── Burbuja global
+// #tipBubble para cualquier control con
 (function initTooltips() {
     const TIP = document.createElement("div");
     TIP.id = "tipBubble";
@@ -1312,13 +1202,7 @@ function updatePaperVisibility() {
     document.addEventListener("scroll", hide, true);
 })();
 
-// FIX Android (segundo plano): al volver de background, el compositor puede
-// DESCARTAR las capas GPU de las hojas (transform/preserve-3d) y no re-pintar el
-// fondo opaco de la hoja actual → la hoja siguiente se transparenta y dos cantos
-// aparecen SUPERPUESTOS. Refrescar o voltear ya lo corregía (fuerza repaint); aquí
-// lo hacemos AUTOMÁTICO al reanudar: re-asentamos el estado de las hojas y forzamos
-// un reflow del libro. El display none→"" se lee en el MISMO frame (offsetHeight),
-// así que re-compone las capas sin llegar a pintar el estado oculto (sin parpadeo).
+// FIX Android (segundo plano):
 document.addEventListener("visibilitychange", () => {
     if (document.hidden) return;
     requestAnimationFrame(() => {
@@ -1337,9 +1221,8 @@ function updateFontControlsVisibility() {
     if (!fc) return;
     const paper = papers[currentLocation - 1];
     const face = paper ? paper.querySelector(":scope > .front") : null;
-    // Todos los layouts de canto (song-page, shared, short-grid, song-two, lyrics,
-    // continuation) usan .page-content-wrap como contenedor. Los diccionarios usan
-    // .dict-content, el índice usa .index-content y los separadores no tienen wrap.
+    // Todos los layouts de canto (song-page, shared, short-grid, song-two, lyrics, continuation)
+    // usan .page-content-wrap como contenedor.
     const isSongFace = !!(face && face.querySelector(".page-content-wrap"));
     // El índice y presentación/dedicatoria también llevan control de letra (zoom +
     // negrita/cursiva) para adultos mayores, aunque no sean cantos.
@@ -1376,11 +1259,7 @@ function fitPaper(paper) {
     const fullW = content.scrollWidth;
     const fullH = content.scrollHeight;
     if (!boxW || !fullW || !fullH || availH <= 0) return;
-    // Los cantos (.page-content-wrap) tienen overflow-y:auto: si el texto excede
-    // el alto disponible se hace scroll manteniendo la fuente a su tamaño real.
-    // Por eso solo se escala para corregir desbordes de ANCHO (líneas de acordes
-    // muy largas), nunca de alto. El diccionario (.dict-content) tiene
-    // overflow:hidden, así que ahí sí se ajusta también en alto para no cortar nada.
+    // Los cantos (.page-content-wrap) tienen overflow-y:auto:
     const scrolls = content.classList.contains("page-content-wrap");
     const scale = scrolls
         ? Math.min(1, boxW / fullW)
@@ -1404,18 +1283,12 @@ function isSinglePageMode() {
 function getViewportSize() {
     const root = document.querySelector(".container") || document.documentElement;
     // iOS Safari: `.container` es 100dvh, pero en la 1a carga (barra de URL sin asentar)
-    // clientHeight reporta un alto que no coincide con lo VISIBLE -> el libro se escala mal
-    // (chico, con negro abajo) hasta recargar. `visualViewport.height` da el area visible
-    // REAL en todo momento; se prefiere cuando existe.
+    // clientHeight reporta un alto que no coincide con lo VISIBLE -> el
     const vv = window.visualViewport;
     const innerH = window.innerHeight || 0;
     let height = (vv && vv.height) || root.clientHeight || innerH;
-    // ★TECLADO: al enfocar un input, iOS encoge visualViewport.height MUCHO (~300px)
-    // pero NO window.innerHeight (alto de layout, estable). Si detectamos esa caída
-    // grande (>150px) es el teclado (abierto o cerrándose) → usamos innerHeight para que
-    // la ESCALA del libro NO se encoja y rebote (glitch al elegir un resultado). La barra
-    // de URL solo cambia ~60px, así que NO se confunde y el fix de 1a carga (vv.height)
-    // se conserva.
+    // ★TECLADO: al enfocar un input, iOS encoge visualViewport.height MUCHO (~300px) pero NO
+    // window.innerHeight (alto de layout, estable).
     if (vv && innerH && vv.height < innerH - 150) height = innerH;
     return {
         width: (vv && vv.width) || root.clientWidth || window.innerWidth,
@@ -1494,23 +1367,17 @@ try {
         applyScale(); refitVisible();
     });
 } catch (e) {}
-// FIX iOS Safari: en la 1a carga la barra de URL aun no se asienta, asi que la
-// medicion del viewport (100dvh / innerHeight) sale mas alta que el area real y el
-// libro queda escalado/posicionado de mas -> choca con la barra de arriba. iOS NO
-// dispara "resize" fiable al mostrar/ocultar la barra, pero SI reporta el area visible
-// por visualViewport. Escuchamos ahi (re-escala) y re-aplicamos unas veces tras load.
+// FIX iOS Safari: en la 1a carga la barra de URL aun no se asienta, asi que la medicion del
+// viewport (100dvh / innerHeight) sale mas alta que el area
 if (window.visualViewport) {
     let vvTimer = null;
     const onVV = () => {
-        // NO re-escalar cuando el teclado está abierto: al enfocar el buscador iOS
-        // encoge visualViewport y esto disparaba un re-fit que MOVÍA el libro entero
-        // (bug reportado). El buscador tapa el libro de todos modos.
+        // NO re-escalar cuando el teclado está abierto:
         if (document.body.classList.contains("searching")) return;
         const ae = document.activeElement;
         if (ae && (ae.tagName === "INPUT" || ae.tagName === "TEXTAREA" || ae.isContentEditable)) return;
-        // La escala ya es independiente del teclado (getViewportSize ignora la caída de
-        // visualViewport por el teclado), así que aquí re-escalamos directo (1a carga /
-        // barra de URL). Sin debounce: evita el lag que introduje antes.
+        // La escala ya es independiente del teclado (getViewportSize ignora la caída de visualViewport
+        // por el teclado), así que aquí re-escalamos directo (1a
         applyScale();
         clearTimeout(vvTimer);
         vvTimer = window.setTimeout(refitVisible, 200);
@@ -1528,11 +1395,7 @@ window.addEventListener("load", () => {
 function setTheme(isDark, persist = true) {
     document.body.classList.toggle("dark-mode", isDark);
     themeToggle.setAttribute("aria-label", isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
-    // Con el control gestual ACTIVO todo lo ambiental está sacrificado a
-    // propósito: cambiar de tema NO debe reactivar el cielo (antes pasar a modo
-    // oscuro con gestos encendidos volvía a pintar y animar el starfield, justo
-    // lo que se había apagado para dedicar recursos a la cámara + MediaPipe).
-    // Al apagar los gestos, turnOffGestures() lo restaura según el tema real.
+    // Con el control gestual ACTIVO todo lo ambiental está sacrificado a propósito:
     if (window.__starfield && !document.body.classList.contains("gestures-on")) {
         window.__starfield.update(isDark);
     }
@@ -1566,9 +1429,7 @@ function currentStepDelay() {
     return Math.max(MIN_STEP_MS, Math.round(BASE_STEP_MS / speedMultiplier(currentLocation)));
 }
 
-// body.flipping pausa las animaciones decorativas (árbol/mariposas) mientras
-// alguna hoja gira. Se deriva del DOM (¿queda alguna .turning?) en vez de un
-// contador, para no desincronizarse cuando un re-volteo cancela el timer.
+// body.flipping pausa las animaciones decorativas (árbol/mariposas) mientras alguna hoja gira.
 function syncFlippingClass() {
     document.body.classList.toggle("flipping", !!document.querySelector(".paper.turning"));
 }
@@ -1616,10 +1477,8 @@ function closeBook(isAtBeginning) {
     }
 }
 
-// ── CIERRE DEL LIBRO — gesto al llegar a la contraportada ──────────────────
-// El libro entero se abate sobre el lomo hasta quedar plano y ASIENTA con un
-// rebote corto (Web Animations sobre .book, porque su transform es inline y lo
-// reescribe applyScale; con fill:"none" el inline manda otra vez al terminar).
+// ── CIERRE DEL LIBRO — gesto al llegar a la contraportada ────────────────── El libro entero
+// se abate sobre el lomo hasta quedar plano y ASIENTA con
 let closeFxTimer = null;
 let bookCloseAnim = null;
 function cancelBookCloseFx() {
@@ -1662,9 +1521,7 @@ function playBookCloseFx() {
     try { if (navigator.vibrate) window.setTimeout(() => navigator.vibrate([14, 36, 22]), 900); } catch (e) {}
 }
 
-// El libro CERRADO no se hojea hacia atrás: al intentarlo, "resiste" (shake corto)
-// y la correa "Volver al inicio" pulsa señalando la única salida. Un toast una-vez
-// lo explica. Menú/índice/búsqueda/listones siguen vivos (eso es "reabrir", no hojear).
+// El libro CERRADO no se hojea hacia atrás:
 let __closedHintShown = false;
 function resistClosedBook() {
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1718,9 +1575,7 @@ function goNextPage() {
         }
     }
     const paper = papers[currentLocation - 1];
-    // Última hoja del libro: gira más despacio y con otra curva (peso del cierre),
-    // y el libro entero hace el gesto de cerrarse. En reduced-motion/lite: volteo
-    // normal (sin peso ni gesto) → 100% calmado.
+    // Última hoja del libro:
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const closing = currentLocation + 1 >= maxLocation
         && !document.body.classList.contains("lite") && !reduce;
@@ -1755,8 +1610,6 @@ function goPrevPage() {
 }
 
 // Restaurar la página guardada ANTES de aplicar visibilidad/escala.
-// Si lo hacemos después, updatePaperVisibility() sobrescribiría la URL
-// (con #portada) porque currentLocation aún vale 1 en ese momento.
 (function restoreInitialLocation(){
     // Sólo enlaces directos (#canto-123). La página "donde me quedé" ya no se
     // restaura de golpe: la marca el listón y el salto ocurre al primer avance.
@@ -1781,12 +1634,8 @@ applyScale();
 updatePaperVisibility();
 
 // ═══════════════════════════════════════════════════════════════════
-// LISTONES (separadores de página) — sustituyen al auto-guardado
+// LISTONES (separadores de página) — sustituyen al auto-guardado Modelo:
 // ═══════════════════════════════════════════════════════════════════
-// Modelo: 3 ranuras. Siempre asoma UNA cinta libre (hasta llenar las 3), así
-// el usuario no tiene que "agregar listón" con un botón: fija uno y sale el
-// siguiente. Colapsado sólo se ve un fragmento; al tocarlo caen los listones
-// fijados sobre la hoja para volver a su página. Sin ventanas de texto.
 (function initRibbons() {
     const layer = document.getElementById("ribbonLayer");
     const hit = document.getElementById("ribbonHit");
@@ -1808,9 +1657,8 @@ updatePaperVisibility();
     let isOpen = false;
     let paintMode = false;            // modo "elegir color" (botón 🎨)
 
-    // ── Colores de los listones (20 tonos mate, familia de la pasta salvia) ──
-    // Cada color es UN tono base; brillo (arriba), sombra (abajo) e hilo de costura
-    // se derivan en HSL para no guardar 4 valores por ranura.
+    // ── Colores de los listones (20 tonos mate, familia de la pasta salvia) ── Cada color es UN
+    // tono base; brillo (arriba), sombra (abajo) e hilo de
     const PALETTE = [
         // 1-20 salvia base (original)
         "#9aa890", "#909a78", "#84a094", "#79a0a0", "#849ab2",
@@ -1931,10 +1779,6 @@ updatePaperVisibility();
     }
 
     // Datos del canto de la hoja actual para escribir en el listón:
-    //   full = título completo ("172. MADRE ERES TERNURA.") a lo largo de la cinta
-    //   id   = "C" + número de canto ("C172") para la punta que cuelga
-    // Las páginas de continuación heredan el título del canto anterior; las que no
-    // son de canto (secciones/índice) caen al número impreso, sin id.
     function currentSongInfo() {
         const paper = papers[currentLocation - 1];
         const face = paper ? paper.querySelector(":scope > .front") : null;
@@ -1974,22 +1818,14 @@ updatePaperVisibility();
         // Colapsado el fragmento visible es el listón LIBRE; cuando ya no queda
         // ninguno, es el color del PRIMER listón fijado (lo pidió así el boceto).
         const top = free >= 0 ? free : firstPinned();
-        // Cada slot es POSICIONAL: se muestra si está fijado (en su lugar/color) o
-        // si es el ÚNICO hueco libre ofrecido como "+". En la pasta sólo cuelgan
-        // los fijados.
+        // Cada slot es POSICIONAL:
         let visCount = 0;
         let stack = 0;
         let rank = 0;   // orden ENTRE los fijados (para el escalonado de colas)
         for (let i = 0; i < MAX; i++) {
             const r = ribs[i];
             const pinned = !!slots[i];
-            // En modo pintar se muestran los 5 (aunque estén libres) para poder
-            // elegir su color. Fuera de pintar: los fijados siempre; el "+" libre
-            // sólo con el panel abierto (colgando no se ofrece agregar).
-            // El "+" libre asoma con el panel abierto; además, si NO queda ningún
-            // listón fijado, se mantiene asomando aun con el panel cerrado para que
-            // el usuario siga viendo que hay listones disponibles (la zona touch ya
-            // está ahí; sin este peek quedaría invisible pero activa = confuso).
+            // En modo pintar se muestran los 5 (aunque estén libres) para poder elegir su color.
             const on = paintMode ? true
                 : (atCover ? pinned : (pinned || (i === free && (isOpen || pinnedCount() === 0))));
             if (on) visCount++;
@@ -2001,16 +1837,13 @@ updatePaperVisibility();
             r.classList.toggle("here", isHere);
             if (!on) continue;
             r.style.setProperty("--i", String(i));
-            // Cola escalonada por RANGO entre fijados (no por índice de slot): así,
-            // aunque el hueco libre esté en medio, las puntas caen ordenadas y la
-            // última sigue cabiendo en pantalla.
+            // Cola escalonada por RANGO entre fijados (no por índice de slot):
             if (pinned) r.style.setProperty("--rank", String(rank++));
             // Encimados: el visible al frente, los demás asomando apenas detrás.
             r.style.setProperty("--off", String(i === top ? 0 : ++stack));
             r.style.zIndex = String(i === top ? 30 : 20 - i);
-            // Cada listón fijado lleva su título ABREVIADO a lo largo (el id ya va
-            // en la punta, así que quitamos el "NN." del inicio y recortamos para
-            // que no se apriete ni choque con la X); el libre muestra "+".
+            // Cada listón fijado lleva su título ABREVIADO a lo largo (el id ya va en la punta, así que
+            // quitamos el "NN." del inicio y recortamos para que no se
             const num = r.querySelector(".rib-num");
             if (num) {
                 if (pinned) {
@@ -2038,13 +1871,6 @@ updatePaperVisibility();
         if (paintBtn) paintBtn.classList.toggle("hidden", !(isOpen || paintMode));
 
         // Colas adaptables al hueco REAL bajo el libro:
-        //   - El de DELANTE (slot0) asoma un mínimo fijo para que su id despeje el
-        //     borde del libro (no quede oculto).
-        //   - El resto se escalona con un paso que se ajusta para que la punta del
-        //     ÚLTIMO (3º incluido) siga cabiendo en pantalla.
-        // La cola i cuelga extra_i = --rbase + i·--rstep. id_i queda ≈ extra_i-26
-        // px bajo el libro (el id va 13px sobre la punta, y la punta 13px bajo el
-        // borde del libro).
         const bookEl = document.getElementById("book");
         if (bookEl) {
             const gap = window.innerHeight - bookEl.getBoundingClientRect().bottom;
@@ -2052,9 +1878,8 @@ updatePaperVisibility();
             const d0 = Math.max(12, Math.min(16, gap * 0.28)); // asomo del primero
             const dLast = Math.max(d0, gap - 8);               // el último, casi al borde
             let step = n > 1 ? (dLast - d0) / (n - 1) : 18;
-            // El paso HORIZONTAL es fijo (38px, igual que abiertos); la escalera la
-            // da la altura de la cola. Se apunta a ~STAIR_ANGLE° (38·tanθ) y se acota
-            // para que siempre quepan las 5 puntas en el hueco bajo el libro.
+            // El paso HORIZONTAL es fijo (38px, igual que abiertos); la escalera la da la altura de la
+            // cola.
             const ideal = 30 * Math.tan(STAIR_ANGLE * Math.PI / 180);
             step = Math.max(6, Math.min(step, ideal, 16));
             layer.style.setProperty("--rbase", (26 + d0).toFixed(1) + "px");
@@ -2160,9 +1985,8 @@ updatePaperVisibility();
     ribs.forEach((r, i) => {
         r.addEventListener("click", (e) => {
             e.stopPropagation();
-            // Contraportada: tocar un listón ABRE el libro en esa página (como
-            // agarrar el separador), sin desplegar el panel (que se iría a la
-            // izquierda encimándose con la correa).
+            // Contraportada: tocar un listón ABRE el libro en esa página (como agarrar el separador), sin
+            // desplegar el panel (que se iría a la izquierda
             if (document.body.classList.contains("book-at-back")) {
                 if (slots[i]) {
                     const loc = getLocationForHash(slots[i].hash);
@@ -2192,10 +2016,7 @@ updatePaperVisibility();
         });
     });
 
-    // "Cerrar libro": el ritual. Refrescar o volver a entrar deja al usuario
-    // donde iba (el navegador recuerda el hash), así que la vuelta a la pasta la
-    // decide ÉL con este botón. Deja la marca, limpia el hash y devuelve el libro
-    // a la portada volteando hojas.
+    // "Cerrar libro": el ritual.
     function closeBook() {
         const active = (lastSlot >= 0 && slots[lastSlot]) ? lastSlot : firstPinned();
         if (active < 0) return;
@@ -2252,10 +2073,7 @@ updatePaperVisibility();
     render();
     setOpen(false);
 
-    // Reanudación diferida: SÓLO tras cerrar el libro con el botón. Arranca en la
-    // pasta con todas sus animaciones y goNextPage() consume esta marca en el
-    // primer avance para caer en la página del listón. En cualquier otro caso
-    // manda el hash / el auto-guardado y no hay ceremonia.
+    // Reanudación diferida:
     const resumeSlot = BOOK_WAS_CLOSED;
     if (resumeSlot >= 0 && slots[resumeSlot]) {
         const loc = getLocationForHash(slots[resumeSlot].hash);
@@ -2272,9 +2090,7 @@ themeToggle.addEventListener("click", () => {
     setTheme(!document.body.classList.contains("dark-mode"));
 });
 
-// ── Modo LIGERO: toggle + persistencia. La clase body.lite hace el resto por CSS
-// (apaga animaciones/transiciones y oculta decorativos). Aquí además detenemos los
-// decorativos manejados por JS (starfield) y refrescamos su estado.
+// ── Modo LIGERO: toggle + persistencia.
 function setLite(on, persist) {
     document.body.classList.toggle("lite", !!on);
     const b = document.getElementById("liteBtn");
@@ -2319,13 +2135,7 @@ function setLite(on, persist) {
 })();
 
 // ═══════════════════════════════════════════════════════════════════
-// INSTALAR como app (PWA) — FAB consciente de plataforma
-//   · Android/escritorio: capturamos `beforeinstallprompt` y disparamos el
-//     instalador NATIVO con nuestro botón (mejor conversión que el mini-infobar).
-//   · iOS/Safari: NO existe ese evento → mostramos el FAB igual y al tocarlo
-//     abrimos los pasos ilustrados (Compartir → Añadir a inicio).
-//   · Ya instalado (standalone) o tras instalar: el FAB se OCULTA.
-//   El FAB es la reentrada permanente: no ocupa lugar en la hamburguesa.
+// INSTALAR como app (PWA) — FAB consciente de plataforma · Android/escritorio:
 // ═══════════════════════════════════════════════════════════════════
 (function wireInstall() {
     const fab = document.getElementById("installBtn");
@@ -2403,7 +2213,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════
-// Búsqueda — corpus construido desde JSON, no desde el DOM
+// Búsqueda — corpus construido desde JSON, no desde el
 // ═══════════════════════════════════════════════════════════════════
 
 const searchBtn     = document.querySelector("#searchBtn");
@@ -2413,9 +2223,7 @@ const searchClear   = document.querySelector("#searchClear");
 const searchResults = document.querySelector("#searchResults");
 
 
-// Sección por KEY (para cantos cuyo id no es numérico, p. ej. "cred1" de la
-// sección CRÉDITOS): SECTION_MAP se indexa por rango numérico de nº de canto,
-// así que parseInt("cred1") = NaN dejaba esas páginas SIN sección en la búsqueda.
+// Sección por KEY (para cantos cuyo id no es numérico, p.
 const SECTION_BY_KEY = new Map(
     DATA.sections.map(sec => [sec.key, {
         label: sec.label,
@@ -2450,17 +2258,7 @@ function levenshtein(a, b) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// TOLERANCIA ORTOGRÁFICA (español)
-// Clave FONÉTICA: reduce a un mismo código las letras que en español suenan
-// igual, para que el buscador encuentre el canto aunque se escriba "mal":
-//   b=v      (vendito → bendito, alavado → alabado)
-//   c/z/s    (corason → corazón, sielo → cielo)
-//   ll/y     (yamado → llamado, alleluya → aleluya)
-//   h muda   (haleluya → aleluya, oy → hoy)
-//   g(e,i)=j (jesus/gesus, virgen/virjen)
-//   qu/k/c   (kiere → quiere, kirie → quirie)
-//   x=s, w=b, ph=f, dobles → simple, -s final (plural) fuera
-// Se aplica SOBRE texto ya pasado por norm() (minúsculas, sin acentos).
+// TOLERANCIA ORTOGRÁFICA (español) Clave FONÉTICA:
 // ═══════════════════════════════════════════════════════════════════
 function phon(s) {
     let t = norm(s);
@@ -2483,11 +2281,7 @@ function phon(s) {
     return t.trim();
 }
 
-// Igualdad tolerante entre DOS PALABRAS. Combina:
-//   1) igualdad exacta / prefijo (para autocompletar mientras se teclea)
-//   2) igualdad FONÉTICA (errores de b/v, s/c/z, ll/y, h…)
-//   3) distancia de edición (letras cambiadas, faltantes o sobrantes),
-//      también sobre la forma fonética, con umbral según el largo.
+// Igualdad tolerante entre DOS PALABRAS.
 function fuzzyMatch(a, b) {
     a = norm(a); b = norm(b);
     if (!a || !b) return false;
@@ -2520,9 +2314,7 @@ function fuzzyPhrase(a, b) {
     return levenshtein(pa, pb) <= Math.min(5, Math.max(2, Math.floor(longest * 0.25)));
 }
 
-// Puntúa un canto contra la consulta. Cada señal existe en DOS niveles:
-// exacto (más puntos) y TOLERANTE — fonético o con erratas (algo menos), de
-// modo que escribir "alavado", "corason" o "haleluya" sigue encontrando el canto.
+// Puntúa un canto contra la consulta.
 function scoreEntry(entry, qNorm, qWords, qPhon, qWordsPhon) {
     let score = 0;
     const { titleN, lyricsN, titleP, lyricsP, titleWords, lyricWords, titleWordsP, lyricWordsP } = entry;
@@ -2583,9 +2375,7 @@ function buildCorpus() {
         // c.section resuelve también los ids NO numéricos (p. ej. "cred1" de CRÉDITOS).
         const section = getSectionForSong(songNum, c.section);
         const lyrics = lyricsArr.join(" ");
-        // Formas normalizada y FONÉTICA precalculadas UNA vez por canto. Antes se
-        // recalculaba norm() de toda la letra en cada pulsación de tecla y por cada
-        // canto del corpus; ahora la búsqueda tolerante no cuesta más que la anterior.
+        // Formas normalizada y FONÉTICA precalculadas UNA vez por canto.
         const titleN  = norm(titleText);
         const lyricsN = norm(lyrics);
         corpus.push({
@@ -2608,10 +2398,7 @@ let CORPUS = null;
 function ensureCorpus() { if (!CORPUS) CORPUS = buildCorpus(); return CORPUS; }
 (window.requestIdleCallback || (cb => setTimeout(cb, 1)))(ensureCorpus, { timeout: 3000 });
 
-// Detecta consultas numéricas. Devuelve { num, explicitPage } o null.
-// - "220"        -> { num:"220", explicitPage:false }  (busca por nº de canto Y página)
-// - "pagina 50"  -> { num:"50",  explicitPage:true  }  (solo página)
-// - "220 amor"   -> null                               (texto normal)
+// Detecta consultas numéricas.
 function parseNumberQuery(qNorm) {
     const numMatch = qNorm.match(/\d+[a-z]?/);
     if (!numMatch) return null;
@@ -2632,8 +2419,6 @@ function localSearch(q) {
     if (numQ) {
         const { num, explicitPage } = numQ;
         // Si el usuario escribió "página N" solo buscamos por página.
-        // Para un número suelto priorizamos el nº de canto (lo que ve en el título)
-        // y luego la página física, sin duplicar cantos.
         const sn = e => String(e.songNum);
         const pg = e => String(e.pageNum);
         const buckets = explicitPage
@@ -2732,11 +2517,8 @@ function closeSearch() { searchOverlay.classList.remove("active"); document.body
 // buscador + la frase secreta y dejar la plumeria de fondo al revelar).
 try { window.__closeSearch = closeSearch; } catch (e) {}
 
-// La barra de búsqueda permanece ABIERTA hasta que el usuario toque FUERA de
-// ella (cualquier parte de la pantalla) o el botón (×). Antes se cerraba sola a
-// los 3.5 s de inactividad; ese autocierre se quitó a pedido del usuario.
-// pointerdown (no click) para reaccionar al primer contacto; se ignoran los
-// toques dentro del overlay (caja/resultados/×) y sobre el botón de búsqueda.
+// La barra de búsqueda permanece ABIERTA hasta que el usuario toque FUERA de ella (cualquier
+// parte de la pantalla) o el botón (×).
 document.addEventListener("pointerdown", (e) => {
     if (!searchOverlay.classList.contains("active")) return;
     if (!e.target.closest) return;
@@ -2761,7 +2543,7 @@ searchInput.addEventListener("input", () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════
-// Navegación a páginas específicas
+// Navegación a páginas
 // ═══════════════════════════════════════════════════════════════════
 
 // Dinámico: la posición del índice se corre si se añaden páginas al frente
@@ -2845,9 +2627,8 @@ if (indexBtn) indexBtn.addEventListener("click", () => goToPage(indexLocation())
 const dictBtn = document.querySelector("#dictBtn");
 if (dictBtn) dictBtn.addEventListener("click", () => goToSection("diccionario"));
 
-// Contraportada: la correa "Volver al inicio" cierra el viaje → regresa a la
-// portada inicial (loc 1, libro cerrado). Vive en la cara trasera de pCoverBack,
-// que solo recibe toques cuando está volteada (final del libro).
+// Contraportada: la correa "Volver al inicio" cierra el viaje → regresa a la portada inicial
+// (loc 1, libro cerrado).
 const backToStart = document.getElementById("backToStart");
 if (backToStart) backToStart.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -2855,9 +2636,8 @@ if (backToStart) backToStart.addEventListener("click", (e) => {
     goToPage(1);
 });
 
-// Contraportada: botón "Ant" (pegado al lomo) REABRE el libro a la página
-// anterior (los créditos). goToPage(loc-1) entra al paso corto con isAnimating,
-// así goPrevPage salta el "resistClosedBook" y cancela el cierre limpio.
+// Contraportada: botón "Ant" (pegado al lomo) REABRE el libro a la página anterior (los
+// créditos).
 const backToPrev = document.getElementById("backToPrev");
 if (backToPrev) backToPrev.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -2865,9 +2645,7 @@ if (backToPrev) backToPrev.addEventListener("click", (e) => {
     goToPage(currentLocation - 1);
 });
 
-// Botón "Guía de Acordes" (ícono guitarra, en el pie de cada canto y en el
-// diccionario). Delegado porque los botones se generan por página. Abre la guía
-// (el wiring de la lámina/overlay se conecta aparte vía window.__openGuide).
+// Botón "Guía de Acordes" (ícono guitarra, en el pie de cada canto y en el diccionario).
 document.addEventListener("click", (e) => {
     const b = e.target.closest && e.target.closest(".guide-btn");
     if (!b) return;
@@ -2912,17 +2690,14 @@ document.addEventListener("click", (e) => {
     });
     applyHand(getHand());
     window.__openGuide = (btn) => {
-        // Coloca la esquina inferior-derecha del popup JUSTO sobre el ícono real
-        // (que está dentro del papel, NO en el borde de la pantalla), y crece
-        // desde ahí hacia arriba-izquierda.
+        // Coloca la esquina inferior-derecha del popup JUSTO sobre el ícono real (que está dentro del
+        // papel, NO en el borde de la pantalla), y crece desde ahí
         if (pop && btn && btn.getBoundingClientRect) {
             const r = btn.getBoundingClientRect();
             // Esquina derecha del popup = borde IZQUIERDO del ícono (donde INICIA
             // la guitarra) → queda un poco más a la izquierda, sin pegarse al borde.
             pop.style.right = Math.max(4, Math.round(window.innerWidth - r.left)) + "px";
-            // Si el ícono está cerca del BORDE SUPERIOR (p. ej. el diccionario, donde
-            // el botón va arriba), el popup no cabe hacia arriba: se ancla por ARRIBA
-            // y crece hacia ABAJO. En los cantos (botón al pie) crece hacia arriba.
+            // Si el ícono está cerca del BORDE SUPERIOR (p.
             const openDown = r.top < window.innerHeight * 0.35;
             m.classList.toggle("down", openDown);
             if (openDown) {
@@ -3009,26 +2784,13 @@ function buildIndex() {
         indexPapers.forEach((p, i) => { if (p) p.style.display = savedDisplay[i]; });
         return;
     }
-    // ── Sin layout thrashing: MEDIR EN LOTE, luego repartir por matemática ──────
-    // Antes: append + leer scrollHeight por CADA item (~400 reflows síncronos en un
-    // bucle read-after-write = layout thrashing). Ahora: se ponen TODOS los items en
-    // la 1ª hoja, se fuerza UN SOLO reflow y se leen sus posiciones (offsetTop) EN
-    // LOTE — sin escrituras intercaladas, así solo la 1ª lectura provoca reflow y el
-    // resto sale de caché. Con esas alturas REALES (delta de offsetTop = alto ocupado,
-    // incluye márgenes y redondeo) se reparte por suma. Es EXACTO y se mide en el
-    // MISMO instante que el layout → misma garantía que el método por overflow: nunca
-    // recorta relativo a su propio clientHeight, sin importar el estado de layout.
-    // La paginación se mide SIEMPRE con zoom 1, aunque el usuario tenga un zoom
-    // guardado (ahora el índice también escala con --font-scale). Así el reparto de
-    // entradas por hoja es ESTABLE; el zoom luego sólo agranda + hace scroll, sin
-    // re-paginar ni romper el índice.
+    // ── Sin layout thrashing:
     const savedScale = document.documentElement.style.getPropertyValue("--font-scale");
     document.documentElement.style.setProperty("--font-scale", "1");
     const measure = targets[0];
     { const frag = document.createDocumentFragment(); for (const it of items) frag.appendChild(it); measure.appendChild(frag); }
-    // clientHeight incluye el padding-bottom (reserva del botón "Aa"); los items sólo
-    // ocupan el área SIN ese padding → se resta para que a escala 1 quepan exacto
-    // (sin barra de scroll) y sólo aparezca scroll al AGRANDAR con el zoom.
+    // clientHeight incluye el padding-bottom (reserva del botón "Aa"); los items sólo ocupan el
+    // área SIN ese padding → se resta para que a escala 1 quepan
     const padB = parseFloat(getComputedStyle(measure).paddingBottom) || 0;
     const availH = measure.clientHeight - padB;   // mismo instante que las lecturas de offsetTop
     const advance = items.map((it, i) =>
@@ -3062,12 +2824,8 @@ function buildIndex() {
     indexPapers.forEach((p, i) => { if (p) p.style.display = savedDisplay[i]; });
 }
 
-// (buildIndex ya NO se llama aquí de inmediato — ver ensureIndexBuilt.)
-// El nº de hojas de índice necesarias depende de la altura de pantalla (buildIndex
-// fluye por overflow). En pantallas altas caben todas las entradas en menos hojas y
-// la(s) última(s) del bloque quedan EN BLANCO. Aquí sacamos esas hojas vacías del
-// flujo (del array `papers` y de la navegación) para que no aparezca una página en
-// blanco al final del índice. No se tocan las que sí tienen entradas.
+// (buildIndex ya NO se llama aquí de inmediato — ver ensureIndexBuilt.) El nº de hojas de
+// índice necesarias depende de la altura de pantalla
 function collapseEmptyIndexPages() {
     const emptyPapers = Array.from(document.querySelectorAll(".index-page .index-content"))
         .filter(c => c.childElementCount === 0)
@@ -3091,10 +2849,8 @@ function collapseEmptyIndexPages() {
     updatePaperVisibility();
     refitVisible();
 }
-// OPT arranque: arma el índice (plantilla + distribución + colapso de vacías) UNA vez,
-// en idle o a demanda (al abrir el índice / resolver un hash de índice), lo que ocurra
-// antes. Saca del arranque el trabajo del índice. collapse muta `papers`, así que se
-// hace ANTES de que el usuario pueda navegar al índice (idle es casi inmediato).
+// OPT arranque: arma el índice (plantilla + distribución + colapso de vacías) UNA vez, en idle
+// o a demanda (al abrir el índice / resolver un hash de
 function ensureIndexBuilt() {
     if (indexBuilt) return;
     indexBuilt = true;
@@ -3135,11 +2891,8 @@ document.addEventListener("click", (e) => {
     e.preventDefault();
     applyVariant(btn.closest("[data-active-variant]"), btn.dataset.variant);
 });
-// FIX iOS + ZOOM: con zoom, fitPaper aplica transform:scale al contenido; en iOS
-// Safari el hit-test de click/closest() sobre contenido transformado FALLA y el
-// cambio de versión no responde. Detección por COORDENADAS en touchend (rect real
-// en pantalla, post-transform). Toma el selector más cercano al toque (≤14px),
-// ignorando páginas fuera de vista (rect vacío).
+// FIX iOS + ZOOM: con zoom, fitPaper aplica transform:scale al contenido; en iOS Safari el
+// hit-test de click/closest() sobre contenido transformado
 document.addEventListener("touchend", (e) => {
     if (!e.changedTouches || !e.changedTouches.length) return;
     const btns = document.querySelectorAll("[data-active-variant] .variant-btn");
@@ -3304,19 +3057,15 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     }, { passive: true });
 })();
 
-// FIX: el scroll de las SUGERENCIAS de búsqueda arrastraba el libro/documento en
-// iOS (scroll chaining). overscroll-behavior:contain lo cubre cuando la lista SÍ
-// scrollea; aquí bloqueamos el default cuando la lista es corta (no scrollea) o
-// está en el borde, para que el gesto no mueva nada detrás. Se queda en la lista.
+// FIX: el scroll de las SUGERENCIAS de búsqueda arrastraba el libro/documento en iOS (scroll
+// chaining).
 (function lockSearchResultsScroll() {
     if (!searchResults) return;
     const el = searchResults;
     let lastY = 0;
     el.addEventListener("touchstart", (e) => {
         lastY = (e.touches[0] || {}).clientY || 0;
-        // NUDGE de 1px LEJOS del borde exacto: si la lista arranca pegada al tope o al
-        // fondo, iOS entrega el scroll al documento en el 1er frame (arrastra el libro).
-        // Separarla 1px la mantiene como dueña del scroll.
+        // NUDGE de 1px LEJOS del borde exacto:
         if (el.scrollHeight > el.clientHeight + 1) {
             if (el.scrollTop <= 0) el.scrollTop = 1;
             else if (el.scrollTop + el.clientHeight >= el.scrollHeight) el.scrollTop = el.scrollHeight - el.clientHeight - 1;
@@ -3336,11 +3085,8 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         e.stopPropagation();
     }, { passive: false });
 
-    // ★TECLADO ABIERTO: con el buscador activo (foco en el input) iOS vuelve el
-    // DOCUMENTO scrollable para "revelar" el campo, y el overscroll de la lista
-    // arrastraba el libro (sobre todo en PWA standalone). Mientras se busca,
-    // bloqueamos CUALQUIER arrastre del documento salvo DENTRO de la lista (que
-    // maneja su propio scroll arriba). Así no hay nada que arrastrar detrás.
+    // ★TECLADO ABIERTO: con el buscador activo (foco en el input) iOS vuelve el DOCUMENTO
+    // scrollable para "revelar" el campo, y el overscroll de la lista
     document.addEventListener("touchmove", (e) => {
         if (!document.body.classList.contains("searching")) return;
         if (e.target && e.target.closest && e.target.closest("#searchResults")) return;
@@ -3348,11 +3094,8 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     }, { passive: false });
 })();
 
-// === Cielo nocturno (CSS/compositor, SOLO en las bandas visibles) ===
-// Antes era un <canvas> con requestAnimationFrame que repintaba TODA la pantalla
-// ~25fps en el hilo principal, incluido el ~⅔ tapado por la página del libro.
-// Ahora: estrellas por box-shadow que hacen scroll sin costura (transform → GPU)
-// dentro de dos bandas colocadas arriba/abajo del libro (según su rect real).
+// === Cielo nocturno (CSS/compositor, SOLO en las bandas visibles) === Antes era un <canvas>
+// con requestAnimationFrame que repintaba TODA la pantalla
 (function setupStarfield() {
     const root = document.getElementById("starfield");
     if (!root) return;
@@ -3362,11 +3105,8 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let active = false, shootTimer = null, built = false, rsTimer = null;
 
-    // Lista de box-shadow: cada estrella con TAMAÑO (spread) y BRILLO variados, y
-    // ~10% con halo (blur) como las del canvas → menos "artificial". Repartidas en
-    // un PERIODO fijo P y DUPLICADAS a -P para que el scroll (translateY 0→P) sea un
-    // bucle sin costura. Desacoplar P del alto de la banda evita "pares"/repeticiones
-    // en bandas finas.
+    // Lista de box-shadow: cada estrella con TAMAÑO (spread) y BRILLO variados, y ~10% con halo
+    // (blur) como las del canvas → menos "artificial".
     function shadows(n, w, P, near) {
         const out = [];
         for (let i = 0; i < n; i++) {
@@ -3436,9 +3176,8 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         built = true;
     }
 
-    // Estrella fugaz: <div> con WAAPI (transform/opacity → compositor), dirección
-    // ALEATORIA (izq o der) y cola alineada por la rotación del propio elemento
-    // (así la estela siempre queda DETRÁS, sin importar el sentido).
+    // Estrella fugaz: <div> con WAAPI (transform/opacity → compositor), dirección ALEATORIA (izq o
+    // der) y cola alineada por la rotación del propio elemento
     function spawnShoot(band) {
         const bw = band.clientWidth, bh = band.clientHeight;
         if (bh < 14) return;
@@ -3500,9 +3239,6 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     });
 
     // La app puede pedir recolocar las bandas si cambia la geometría del libro.
-    // update(): el cielo NUNCA arranca con los gestos activos (recursos dedicados a
-    // la cámara). Blindaje además de la comprobación en setTheme, por si otro punto
-    // del código lo invoca. turnOffGestures() vuelve a llamarlo para restaurarlo.
     window.__starfield = {
         update(isDark) {
             if (isDark && !document.body.classList.contains("gestures-on")) start();
@@ -3526,8 +3262,6 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         ["G","assets/chords/G.svg"],["G7","assets/chords/G7.svg"],["G#","assets/chords/G#.svg"],["G#7","assets/chords/G#7.svg"],["G#m","assets/chords/G#m.svg"],["Gm","assets/chords/Gm.svg"],["Gsus4","assets/chords/Gsus4.svg"],
         ["E♭","assets/chords/Eb.svg"],["A♭","assets/chords/Ab.svg"],["D♭","assets/chords/Db.svg"],
         // ── Enarmónicos faltantes de acordes PREEXISTENTES (mismo SVG, otra grafía):
-        //    sin esto, al transponer a una tonalidad con la grafía opuesta el
-        //    diagrama desaparecía aunque el dibujo ya existiera. ──
         ["C#","assets/chords/Db.svg"],["Db7","assets/chords/C#7.svg"],["Dbm","assets/chords/C#m.svg"],
         ["D#","assets/chords/Eb.svg"],
         ["Gb","assets/chords/F#.svg"],["Gbm","assets/chords/F#m.svg"],["Gb7","assets/chords/F#7.svg"],["Gbm7","assets/chords/F#m7.svg"],
@@ -3627,11 +3361,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     function enhanceSpan(span) {
         if (span.dataset.ix) return;
         const name = span.textContent.trim();
-        // Un .cchord anclado puede traer acordes PEGADOS (ej. "D7G", "A7Dm") por venir
-        // sin espacio en los datos. parseToken los divide en varios .chord-ix clicables
-        // (recorriendo con CHORD_RE), y quedan INLINE dentro del mismo .cchord: misma
-        // columna anclada sobre la letra → la alineación no cambia. Así cada acorde del
-        // grupo es clicable sin tener que separar el texto (que sí desplazaría el anclaje).
+        // Un .cchord anclado puede traer acordes PEGADOS (ej.
         const parsed = parseToken(name);
         if (parsed !== null) {
             span.innerHTML = parsed;
@@ -3648,11 +3378,8 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         root.querySelectorAll("span.chord:not([data-ix])").forEach(enhanceSpan);
     }
 
-    // ── TRANSPOSICIÓN DE ACORDES (por canto, spelling inteligente) ─────────────
-    // Opera IN-PLACE sobre los `.chord-ix` ya creados: guarda el original en
-    // `data-orig` y re-transpone desde él (nunca desde el ya transpuesto). El
-    // spelling elige sostenidos/bemoles según el TONO DESTINO (raíz del 1er acorde
-    // + semitonos): tonos "de bemoles" → bemoles. Offset por canto en localStorage.
+    // ── TRANSPOSICIÓN DE ACORDES (por canto, spelling inteligente) ───────────── Opera IN-PLACE
+    // sobre los `.chord-ix` ya creados:
     const T_SHARP = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
     const T_FLAT  = ["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
     const T_PC = {C:0,"C#":1,"Db":1,D:2,"D#":3,"Eb":3,E:4,"Fb":4,F:5,"E#":5,"F#":6,"Gb":6,G:7,"G#":8,"Ab":8,A:9,"A#":10,"Bb":10,B:11,"Cb":11,"B#":0};
@@ -3757,9 +3484,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
             pop.innerHTML = svgText;
             const svg = pop.querySelector("svg");
             if (svg) { svg.removeAttribute("width"); svg.removeAttribute("height"); svg.classList.add("chord-font"); }
-            // El diagrama es un SVG compartido entre grafías enarmónicas (Gb reusa F#,
-            // A# reusa B♭…). Reescribimos el título con el nombre que el usuario tocó
-            // para que no vea "F#" al oprimir "Gb". El título es el 1er <text> (y=30).
+            // El diagrama es un SVG compartido entre grafías enarmónicas (Gb reusa F#, A# reusa B♭…).
             const ttl = pop.querySelector("svg text");
             if (ttl) ttl.textContent = name;
             positionPop(el);
@@ -3788,35 +3513,21 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         if (chord) { e.preventDefault(); e.stopPropagation(); showChordPop(chord); return; }
         if (!pop.hidden && !(e.target.closest && e.target.closest("#chordPop"))) hideChordPop();
     }, true);
-    // FIX iOS + ZOOM: con zoom, fitPaper aplica transform:scale al contenido y el
-    // hit-test del toque en iOS se DESVÍA (más a la orilla, más error) → los acordes
-    // de la derecha no responden. Detección por COORDENADAS (getBoundingClientRect =
-    // posición REAL en pantalla, inmune al error). CLAVE anti-falsos-positivos:
-    //   • SOLO actúa si el contenido está TRANSFORMADO (zoom real); sin transform el
-    //     click normal ya funciona y este handler NO interfiere.
-    //   • solo la HOJA visible (.onstage), ancho EXACTO del acorde (no invade vecinos),
-    //   • guard anti-scroll (__tapMoved). Si no cae en un acorde, no hace NADA.
+    // FIX iOS + ZOOM: con zoom, fitPaper aplica transform:scale al contenido y el hit-test del
+    // toque en iOS se DESVÍA (más a la orilla, más error) → los
     const __bookEl = document.getElementById("book");
     document.addEventListener("touchend", (e) => {
         if (__tapMoved) return;
         const stage = document.querySelector(".paper.onstage .page-content-wrap");
         if (!stage) return;
-        // Activa si HAY transform que desvíe el hit-test de iOS: puede estar en el
-        // wrap (fitPaper por ancho) O en el .book (móvil single-page se escala con
-        // transform-origin top center → el click normal falla arriba). Sin ninguno
-        // (escritorio sin zoom) el click normal ya sirve y no interferimos.
+        // Activa si HAY transform que desvíe el hit-test de iOS:
         const wrapT = getComputedStyle(stage).transform !== "none";
         const bookT = __bookEl && getComputedStyle(__bookEl).transform !== "none";
         if (!wrapT && !bookT) return;
         const tp = e.changedTouches && e.changedTouches[0];
         if (!tp) return;
         const x = tp.clientX, y = tp.clientY;
-        // GUARD: no secuestrar el toque si cae sobre un control (overlay abierto o
-        // boton del pie). El ruteo por coordenadas ignoraba lo que hubiera ENCIMA del
-        // contenido, asi que un tap en "Aa"/listones/T/guia disparaba el acorde detras.
-        // Usamos los rects REALES de pantalla (getBoundingClientRect), validos tanto
-        // para overlays fijos como para los botones del pie (dentro del contenido con
-        // transform, pero el rect ya es post-transform = igual que el de los acordes).
+        // GUARD: no secuestrar el toque si cae sobre un control (overlay abierto o boton del pie).
         const fcOpen = document.getElementById("fontControls");
         const paperEl = stage.closest(".paper");
         const guardEls = [
@@ -3860,9 +3571,8 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     enhance(document.body);///Faltaba.body///
     document.querySelectorAll(".paper").forEach(applyTranspose);
 
-    // Precalienta la caché en memoria de los diagramas durante el tiempo muerto, para
-    // que el PRIMER toque de cualquier acorde abra el popup al instante (sin fetch/parse).
-    // Usa la misma URL codificada (#->%23) que showChordPop, así comparten entrada de caché.
+    // Precalienta la caché en memoria de los diagramas durante el tiempo muerto, para que el
+    // PRIMER toque de cualquier acorde abra el popup al instante
     function preloadDiagrams() {
         CHORD_LIBRARY.forEach((url) => {
             loadSvg(encodeURI(url).replace(/#/g, "%23")).catch(() => {});
@@ -3922,12 +3632,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
 
 // === Plumeria (escenas: main paper, orientation overlay, desktop gate) ===
 (function setupPlumeriaScenes(){
-    // ── Estado compartido: clima aleatorio persistido en sessionStorage ──
-    // Mismas 12 paletas de atardecer REALISTA del intro (welcomeIntro): cénit
-    // FRÍO arriba (azul/violeta/índigo) que se calienta hacia el horizonte
-    // (coral→oro abajo). Antes aquí había paletas pastel más cálidas que
-    // terminaban en crema; el usuario las cambió por éstas por sus tonos fríos.
-    // 5 paradas [cénit, alto, medio, bajo, horizonte] → 0/34/60/82/100%.
+    // ── Estado compartido:
     const SUNSETS = [
         "linear-gradient(180deg, #5b6aa8 0%, #c98aad 34%, #ff9d7a 60%, #ffb057 82%, #ffcf7a 100%)", // coral-oro
         "linear-gradient(180deg, #6d6fae 0%, #d68f9e 34%, #ff9b6a 60%, #ff9f52 82%, #ffc266 100%)", // rosa-ámbar
@@ -3948,11 +3653,8 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         "linear-gradient(180deg, #8ea6d8 0%, #d9a7cf 34%, #ffc3c0 60%, #ffd9b0 82%, #fff0cf 100%)", // 🌸 pastel rosado
         "linear-gradient(180deg, #3f6d7a 0%, #5f9a8c 34%, #9fbf7e 60%, #e8c56b 82%, #ffd98a 100%)"  // 🟢 verde-teal
     ];
-    // Sorteo NUEVO en cada carga (antes se persistía en sessionStorage, pero
-    // Safari iOS restaura la sesión al reabrir el navegador y el atardecer se
-    // quedaba clavado en el mismo para siempre). Dentro de una misma carga las
-    // 3 escenas (libro, overlay orientación, gate escritorio) comparten estas
-    // variables de módulo, así que siguen viéndose idénticas entre sí.
+    // Sorteo NUEVO en cada carga (antes se persistía en sessionStorage, pero Safari iOS restaura
+    // la sesión al reabrir el navegador y el atardecer se
     const isRainyDay = Math.random() < 0.10;
     const sunsetBg = SUNSETS[Math.floor(Math.random() * SUNSETS.length)];
     // Expuesto para el easter egg: usa el MISMO atardecer de esta carga como fondo
@@ -4002,10 +3704,8 @@ function setupPlumeria(cfg){
     function miniFlower(x,y,s,color){let p="";for(let i=0;i<5;i++){const a=i*72*Math.PI/180;p+=`<circle cx="${(Math.cos(a)*2.3*s).toFixed(1)}" cy="${(Math.sin(a)*2.3*s).toFixed(1)}" r="${(1.8*s).toFixed(1)}" fill="${color}"/>`;}return`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})">${p}<circle r="${(1.2*s).toFixed(1)}" fill="#ffe27a"/></g>`;}
     function bush(cx,baseY,w,h,flowering){let s=`<g class="bushg" transform="translate(${cx.toFixed(1)} ${baseY.toFixed(1)})"><g class="bush" style="animation-delay:${r(0,.9).toFixed(2)}s,${r(0,3).toFixed(2)}s;animation-duration:.8s,${r(3.5,5.5).toFixed(1)}s">`;s+=`<ellipse cx="0" cy="0" rx="${(w*0.95).toFixed(1)}" ry="${(h*0.5).toFixed(1)}" fill="url(#gBush)"/>`;const lobes=ri(3,5);for(let i=0;i<lobes;i++){const ex=r(-w*0.45,w*0.45),ew=r(w*0.42,w*0.66),eh=r(h*0.6,h);s+=`<ellipse cx="${ex.toFixed(1)}" cy="${(-eh*0.5).toFixed(1)}" rx="${ew.toFixed(1)}" ry="${eh.toFixed(1)}" fill="url(#gBush)"/>`;}s+=`<ellipse cx="${(-w*0.15).toFixed(1)}" cy="${(-h*0.55).toFixed(1)}" rx="${(w*0.5).toFixed(1)}" ry="${(h*0.4).toFixed(1)}" fill="url(#gBushHi)" opacity=".55"/>`;if(flowering){const bcols=["#ff6fae","#ffd23f","#ffffff","#ff5a4d","#ff9e3c","#b277e0","#5ab0ff"];const nf=ri(7,13);for(let k=0;k<nf;k++)s+=miniFlower(r(-w*0.78,w*0.78),-r(h*0.1,h*1.05),r(0.8,1.35),pick(bcols));}s+="</g></g>";return s;}
     function buildGround(baseX,baseY){const top=1196;let d=`M -1100 1305 L -1100 ${top}`;const segs=12;for(let i=0;i<=segs;i++){const x=Math.round(-30+(1060/segs)*i),y=Math.round(top+Math.sin(i*1.7)*6-r(0,7));d+=` L ${x} ${y}`;}d+=` L 2100 ${top} L 2100 1305 Z`;groundBack.push(`<path d="${d}" fill="url(#gGrass)"/>`);
-    // Los laterales fuera del viewBox (x<-12 y x>1015) SOLO se ven en los
-    // overlays anchos (orientación en landscape / gate escritorio). En la hoja
-    // del libro (portrait, "meet" ajusta por ancho) eran césped y arbustos
-    // INVISIBLES pero animando cada frame — no se generan.
+    // Los laterales fuera del viewBox (x<-12 y x>1015) SOLO se ven en los overlays anchos
+    // (orientación en landscape / gate escritorio).
     if(overlay)for(let x=-1050;x<-12;x+=r(30,48))groundBack.push(grassBlade(x,top+r(-4,9),r(20,46),r(-11,11),Math.random()<0.5?"gBlade":"gBlade2"));
     for(let x=-12;x<1015;x+=r(14,24))groundBack.push(grassBlade(x,top+r(-4,9),r(20,46),r(-11,11),Math.random()<0.5?"gBlade":"gBlade2"));
     if(overlay)for(let x=1015;x<2050;x+=r(30,48))groundBack.push(grassBlade(x,top+r(-4,9),r(20,46),r(-11,11),Math.random()<0.5?"gBlade":"gBlade2"));
@@ -4021,17 +3721,8 @@ function setupPlumeria(cfg){
     if(nestCands.length){const nt=pick(nestCands),nx=nt.x.toFixed(1),ny=nt.y.toFixed(1);
     nestMarkup=`<g class="plumeria-nest" transform="translate(${nx} ${ny}) scale(1.45)"><path d="M-22 2 Q-24 -5 -16 -9 Q-8 -13 0 -14 Q8 -13 16 -9 Q24 -5 22 2 Q14 6 0 7 Q-14 6 -22 2Z" fill="#8B6914" stroke="#5a3e0a" stroke-width=".8"/><path d="M-24 0 Q-16 -13 -6 -10" fill="none" stroke="#6b4d1a" stroke-width="1.8" stroke-linecap="round"/><path d="M-12 -11 Q2 -17 16 -10" fill="none" stroke="#7a5c2a" stroke-width="1.4" stroke-linecap="round"/><path d="M8 -12 Q22 -15 26 -1" fill="none" stroke="#6b4d1a" stroke-width="1.6" stroke-linecap="round"/><path d="M-18 -2 Q-10 -7 4 -11" fill="none" stroke="#8a6c2a" stroke-width="1" stroke-linecap="round"/><ellipse cx="0" cy="-1" rx="13" ry="7" fill="#5a3e0a" opacity=".35"/><g class="nest-birds"><g transform="translate(-8 -16)"><ellipse cx="0" cy="0" rx="7" ry="5" fill="#5a4030"/><circle cx="5.5" cy="-3.5" r="3.6" fill="#5a4030"/><path d="M8.5 -3.5 L12 -2.5" fill="none" stroke="#e89520" stroke-width="1.4" stroke-linecap="round"/><circle cx="6.5" cy="-4.5" r="1" fill="#222"/><path d="M-2 -1 Q0 -4.5 4.5 -2" fill="none" stroke="#4a3020" stroke-width=".7"/></g><g transform="translate(8 -15) scale(-1,1)"><ellipse cx="0" cy="0" rx="6.5" ry="4.5" fill="#6a5040"/><circle cx="5" cy="-3" r="3.2" fill="#6a5040"/><path d="M7.5 -3 L11 -2" fill="none" stroke="#e89520" stroke-width="1.3" stroke-linecap="round"/><circle cx="6" cy="-4" r=".9" fill="#222"/><path d="M-1.5 -.5 Q.5 -4 4 -1.5" fill="none" stroke="#5a4030" stroke-width=".6"/></g></g></g>`;var _bm=nestMarkup.match(/<g class="nest-birds">([\s\S]*)<\/g><\/g>$/);nestBirdsOverlay=_bm?('<svg class="nest-birds-live" viewBox="0 0 1000 1300" preserveAspectRatio="xMidYMax meet"><g transform="translate('+nx+' '+ny+') scale(1.45)">'+_bm[1]+'</g></svg>'):"";}
     const defs=`<defs><linearGradient id="bark" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#37261a"/><stop offset=".5" stop-color="#6b4d31"/><stop offset="1" stop-color="#2c1d12"/></linearGradient><linearGradient id="gLeafB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#0b3414"/><stop offset="1" stop-color="#1b6224"/></linearGradient><linearGradient id="gLeafM" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#114d1c"/><stop offset="1" stop-color="#2a8a36"/></linearGradient><linearGradient id="gLeafF" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#176c23"/><stop offset="1" stop-color="#3cab48"/></linearGradient><linearGradient id="gW" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffcf3f"/><stop offset=".2" stop-color="#fff0b0"/><stop offset=".55" stop-color="#fffdf3"/><stop offset="1" stop-color="#ffffff"/></linearGradient><linearGradient id="gY" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff9e00"/><stop offset=".28" stop-color="#ffd633"/><stop offset=".62" stop-color="#ffe97a"/><stop offset="1" stop-color="#fff3a8"/></linearGradient><linearGradient id="gP" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd23f"/><stop offset=".3" stop-color="#ffc6c2"/><stop offset=".62" stop-color="#f58fb0"/><stop offset="1" stop-color="#e85f93"/></linearGradient><linearGradient id="gM" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffc63f"/><stop offset=".3" stop-color="#e87aa0"/><stop offset=".62" stop-color="#c43c77"/><stop offset="1" stop-color="#97134f"/></linearGradient><linearGradient id="gR" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffbf33"/><stop offset=".3" stop-color="#f06a3a"/><stop offset=".62" stop-color="#d8392a"/><stop offset="1" stop-color="#ad1c1c"/></linearGradient><linearGradient id="gO" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd23f"/><stop offset=".3" stop-color="#ffb060"/><stop offset=".62" stop-color="#ff8a3c"/><stop offset="1" stop-color="#f4632a"/></linearGradient><linearGradient id="gS" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd84f"/><stop offset=".3" stop-color="#ffc39a"/><stop offset=".62" stop-color="#ff9e74"/><stop offset="1" stop-color="#f47e52"/></linearGradient><linearGradient id="gPe" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffe45a"/><stop offset=".3" stop-color="#ffd9a0"/><stop offset=".62" stop-color="#ffb784"/><stop offset="1" stop-color="#ff9d6e"/></linearGradient><linearGradient id="gL" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffe07a"/><stop offset=".3" stop-color="#f0d2e8"/><stop offset=".62" stop-color="#c79bd6"/><stop offset="1" stop-color="#9d6fc4"/></linearGradient><linearGradient id="gC" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd23f"/><stop offset=".3" stop-color="#ff9e72"/><stop offset=".62" stop-color="#fa6f5a"/><stop offset="1" stop-color="#e8463f"/></linearGradient><linearGradient id="gF" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd84f"/><stop offset=".3" stop-color="#ffb4d0"/><stop offset=".62" stop-color="#f570a8"/><stop offset="1" stop-color="#d62f7e"/></linearGradient><radialGradient id="center"><stop offset="0" stop-color="#fff0a0"/><stop offset="1" stop-color="#f6a821"/></radialGradient><linearGradient id="gGrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5aa83f"/><stop offset=".5" stop-color="#418a30"/><stop offset="1" stop-color="#2a6420"/></linearGradient><linearGradient id="gBlade" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#3c8c2b"/><stop offset="1" stop-color="#74c64e"/></linearGradient><linearGradient id="gBlade2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#327a26"/><stop offset="1" stop-color="#5db441"/></linearGradient><radialGradient id="gBush" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#5cab40"/><stop offset="1" stop-color="#2c6a22"/></radialGradient><radialGradient id="gBushHi" cx=".4" cy=".3" r=".7"><stop offset="0" stop-color="#9bd873"/><stop offset="1" stop-color="#9bd873" stop-opacity="0"/></radialGradient></defs>`;
-    // PERF: back/front leaves van cada uno en UN solo <g class="leaf-canopy">
-    // (antes cada hoja individual llevaba su propia <g class="leafg">, ~106 en la
-    // escena del libro). El filtro CSS de modo oscuro/lluvia se aplicaba POR HOJA
-    // (106 rasterizaciones separadas) dentro del grupo que #canopySway rota cada
-    // 7s sin parar → ese era el cuello de botella real del lag del árbol. Al
-    // agrupar, el filtro pasa a ser 1-2 operaciones en vez de ~106, mismo
-    // resultado visual (mismo filtro, mismos píxeles). Las flores van en su
-    // propio <g class="flower-canopy"> por la misma razón (se usa solo en
-    // lluvia, que también filtraba cada flor por separado). El orden se
-    // preserva (hojas atrás → flores → hojas al frente) para no alterar la
-    // profundidad visual.
+    // PERF: back/front leaves van cada uno en UN solo <g class="leaf-canopy"> (antes cada hoja
+    // individual llevaba su propia <g class="leafg">, ~106 en la
     svgMarkup=`<svg viewBox="0 0 1000 1300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Árbol de flor de mayo">${defs}<g class="groundg" id="groundBack">${groundBack.join("")}</g><g id="sway"><g id="branchLayer">${branchParts.join("")}</g><g id="canopySway"><g class="leaf-canopy">${backLeaves.join("")}</g><g class="flower-canopy">${flowerParts.join("")}</g><g class="leaf-canopy">${frontLeaves.join("")}</g></g>${nestMarkup}</g><g class="groundg" id="groundFront">${groundFront.join("")}</g></svg>`;
     // Prefijo único por escena para IDs de <defs> (evita colisiones entre múltiples árboles en el mismo documento)
     if (SID) {
@@ -4127,9 +3818,6 @@ function setupPlumeria(cfg){
     buildMoon();
     (function buildMountains(){
         // 2 cordilleras ESTÁTICAS detrás del árbol (capa z2, entre cielo y árbol).
-        // Silueta semitransparente = se TIÑE con el cielo del día (cualquier
-        // atardecer o la noche) sin lógica de color. Mismo viewBox que el árbol →
-        // la base cae en el horizonte del pasto (y≈1196). Sin animación = costo ~0.
         const w=sky.parentNode, m=document.createElement("div");
         m.className="plumeria-mountains";
         m.setAttribute("aria-hidden","true");
@@ -4212,7 +3900,6 @@ const cWhite=["#ffffff","#fff8e8","#faf4ff","#fffdf0"];
 for(let i=0;i<50;i++) fireflyColors.push(Math.random()<0.50?pick(cGreenYellow):Math.random()<0.636?pick(cOrangeRed):pick(cWhite));
 // PERF: menos luciérnagas en la escena del LIBRO que en los overlays anchos
 // (orientación/gate), mismo criterio que ya se aplica a hojas/césped/arbustos
-// en buildGround() — el libro es la escena que se ve la mayor parte del tiempo.
 const nF=isRainyDay ? (1+ri(0,1)) : (overlay ? (8+ri(0,3)) : (5+ri(0,2)));
 const fireflies=[];
 for(let i=0;i<nF;i++){
@@ -4242,9 +3929,7 @@ for(let i=0;i<nF;i++){
 }
 let lastFireflyTime=0,ffRunning=false;
 function tickFireflies(ts){
-    // Parar si la escena no se ve (overlay oculto, hoja lejana o volteada) o
-    // no es modo oscuro. ffRunning evita bucles rAF duplicados: antes el
-    // observer re-lanzaba un bucle NUEVO con cada cambio de clase del body.
+    // Parar si la escena no se ve (overlay oculto, hoja lejana o volteada) o no es modo oscuro.
     if(!document.body.classList.contains("dark-mode") || !sceneVisible() || sky.offsetParent===null
        || document.body.classList.contains("gestures-on")){   // gestos activos: liberar recursos
         lastFireflyTime=0; ffRunning=false; return;
@@ -4295,9 +3980,7 @@ function tickFireflies(ts){
         const newOp=f.op+(targetOp-f.op)*Math.min(1,dt*3.5);
         f.op=newOp;
         f.el.style.opacity=newOp.toFixed(3);
-        // PERF: transform (cqw/cqh) en vez de left/top. left/top fuerza LAYOUT del
-        // navegador en cada frame (8-11 luciérnagas × 60fps); transform es solo
-        // compositor/GPU, igual que ya usan las mariposas de esta misma escena.
+        // PERF: transform (cqw/cqh) en vez de left/top.
         f.el.style.transform="translate("+f.x.toFixed(2)+"cqw,"+f.y.toFixed(2)+"cqh)";
     }
     requestAnimationFrame(tickFireflies);
@@ -4317,17 +4000,11 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     let svgCache="",crittersBuilt=false,rasterCache="",rasterizing=false,nestBirdsOverlay="";
     function buildOnce(){if(svgCache)return;build();svgCache=svgMarkup;}
     function buildCrittersOnce(){if(crittersBuilt)return;crittersBuilt=true;buildCritters();}
-    // PRUEBA (técnica 1): rasterizar el árbol ESTÁTICO a PNG una vez. Rotar/animar
-    // una sola imagen (composite GPU) es mucho más barato que animar ~800 formas SVG
-    // vivas (que en oscuro obligaban a apagar el vaivén por re-rasterizado por frame).
+    // PRUEBA (técnica 1): rasterizar el árbol ESTÁTICO a PNG una vez.
     function rasterize(cb){
         if(rasterCache){cb(rasterCache);return;}
         if(!svgCache)buildOnce();
-        // El CSS externo (p.ej. `.nest-birds{display:none}` de día) NO llega al SVG
-        // rasterizado, así que las aves del nido quedarían horneadas SIEMPRE visibles
-        // (= 4 aves de día). Inyectamos display:none inline al nido para el bitmap.
-        // NOTA: con esto el nido queda vacío también de noche/lluvia (limitación del
-        // bitmap); si se quiere el nido nocturno habría que montarlo como overlay vivo.
+        // El CSS externo (p.ej.
         const svg=svgCache
             .replace("<svg ", '<svg width="1000" height="1300" ')
             .replace('<g class="nest-birds">', '<g class="nest-birds" style="display:none">');
@@ -4375,10 +4052,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     function unmountSvg(){mountToken++;stage.innerHTML="";}
     const idle=window.requestIdleCallback||(cb=>setTimeout(cb,1));
     if(overlay){
-        // Escenas de overlay (orientación / gate escritorio): NO construir nada
-        // al arranque — antes se montaban completas al idle y, como el overlay
-        // se oculta con visibility:hidden, sus cientos de animaciones corrían
-        // de fondo SIEMPRE. Se construyen la primera vez que aparece .show.
+        // Escenas de overlay (orientación / gate escritorio):
         let shown=overlay.classList.contains("show");
         const showScene=()=>{buildOnce();buildCrittersOnce();mountSvg();resumeFireflies();};
         const mo=new MutationObserver(()=>{
@@ -4390,15 +4064,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         mo.observe(overlay,{attributes:true,attributeFilter:["class"]});
         if(shown)showScene();
     } else {
-        // Hoja del libro: construir en idle, pero montar SOLO cuando la hoja esté
-        // cerca de la vista (.near), y DESMONTAR al alejarse. Mantener los ~800-1000
-        // nodos SVG permanentes en el DOM se probó y salió caro (memoria + trabajo
-        // de layout al voltear), así que el desmontaje se conserva.
-        // Lo que evita que el árbol "renazca desde 0" al volver NO es dejarlo
-        // montado, sino la clase .plumeria-grown (abajo): vive en .plumeria-page,
-        // que nunca se desmonta, así que al re-montar el SVG las animaciones de
-        // entrada (growTree/leafIn/bloom/sprout) ya están desactivadas por CSS y
-        // el árbol aparece completo al instante.
+        // Hoja del libro: construir en idle, pero montar SOLO cuando la hoja esté cerca de la vista
+        // (.near), y DESMONTAR al alejarse.
         const paperOn=()=>!paper||(paper.style.display!=="none"&&paper.classList.contains("near"));
         // Congela el árbol en su estado final ~6.5s tras verse por primera vez
         // (crecimiento ya terminado). Ver .plumeria-grown en CSS.
@@ -4473,7 +4140,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     });
 
     // ═══════════════════════════════════════════════════════════════════
-    // FASE 3 — Control Gestual con MediaPipe
+    // FASE 3 — Control Gestual con
     // ═══════════════════════════════════════════════════════════════════
     const gestureBtn = document.querySelector("#gestureBtn");
     const gestureModal = document.querySelector("#gestureModal");
@@ -4491,45 +4158,22 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     let animationFrameId = null;
     let processingFrame = false;
 
-    // ── Estado de gestos ──────────────────────────────────────────────
-    // Una FORMA DE MANO por acción (ver classifyPose):
-    //   🖐️ palma → página (←/→) · 👉 índice tumbado → scroll (↑/↓)
-    //   👍/👎 pulgar → zoom (+/−) · ☝️ índice vertical → 🤫 (oculto)
+    // ── Estado de gestos ────────────────────────────────────────────── Una FORMA DE MANO por
+    // acción (ver classifyPose):
     let handHistory = [];        // posiciones de la palma abierta (swipe de página)
     let pointHistory = [];       // posiciones del índice tumbado (swipe de scroll)
     let lastPageTime = 0, lastScrollTime = 0;
     let lastPageDir = 0;         // dirección del último cambio de página (bloqueo de reversa)
     let lastScrollDir = 0;       // dirección del último scroll (bloqueo de reversa)
-    // Sesión de PELLIZCO (zoom en modo dial, ver handlePinchZoom). Una vez abierta se
-    // mantiene aunque los dedos se separen —eso ES mover el dial— y sólo termina al
-    // abrir la mano o bajarla. `pinchRef` guarda la apertura del momento de anclar.
+    // Sesión de PELLIZCO (zoom en modo dial, ver handlePinchZoom).
     let pinchActive = false, pinchRef = 0;
     // Entrar al pellizco exige yemas CLARAMENTE juntas (evita falsos positivos con
     // el índice señalando, donde el pulgar recogido queda lejos de la punta).
     const PINCH_ENTER = 0.60;
 
-    // ── Umbrales de recorrido, medidos en MANOS ───────────────────────────────
-    // ★Antes iban en fracción del ENCUADRE (SWIPE_MIN 0.18 = "recorrer el 18% del
-    // ancho del vídeo") y ése era el motivo principal de que los gestos se
-    // sintieran imprecisos: el mismo número significaba un gesto distinto según la
-    // distancia a la cámara (cerca, la mano ocupa media pantalla y el 18% se
-    // cubría sin querer → páginas solas; en el atril a un metro había que barrer
-    // con todo el brazo → no disparaba). Encima dependía de la RESOLUCIÓN que
-    // entregara cada equipo, que es sólo un `ideal` en getUserMedia.
-    // Ahora la unidad es el TAMAÑO DE LA MANO (muñeca→nudillo del medio), que es
-    // justo lo que crece y mengua con la distancia, así que el gesto se siente
-    // igual cerca, lejos y en cualquier teléfono. Es el mismo criterio que el
-    // pellizco ya usaba (dist(4,8)/handSize) y por eso era el más consistente.
-    // Equivalencias con los valores viejos, a distancia media y encuadre 4:3.
-    // ★0.9, no 1.4 (14-sep-2026). Probado en escenario real: alguien tocando con la
-    // GUITARRA en la mano no lograba pasar página, mientras scroll y zoom le iban
-    // perfectos. El motivo es un efecto secundario del propio cambio a "anchos de
-    // mano": el umbral viejo iba en fracción del encuadre, así que pedía MENOS
-    // cuanto más cerca estaba la mano. Al pasar a manos se arregló el caso lejano
-    // y se endureció el cercano — justo el de quien toca con el teléfono cerca:
-    //   span 0.42 (muy cerca): antes 0.57 manos → con 1.4 se le pidió 2.5× más
-    //   span 0.30 (cerca):     antes 0.80 manos → con 1.4 se le pidió 1.7× más
-    // Y explica por qué scroll (0.55) y pellizco (sin recorrido) nunca fallaron.
+    // ★Umbrales en ANCHOS DE MANO, no en % del encuadre: así el gesto es el mismo de cerca
+    // que de lejos. 0.9 y no 1.4 porque con el móvil cerca (tocando guitarra) 1.4 no salía.
+    // vídeo") y ése era el motivo principal de que los gestos se
     const SWIPE_MIN_HANDS = 0.9;        // era 0.18 del ancho; luego 1.4 (demasiado)
     const SWIPE_CROSS_MAX_HANDS = 1.0;  // era 0.14 (trazo recto)
     const SCROLL_MIN_HANDS = 0.55;      // era 0.09 del alto
@@ -4541,14 +4185,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
     function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
 
-    // ── Espacio de medida corregido por FORMA DEL ENCUADRE ────────────────────
-    // MediaPipe entrega x e y de 0 a 1 sobre el frame, así que en un vídeo que no
-    // sea cuadrado un mismo movimiento físico da números distintos según el eje:
-    // comparar "cuánto avanzó en X" contra "cuánto se desvió en Y" (que es
-    // exactamente lo que hacen los swipes) estaba comparando peras con manzanas, y
-    // el sesgo cambiaba de un teléfono a otro según la resolución que entregara.
-    // Multiplicando x por el aspecto, ambos ejes quedan en la MISMA unidad
-    // (alturas de frame) y el trazo se mide igual en 4:3, 16:9 o lo que toque.
+    // ── Espacio de medida corregido por FORMA DEL ENCUADRE ──────────────────── MediaPipe entrega
+    // x e y de 0 a 1 sobre el frame, así que en un vídeo que
     function frameAspect() {
         const w = videoElement && videoElement.videoWidth;
         const h = videoElement && videoElement.videoHeight;
@@ -4557,11 +4195,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     // Punto del landmark en unidades de altura de frame.
     function pt(lm, i, aspect) { return { x: lm[i].x * aspect, y: lm[i].y }; }
 
-    // Tamaño de la mano = muñeca (0) → nudillo del dedo medio (9). Es la regla con
-    // la que se miden todos los recorridos. Se SUAVIZA porque salta unos puntos de
-    // una muestra a otra (modelo lite) y si la regla tiembla, los umbrales
-    // tiemblan con ella. Se acota para que una mano casi fuera de cuadro no
-    // produzca una regla absurda y dispare cualquier cosa.
+    // Tamaño de la mano = muñeca (0) → nudillo del dedo medio (9).
     const HAND_SPAN_MIN = 0.04, HAND_SPAN_MAX = 0.60;
     let handSpanSmooth = 0;
     function handSpan(lm, aspect) {
@@ -4578,32 +4212,19 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return { index: up(8, 6), middle: up(12, 10), ring: up(16, 14), pinky: up(20, 18) };
     }
 
-    // Clasificador de POSE. Cada acción tiene una FORMA DE MANO distinta, sin zonas
-    // grises: así el analizador no puede confundir un gesto con otro.
-    //   palm  → 4 dedos extendidos ............... SOLO cambiar de página (←/→)
-    //   point → solo índice, TUMBADO ............. SOLO scroll (↑/↓)
-    //   pinch → yemas pulgar+índice juntas ....... SOLO zoom (separar +, juntar −)
-    // ★NO usar 👍/👎 para el zoom. Se probó (era más robusto de detectar: la forma
-    // global de la mano no se confunde con ninguna otra pose) y se DESCARTÓ por una
-    // razón que no es técnica: esto se usa cantando en misa, de cara a la gente, y
-    // un pulgar abajo en medio de una celebración se malinterpreta. La pinza es
-    // discreta. Si alguien vuelve a proponer el pulgar, éste es el motivo del "no".
+    // ★NO usar 👍/👎 para el zoom: esto se usa en misa, de cara a la gente, y un pulgar
+    // abajo se malinterpreta. La pinza es discreta. (Se probó y se descartó por eso.)
     function classifyPose(lm, f) {
         // 1) PALMA (4 dedos extendidos) → cambiar de página.
         if (f.index && f.middle && f.ring && f.pinky) return "palm";
-        // 2) Anular o meñique fuera ⇒ no es pellizco ni índice señalando. Este filtro
-        //    es la principal defensa contra falsos pellizcos: una mano a medio abrir
-        //    (típica al rasguear o al mover el brazo) queda descartada aquí.
+        // 2) Anular o meñique fuera ⇒ no es pellizco ni índice señalando.
         if (f.ring || f.pinky) return "none";
         const handSize = dist(lm[0], lm[9]) || 0.0001;
         const pinchRatio = dist(lm[4], lm[8]) / handSize;   // apertura pulgar↔índice
         // 3) Sesión de pellizco viva manda: al separar los dedos (zoom +) la apertura
         //    crece y saldría de la pose, pero seguimos en el MISMO gesto hasta soltar.
         if (pinchActive) return "pinch";
-        // 4) PELLIZCO: yemas de pulgar e índice juntas. NO se exige que el índice esté
-        //    "extendido": al pellizcar se curva hacia el pulgar y fingersUp() lo da por
-        //    recogido (la punta se acerca a la muñeca) — condicionarlo a f.index hacía
-        //    el pellizco literalmente indetectable. Solo cuenta la cercanía de yemas.
+        // 4) PELLIZCO: yemas de pulgar e índice juntas.
         if (pinchRatio < PINCH_ENTER) return "pinch";
         // 5) ÍNDICE señalando (pulgar recogido ⇒ apertura grande) y TUMBADO → scroll.
         if (f.index && !f.middle) {
@@ -4623,9 +4244,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             container.id = "toastContainer";
             document.body.appendChild(container);
         }
-        // Feedback de REPETICIÓN RÁPIDA (zoom/scroll por gestos): con `key` se reusa
-        // UN solo toast — actualiza texto y reinicia su timer — para que NO se apilen
-        // sobre la letra del canto (antes 4+ toasts de 2.5s trepaban y tapaban).
+        // Feedback de REPETICIÓN RÁPIDA (zoom/scroll por gestos):
         let toast = opts.key ? container.querySelector('.toast-message[data-key="' + opts.key + '"]') : null;
         if (toast) {
             clearTimeout(toast.__hideT); clearTimeout(toast.__rmT);
@@ -4682,9 +4301,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return true;
     }
 
-    // PALMA ABIERTA: deslizar ←/→ para cambiar de página. Usa el MCP del dedo medio
-    // (landmark 9) como centro estable de la palma. El movimiento vertical se
-    // IGNORA aquí (el scroll tiene su propia pose: índice horizontal).
+    // PALMA ABIERTA: deslizar ←/→ para cambiar de página.
     function handleNavSwipe(lm, now) {
         const aspect = frameAspect();
         const span = handSpan(lm, aspect);          // la "regla" de esta muestra
@@ -4704,12 +4321,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             if (adx > SWIPE_MIN && ady < SWIPE_CROSS_MAX && adx > ady) {
                 if (now - lastPageTime < PAGE_COOLDOWN) return;
                 const dir = dx > 0 ? 1 : -1;
-                // Bloqueo de REVERSA: tras cambiar de página, la mano tiene que
-                // volver a su sitio y ese trayecto se leía como swipe contrario
-                // (avanzabas una y regresabas). Durante PAGE_REVERSE_LOCK solo se
-                // acepta la MISMA dirección (para encadenar varias páginas); la
-                // contraria se ignora y además se descarta el historial para que
-                // el trayecto de retorno no quede acumulado.
+                // Bloqueo de REVERSA: tras cambiar de página, la mano tiene que volver a su sitio y ese
+                // trayecto se leía como swipe contrario (avanzabas una y
                 if (dir !== lastPageDir && now - lastPageTime < PAGE_REVERSE_LOCK) {
                     handHistory = [];
                     return;
@@ -4737,16 +4350,11 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         for (const h of pointHistory) {
             const dx = x - h.x, dy = y - h.y;
             const adx = Math.abs(dx), ady = Math.abs(dy);
-            // SCROLL_MIN < SWIPE_MIN: el scroll se hace con la punta del índice y
-            // exigía un recorrido tan largo (18% del encuadre) que había que barrer
-            // casi toda la altura visible, y devolver la mano arriba era incómodo.
+            // SCROLL_MIN < SWIPE_MIN:
             if (ady > SCROLL_MIN && adx < SWIPE_CROSS_MAX && ady > adx) {
                 if (now - lastScrollTime < SCROLL_COOLDOWN) return;
                 const dir = dy < 0 ? 1 : -1;   // +1 = contenido hacia abajo
-                // Bloqueo de REVERSA (igual que en las páginas): tras desplazar, el
-                // trayecto de VOLVER la mano a su sitio se leía como scroll contrario
-                // y deshacía el avance. Durante la ventana solo se acepta la misma
-                // dirección; repetir el gesto encadena el desplazamiento.
+                // Bloqueo de REVERSA (igual que en las páginas):
                 if (dir !== lastScrollDir && now - lastScrollTime < SCROLL_REVERSE_LOCK) {
                     pointHistory = [];
                     return;
@@ -4764,34 +4372,9 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     // Fin de la sesión de pellizco (al abrir/bajar la mano): re-arma para el próximo.
     function resetPinch() { pinchActive = false; pinchRatioSmooth = 0; }
 
-    // PELLIZCO 🤏 → zoom, en modo DIAL: mientras dure el pellizco, la apertura de los
-    // dedos manda directo sobre el tamaño de la letra. Separas y crece, juntas y
-    // encoge, en vivo; sueltas cuando te gusta. Como el pinch de toda la vida.
-    //
-    // ★Antes esto iba por PASOS con la dirección LATCHEADA y el zoom − era
-    // literalmente inalcanzable, no difícil. Dos fallos que se sumaban:
-    //  1. RANGO. Para entrar al pellizco las yemas ya tienen que estar juntas
-    //     (PINCH_ENTER), y disparar un paso exigía cambiar la apertura en 0.35.
-    //     Entrando en una apertura normal (~0.30) quedaban 0.28 de recorrido hacia
-    //     abajo: menos de lo que se pedía. Hacia arriba quedaban 1.70, de sobra.
-    //     De ahí que el + saliera siempre y el − nunca.
-    //  2. LATCHEO. La dirección se fijaba con el primer movimiento y no cambiaba en
-    //     toda la sesión, así que ni "separo y luego junto" servía: el juntar sólo
-    //     arrastraba la referencia. Y la sesión sólo terminaba bajando la mano.
-    // El dial no tiene direcciones ni pasos, así que ninguno de los dos puede pasar.
-    //
-    // Anclaje RELATIVO: al entrar se recuerda la apertura y el tamaño de ese momento,
-    // y se mueve desde ahí. Si se anclara en absoluto, activar el pellizco daría un
-    // salto de tamaño de golpe.
-    // El dial va por ESCALONES, no continuo. Con valores libres (1.01, 1.13…) el
-    // temblor normal de la mano movía el tamaño sin parar y no se podía dejar la
-    // letra quieta en una medida. Ahora cae en los mismos pasos que el slider
-    // (0.05) y, sobre todo, hay que REBASAR un margen para saltar al siguiente:
-    // dentro de ese margen la mano puede temblar cuanto quiera, que no pasa nada.
-    // Valores elegidos por barrido (ver abajo), midiendo tres cosas a la vez:
-    // cuánto se mueve solo con la mano quieta temblando, cuánto tarda en arrancar y
-    // cuánto en responder al invertir el sentido. Con temblor de ±0.06 (fuerte, mano
-    // en el aire sin apoyo) pasa de ~8 cambios espurios por gesto a ~0.3.
+    // ★DIAL, no pasos: por pasos el zoom − era imposible (entrar exigía dedos juntos y no
+    // quedaba recorrido para juntar más, y la dirección se trababa). No volver a pasos.
+    // inalcanzable, no difícil.
     const ZOOM_SENSITIVITY = 1.0;   // tamaño ganado por unidad de apertura. ★Subir si
                                     // se siente lento; bajar si cuesta afinar.
     const ZOOM_STEP = 0.05;         // el mismo escalón que usa el slider "Aa"
@@ -4815,9 +4398,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
         if (!window.__cantoralZoomSet || !window.__cantoralZoomGet) return;
 
-        // Objetivo CONTINUO: se mantiene sin redondear para que el gesto no pierda
-        // precisión por el camino (si se re-anclara en cada escalón, el error se
-        // acumularía y el dial derivaría).
+        // Objetivo CONTINUO: se mantiene sin redondear para que el gesto no pierda precisión por el
+        // camino (si se re-anclara en cada escalón, el error se
         const target = pinchBaseScale + (ratio - pinchRef) * ZOOM_SENSITIVITY;
         const current = window.__cantoralZoomGet();
         const steps = (target - current) / ZOOM_STEP;
@@ -4825,28 +4407,14 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         if (Math.abs(steps) >= ZOOM_HYSTERESIS) {
             const applied = window.__cantoralZoomSet(current + Math.round(steps) * ZOOM_STEP);
             showZoomFeedback(applied);         // sólo al cambiar de escalón: ya no
-                                               // hace falta throttle, el aviso no
-                                               // parpadea porque no se repite
-            // Tope alcanzado: re-anclar junto a él. Sin esto se acumula "cuerda"
-            // contra el límite (pides 2.0 cuando el máximo es 1.40) y al invertir el
-            // gesto habría que deshacer todo ese sobrante antes de ver reacción.
+                                               // hace falta throttle, el aviso no parpadea porque no se repite Tope alcanzado:
             if (target > applied + ZOOM_STEP) { pinchBaseScale = applied + ZOOM_STEP; pinchRef = ratio; }
             else if (target < applied - ZOOM_STEP) { pinchBaseScale = applied - ZOOM_STEP; pinchRef = ratio; }
         }
     }
 
-    // ── Pose ESTABLE (histéresis) ─────────────────────────────────────────────
-    // ★Segunda causa de que los gestos fallaran "a veces". El despachador borraba
-    // el historial en cuanto la pose leída no coincidía, y basta con que el modelo
-    // pierda un dedo UNA muestra —o que la mano tape un dedo al girar— para que
-    // classifyPose devuelva "none" un instante. Como en la ventana de 900 ms sólo
-    // caben ~6 muestras, ese único tropiezo borraba medio recorrido y el swipe no
-    // llegaba nunca: el usuario hacía el gesto bien y no pasaba nada.
-    // Ahora la pose tiene que fallar POSE_MISS_TOLERANCE veces seguidas para darse
-    // por cambiada. Durante el bache no se procesa (los landmarks no son de fiar)
-    // pero TAMPOCO se borra lo acumulado, así que el gesto sobrevive al tropiezo.
-    // Efecto secundario bueno: cambiar de pose a propósito tarda ~2 muestras, lo
-    // que evita que el tránsito entre una pose y otra dispare la acción de en medio.
+    // ★Tolerar fallos sueltos del modelo: sin esto, perder la pose UNA muestra borraba el
+    // recorrido a medio gesto y el swipe no llegaba nunca.
     const POSE_MISS_TOLERANCE = 2;
     let stablePose = "none";
     let poseMisses = 0;
@@ -4888,16 +4456,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     }
 
-    // ── Filtro ONE EURO sobre los puntos de la mano ───────────────────────────
-    // Hasta ahora no se suavizaba NADA de lo que entrega el modelo, y el modelo
-    // ligero (modelComplexity 0) baila unos puntos entre muestra y muestra. Una
-    // media fija no vale: la que calma la mano quieta retrasa el gesto rápido, y
-    // la que sigue al gesto deja pasar el temblor. One Euro adapta el filtrado a
-    // la VELOCIDAD — filtra fuerte en reposo y se aparta al detectar movimiento.
-    // Medido a 7 muestras/s con ruido realista: 76-78% menos temblor conservando
-    // el 90% del recorrido en un gesto rápido.
-    // ★OE_BETA va en unidades de VELOCIDAD: con valores pequeños (0.02) el filtro
-    // se queda siempre cerrado y sólo añade retraso. 4.0 es lo calibrado.
+    // ★OE_BETA va en unidades de VELOCIDAD: con valores pequeños (0.02) el filtro se queda
+    // cerrado y sólo añade retraso. Medido con 0.4/4.0: -76% de temblor y 90% de respuesta.
     const OE_MIN_CUTOFF = 0.4;   // cuánto filtra en reposo (más bajo = más quieto)
     const OE_BETA = 4.0;         // cuánto se abre al moverse (más alto = más ágil)
 
@@ -4952,10 +4512,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             noHandCount = 0;
             processHandLandmarks(suavizarLandmarks(results.multiHandLandmarks[0]));
         } else if (++noHandCount >= POSE_MISS_TOLERANCE) {
-            // Mano REALMENTE fuera de cuadro (bajada): soltar todas las sesiones.
-            // Con tolerancia, igual que la pose: el modelo pierde la mano una
-            // muestra suelta a media trayectoria (sobre todo con poca luz) y sin
-            // esto el gesto se caía justo antes de completarse.
+            // Mano REALMENTE fuera de cuadro (bajada):
             handHistory = []; pointHistory = []; resetPinch();
             stablePose = "none"; poseMisses = 0;
             handSpanSmooth = 0;      // la próxima mano trae su propia regla
@@ -4963,16 +4520,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     }
 
-    // ── Sampling rate de la IA ────────────────────────────────────────────────
-    // El vídeo puede ir a 30-60 fps, pero NO hace falta pasar cada fotograma por el
-    // modelo: antes se inferían ~30-60 veces por segundo (solo limitado por que no
-    // se solaparan inferencias), y ahí se iba la mayor parte de la CPU/GPU (y el
-    // calor). Analizar ~7 veces por segundo basta de sobra para estos gestos y
-    // recorta drásticamente el consumo.
-    // Por qué 140 ms y no 200: página y scroll son SWIPES y necesitan varias
-    // muestras a lo largo del trayecto. Con la ventana de 900 ms (SWIPE_TIME_LIMIT)
-    // quedan ~6 muestras, suficiente para medir dirección sin que el gesto se
-    // sienta perezoso. A 200 ms bajaría a ~4 y los swipes rápidos se perderían.
+    // ── Sampling rate de la IA ──────────────────────────────────────────────── El vídeo puede ir
+    // a 30-60 fps, pero NO hace falta pasar cada fotograma por
     const DETECT_INTERVAL = 140;
     let lastDetectTs = 0;
 
@@ -4996,17 +4545,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     }
 
-    // Carga PEREZOSA de MediaPipe Hands: sólo se inyecta el script la primera vez
-    // que se activan los gestos (antes se cargaba en cada arranque, penalizando el
-    // inicio).
-    // ★LOCAL, no CDN (antes: cdn.jsdelivr.net/npm/@mediapipe/hands). Medido: el
-    // detector son 7 archivos y 12.16 MB (wasm 5.9 · packed_assets 4.2 · tflite 2.0
-    // · resto 0.3). Viviendo en el CDN dependía de que jsdelivr fuera alcanzable la
-    // primera vez, de un tag `latest` que puede moverse solo, y la copia en caché
-    // moría en cada actualización porque caía en CACHE_VERSION (el sw la purga).
-    // Ahora son del MISMO ORIGEN y el SW los guarda en una caché aparte que las
-    // actualizaciones NO borran (ver GESTURE_CACHE en sw.js). Versión congelada del
-    // paquete npm: @mediapipe/hands 0.4.1675469240.
+    // ★LOCAL, no CDN: son 12 MB que deben funcionar sin señal y sin depender de terceros.
     const MP_BASE = "assets/mediapipe/";
     let mediaPipePromise = null;
     function loadMediaPipe() {
@@ -5022,17 +4561,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return mediaPipePromise;
     }
 
-    // ── Pantalla despierta mientras se usan los gestos ────────────────────────
-    // Control SIN CONTACTO: si nadie toca el vidrio, el móvil apaga la pantalla a
-    // los ~30 s y el gesto deja de servir (justo el problema que venía a resolver).
-    // Screen Wake Lock lo evita. Notas de la API, verificadas:
-    //  • Sólo se concede con la página VISIBLE; en segundo plano lanza
-    //    NotAllowedError ("The requesting page is not visible").
-    //  • El sentinel se libera SOLO al ocultarse la página. Aquí no hace falta
-    //    re-pedirlo porque `visibilitychange` ya apaga los gestos al salir.
-    //  • Requiere contexto seguro (https), que los gestos ya exigen por la cámara.
-    //  • iOS: disponible desde Safari 16.4. Si no está, se avisa y los gestos
-    //    siguen funcionando igual (sólo hay que subir el bloqueo automático).
+    // ── Pantalla despierta mientras se usan los gestos ──────────────────────── Control SIN
+    // CONTACTO:
     let wakeLockSentinel = null;
     async function acquireWakeLock() {
         if (!("wakeLock" in navigator)) return "unsupported";
@@ -5078,9 +4608,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             return;
         }
 
-        // Cargar MediaPipe bajo demanda. Ya es del mismo origen: la PRIMERA vez se
-        // baja (12 MB) y necesita conexión; después el SW lo sirve de su caché
-        // propia y funciona sin señal, también tras actualizar el cantoral.
+        // Cargar MediaPipe bajo demanda.
         try {
             await loadMediaPipe();
         } catch (e) {
@@ -5117,9 +4645,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         if (!handsInstance) {
             try {
                 handsInstance = new Hands({
-                    // Mismo origen: el wasm, el .data y el modelo .tflite salen de
-                    // assets/mediapipe/ (ver MP_BASE). Los pide MediaPipe por su
-                    // cuenta —medido: 6 archivos— así que basta con redirigir aquí.
+                    // Mismo origen: el wasm, el .data y el modelo .tflite salen de assets/mediapipe/ (ver
+                    // MP_BASE).
                     locateFile: (file) => MP_BASE + file
                 });
                 handsInstance.setOptions({
@@ -5166,8 +4693,6 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             gestureActive = true;
             gestureBtn.classList.add("active");
             // Sacrificar TODO lo ambiental para dedicar recursos a la detección:
-            // la clase pausa las animaciones @keyframes (CSS) y aquí detenemos los
-            // bucles JS (starfield; las luciérnagas se paran solas por su condición).
             document.body.classList.add("gestures-on");
             if (window.__starfield) window.__starfield.update(false);
             // Pantalla despierta: sin esto el móvil se apaga a los ~30 s sin toques
@@ -5218,14 +4743,10 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
 
         gestureBtn.classList.remove("active");
-        // Reanudar lo ambiental: quitar la clase reactiva las animaciones CSS y,
-        // por el ffObserver, reinicia las luciérnagas si toca; el starfield se
-        // restaura según el tema actual.
+        // Reanudar lo ambiental:
         document.body.classList.remove("gestures-on");
         if (window.__starfield) window.__starfield.update(document.body.classList.contains("dark-mode"));
-        // Estado del reconocedor a cero: si no, al reencender la cámara se arrastra
-        // la pose y la "regla" (tamaño de mano) de la sesión anterior, que pudo ser
-        // a otra distancia.
+        // Estado del reconocedor a cero:
         handHistory = []; pointHistory = []; resetPinch();
         stablePose = "none"; poseMisses = 0; noHandCount = 0; handSpanSmooth = 0;
         oeReiniciar();
@@ -5265,13 +4786,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     // Cancelar (paso 1)
     if (gestureCancelBtn) gestureCancelBtn.addEventListener("click", closeGestureModal);
 
-    // Segundo plano (cambiar de app / bloquear el teléfono / minimizar): APAGAR la
-    // cámara. La clase 'gestures-on' pausa las animaciones pero NO apaga la cámara,
-    // que seguiría encendida (luz verde) gastando batería y sin privacidad. Aquí
-    // llamamos turnOffGestures() (silencioso) que para los tracks + libera recursos
-    // limpio. NO auto-reanudamos: track.stop() es IRREVERSIBLE (re-encender exige un
-    // getUserMedia nuevo), así que el usuario re-toca ✋ al volver. Avisamos al
-    // REGRESAR (un toast durante el ocultado no se vería).
+    // Segundo plano (cambiar de app / bloquear el teléfono / minimizar):
     let gesturesAutoOff = false;
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
@@ -5285,8 +4800,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 })();
 
 // ═══════════════════════════════════════════════════════════════════
-// BLOQUEO DE ORIENTACIÓN HORIZONTAL + GATE DE ESCRITORIO
-// Módulo independiente: no modifica ninguna variable del IIFE principal.
+// BLOQUEO DE ORIENTACIÓN HORIZONTAL + GATE DE ESCRITORIO Módulo independiente:
 // ═══════════════════════════════════════════════════════════════════
 (function setupScreenGates() {
     function isMobileDevice() {
@@ -5342,10 +4856,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 })();
 
 // ═══════════════════════════════════════════════════════════════════
-// Escala de fuente para el contenido de los cantos (A- / A+)
-// La escala afecta solo a .song-page vía var(--font-scale). El overflow
-// de .page-content-wrap está en hidden para que el texto no se salga del
-// papel al aumentar el tamaño.
+// Escala de fuente para el contenido de los cantos (A- / A+) La escala afecta solo a .song-
+// page vía var(--font-scale).
 // ═══════════════════════════════════════════════════════════════════
 (function initFontScale() {
     const STORAGE_KEY = "cantoral-font-scale";
@@ -5411,11 +4923,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return true;
     };
 
-    // Escala ABSOLUTA, para el zoom por pellizco en modo "dial": la apertura de los
-    // dedos manda directo sobre el tamaño, sin pasos ni cooldowns (ver
-    // handlePinchZoom). Devuelve la escala REALMENTE aplicada, que puede diferir de
-    // la pedida por el tope; quien llama usa esa diferencia para re-anclar su gesto
-    // y que al invertir el movimiento responda de inmediato (sin "cuerda acumulada").
+    // Escala ABSOLUTA, para el zoom por pellizco en modo "dial":
     window.__cantoralZoomSet = function (value) {
         const want = +value;
         if (!isFinite(want)) return scale;
@@ -5438,11 +4946,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return Math.min(MAX, Math.max(MIN, Math.round(raw / STEP) * STEP));
     }
 
-    // ── Apertura / colapso del slider ──
-    // Permanece ABIERTO hasta que el usuario toque FUERA (o el botón "Aa" de
-    // nuevo). Antes se auto-colapsaba a los 2.5s de inactividad (IDLE_MS); ese
-    // comportamiento se quitó a pedido del usuario, mismo criterio que la caja
-    // de búsqueda.
+    // ── Apertura / colapso del slider ── Permanece ABIERTO hasta que el usuario toque FUERA (o el
+    // botón "Aa" de nuevo).
     let dragging = false;
 
     function isOpen()    { return widget.classList.contains("open"); }
@@ -5568,9 +5073,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
     // Evita que el touch dentro del widget escale a swipe/scroll de página.
     widget.addEventListener("touchstart", (e) => e.stopPropagation(), { passive: false });
-    // El widget CORTA la propagación del touchmove; por eso el arrastre del slider
-    // debe resolverse AQUÍ. Si dependiera solo del handler en document, ese
-    // stopPropagation lo mataría y el zoom "avanzaría una escala y se detendría".
+    // El widget CORTA la propagación del touchmove; por eso el arrastre del slider debe resolverse
+    // AQUÍ.
     widget.addEventListener("touchmove", (e) => {
         e.stopPropagation();
         if (dragging && e.touches.length) {
@@ -5580,11 +5084,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     }, { passive: false });
 
-    // Estando abierto: tocar FUERA lo colapsa (tocar dentro no hace nada especial,
-    // ya no hay temporizador que reiniciar). Se anula el gesto (preventDefault)
-    // para que ese mismo toque no dispare el clic sintético de una flecha de
-    // navegación. Se registra DESPUÉS de setupSwipe, cuya guardia ya descarta el
-    // swipe cuando .font-slider-open está presente.
+    // Estando abierto: tocar FUERA lo colapsa (tocar dentro no hace nada especial, ya no hay
+    // temporizador que reiniciar).
     document.addEventListener("touchstart", (e) => {
         if (!isOpen()) return;
         if (insideWidget(e.target)) return;
@@ -5605,9 +5106,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 })();
 
 // ═══════════════════════════════════════════════════════════════════
-// Control radial de estilo: brazos negrita / cursiva / subrayado
-// alrededor del botón "Aa" (el zoom es el brazo superior). Cada botón
-// alterna una clase persistente en <body> y se refleja en localStorage.
+// Control radial de estilo:
 // ═══════════════════════════════════════════════════════════════════
 (function initTextStyles() {
     const TOGGLES = [
@@ -5639,9 +5138,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 })();
 
 // ═══════════════════════════════════════════════════════════════════
-// Toggle del subrayado de TÍTULOS: al tocar el NÚMERO del canto (.song-num,
-// en cualquier página) se alterna el subrayado de todos los títulos del libro.
-// Estado persistente en localStorage; por defecto los títulos van subrayados.
+// Toggle del subrayado de TÍTULOS:
 // ═══════════════════════════════════════════════════════════════════
 (function initTitleUnderlineToggle() {
     const KEY = "cantoral-title-underline";
@@ -5658,10 +5155,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 })();
 
 // ═══════════════════════════════════════════════════════════════════
-// Scroll manual con touch para .page-content-wrap
-// El transform-style: preserve-3d de .paper rompe el touch scroll nativo
-// en varios móviles (iOS Safari y algunos Android). Implementamos scroll
-// manual capturando touch events y ajustando scrollTop directamente.
+// Scroll manual con touch para .page-content-wrap El transform-style:
 // ═══════════════════════════════════════════════════════════════════
 (function initManualScroll() {
     let target = null;      // contenedor que SÍ desborda (o null si el canto cabe)
@@ -5688,9 +5182,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
     document.addEventListener("touchmove", (e) => {
         if (!inBook || e.touches.length !== 1) return;
-        // Páginas SIN contenedor de texto (plumeria/portada): NO interceptamos —
-        // así los toques (con leve desliz) conservan su click. Clave para el easter
-        // egg (luna/tronco) y para no cancelar taps en blancos pequeños.
+        // Páginas SIN contenedor de texto (plumeria/portada):
         if (!hasWrap) return;
         const dx = e.touches[0].clientX - startX;
         const dy = e.touches[0].clientY - startY;
@@ -5700,9 +5192,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
         if (axis === "h") return;            // horizontal → lo maneja el swipe de página
         if (Math.abs(dy) < 8) return;        // tap con micro-desliz: no cancelar el click
-        // Vertical real en página de texto: CANCELAR el pan nativo del documento (en
-        // iOS el overflow:hidden del body no basta y arrastraba el libro entero, aun
-        // cuando el canto no desborda). Si hay scroll, lo movemos.
+        // Vertical real en página de texto:
         e.preventDefault();
         if (target) target.scrollTop = startScroll - dy;
     }, { passive: false });
@@ -5713,12 +5203,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 })();
 
 // ═══════════════════════════════════════════════════════════════════
-// Scroll con la RUEDA del mouse. El contenedor del canto (.page-content-wrap)
-// vive dentro de un contexto transform-style: preserve-3d, que en varios
-// equipos/versiones de Chrome rompe el scroll nativo por rueda: el teclado
-// (flechas, tras dar clic) y el táctil manual sí mueven el texto, pero la
-// rueda no hace nada. Se maneja la rueda a mano sobre el canto/índice/dicc.
-// visible, igual que initManualScroll hace con el táctil.
+// Scroll con la RUEDA del mouse.
 // ═══════════════════════════════════════════════════════════════════
 (function initWheelScroll() {
     document.addEventListener("wheel", (e) => {
@@ -5740,11 +5225,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 })();
 
 // ═══════════════════════════════════════════════════════════════════
-// Desactivar zoom por gestos (pinch, doble-tap, Ctrl+rueda)
-// El meta viewport (maximum-scale=1, user-scalable=no) bloquea el zoom
-// en Chrome/Firefox, pero iOS Safari lo ignora — hay que interceptar
-// los eventos "clicgesture*" y multi-touch para bloquearlo ahí también.
-// Se mantiene intacto el swipe de un solo dedo para pasar página.
+// Desactivar zoom por gestos (pinch, doble-tap, Ctrl+rueda) El meta viewport (maximum-scale=1,
+// user-scalable=no) bloquea el zoom en Chrome/Firefox,
 // ═══════════════════════════════════════════════════════════════════
 (function disablePinchZoom() {
     // iOS Safari: eventos no estándar de gesto (pinch)
@@ -5779,9 +5261,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
 (function initFontPicker() {
     const STORAGE_KEY = "cantoral-font";
-    // Con los acordes ANCLADOS a la sílaba, el picker puede ofrecer fuentes
-    // PROPORCIONALES sin desalinear. Se mezclan monoespaciadas y proporcionales
-    // (serif, sans, manuscrita). Georgia/Sans son de sistema (sin red).
+    // Con los acordes ANCLADOS a la sílaba, el picker puede ofrecer fuentes PROPORCIONALES sin
+    // desalinear.
     const FONTS = [
         { label: "Orig.", name: "Courier New", family: '"Courier New", Courier, monospace' },
         { label: "Patrick", name: "Patrick Hand", family: '"Patrick Hand", "Segoe Script", cursive' },
@@ -5822,12 +5303,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     const btn = document.getElementById("fontPickerBtn");
     if (!picker || !btn) return;
 
-    // ── Carga DIFERIDA de Google Fonts ──────────────────────────────────
-    // La fuente por defecto (Courier New) y "Serif"/"Sans" son de SISTEMA, así que
-    // al arrancar no se pide nada a Google (arranque más rápido). La hoja con todas
-    // las familias se inyecta sólo al abrir el selector, o al arrancar si había una
-    // fuente Google guardada. display=swap => el texto se ve con la de sistema y
-    // "salta" a la elegida al terminar de bajar.
+    // ── Carga DIFERIDA de Google Fonts ────────────────────────────────── La fuente por defecto
+    // (Courier New) y "Serif"/"Sans" son de SISTEMA, así que al
     const SYSTEM_FONTS = new Set(["Courier New", "Georgia", "System Sans"]);
     const GF_URL = "https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Architects+Daughter&family=Bitter:ital,wght@0,400;0,700;1,400&family=Caveat:wght@400;700&family=Courier+Prime:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400;700&family=Domine:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Indie+Flower&family=Josefin+Sans:ital,wght@0,400;0,700;1,400&family=Kalam:wght@400;700&family=Lato:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,700;1,400&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Nunito:ital,wght@0,400;0,700;1,400&family=PT+Mono&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Patrick+Hand&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@400;700&family=Roboto+Mono:wght@400;700&family=Rubik:ital,wght@0,400;0,700;1,400&family=Shadows+Into+Light&family=Space+Mono:wght@400;700&family=Ubuntu+Mono:wght@400;700&family=Work+Sans:ital,wght@0,400;0,700;1,400&family=Zilla+Slab:ital,wght@0,400;0,700;1,400&display=swap";
     let gfInjected = false;
@@ -5871,11 +5348,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         });
     }
 
-    // ── Apertura / colapso del selector ──
-    // Permanece ABIERTO hasta que el usuario toque FUERA (o el botón "F" de
-    // nuevo). Antes se auto-colapsaba a los 2.5s de inactividad; se quitó a
-    // pedido del usuario, mismo criterio que la caja de búsqueda y el slider
-    // de tamaño de letra.
+    // ── Apertura / colapso del selector ── Permanece ABIERTO hasta que el usuario toque FUERA (o
+    // el botón "F" de nuevo).
     function isOpen()    { return !picker.classList.contains("hidden"); }
 
     // Centra el picker justo debajo del botón "F" (antes quedaba bajo el botón
@@ -5968,9 +5442,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             .replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim();
     }
 
-    // Renderiza el texto por PÁRRAFOS: la línea en blanco separa párrafos; los
-    // saltos "suaves" dentro de un párrafo se colapsan a espacio para que el
-    // texto fluya y justifique limpio (no cortado a media frase).
+    // Renderiza el texto por PÁRRAFOS:
     function renderEgg(txt) {
         const blocks = txt.split(/\n{2,}/)
             .map((b) => b.replace(/\s*\n\s*/g, " ").trim())
@@ -6129,9 +5601,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return off(epi, add);
     }
 
-    // Tiempo litúrgico + color del día para (Y,M,D). El color distingue los
-    // rojos de días sueltos (Ramos, Viernes Santo, Pentecostés); el tiempo es el
-    // de la temporada (para la silueta).
+    // Tiempo litúrgico + color del día para (Y,M,D).
     function computeSeason(Y, M, D) {
         const today = Y * 10000 + M * 100 + D;
         const advN = adventStart(Y);
@@ -6184,10 +5654,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return c;
     }
 
-    // Favicon DINÁMICO: la pasta del icono de pestaña acompaña al tiempo litúrgico
-    // (degradado luz→sombra = --cover-1→--cover-3, estilo A; la «M» de Mayo queda en
-    // su clay de marca con sombrita). Se reconstruye como data-URI y se cambia el
-    // <link rel="icon">. (Sin las sombritas mariposa/plumeria: a 16px no se ven.)
+    // Favicon DINÁMICO: la pasta del icono de pestaña acompaña al tiempo litúrgico (degradado
+    // luz→sombra = --cover-1→--cover-3, estilo A; la «M» de Mayo
     function updateFavicon(c) {
         const M = 'd="M25 74 L25 34 L50 59 L75 34 L75 74"';
         const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
@@ -6261,22 +5729,14 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
 
 // ═══════════════════════════════════════════════════════════════════════════
-// CONTRAPORTADA — ESPIRAL DIAGONAL DE MARIPOSAS DE PAPEL
-// Pegar al FINAL de script.js (fuera de cualquier función; es un IIFE, corre solo).
-// Necesita el bloque de mariposas-contraportada.css.
-//
-// Monta la escena en el DORSO de la ÚLTIMA hoja del libro (la contraportada:
-// document.querySelectorAll(".paper") → la última → su ".back").
+// CONTRAPORTADA — ESPIRAL DIAGONAL DE MARIPOSAS DE PAPEL Pegar al FINAL de script.js (fuera de
+// cualquier función; es un IIFE, corre solo).
 // ═══════════════════════════════════════════════════════════════════════════
 (function setupBackCoverButterflies() {
-    // Adaptado al cantoral: la contraportada vive en la cara FRONTAL de #pCoverBack
-    // (.contraportada), no en el .back. Inyectamos la espiral ahi, DETRAS del
-    // contenido (cp-sky z-index:1 < .bc-content z-index:2). Solo en la contraportada.
+    // Adaptado al cantoral:
     var back = document.querySelector("#pCoverBack .front.contraportada");
     if (!back) {
-        // El libro puede no estar armado todavía cuando corre este módulo (orden de
-        // ejecución). Reintenta en el próximo frame hasta que exista la contraportada
-        // (tope ~120 frames para no colgar si algún build no la tuviera).
+        // El libro puede no estar armado todavía cuando corre este módulo (orden de ejecución).
         if ((setupBackCoverButterflies._tries = (setupBackCoverButterflies._tries || 0) + 1) < 120)
             requestAnimationFrame(setupBackCoverButterflies);
         return;
@@ -6303,9 +5763,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     var r = function (a, b) { return a + Math.random() * (b - a); };
     var pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
 
-    // ── Un ALA (lado derecho). El izquierdo es el mismo trazo espejeado con
-    //    scale(-1,1): ala anterior puntiaguda + ala posterior redondeada, filo
-    //    oscuro, sombreado hacia la base, nervaduras y motas del margen. ──
+    // ── Un ALA (lado derecho).
     var WING =
         '<path d="M100 82 C 128 60 166 42 188 34 C 194 32 197 36 196 44 C 194 62 180 84 156 100 C 140 110 112 108 100 96 Z" fill="var(--w1)" stroke="var(--w2)" stroke-width="5.5" stroke-linejoin="round"/>' +
         '<path d="M100 100 C 126 98 152 110 163 126 C 172 140 166 160 146 168 C 128 175 107 166 100 142 Z" fill="var(--w1)" stroke="var(--w2)" stroke-width="5.5" stroke-linejoin="round"/>' +
@@ -6335,9 +5793,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             '<circle cx="67" cy="36" r="3.3" fill="#2b1c11"/><circle cx="133" cy="36" r="3.3" fill="#2b1c11"/>' +
         '</svg>';
 
-    // Para que se LEA la espiral y no un enjambre: todas recorren la MISMA hélice
-    // (mismo periodo de giro y misma duración de ascenso) y sólo se reparten el
-    // desfase; el jitter de radio/tamaño/aleteo las vuelve orgánicas.
+    // Para que se LEA la espiral y no un enjambre:
     var ORB = (LIFE / TURNS).toFixed(2);
     var html = "";
 
@@ -6377,12 +5833,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     sky.innerHTML = html;
     back.appendChild(sky);
 
-    // ── LUCIÉRNAGAS (SOLO modo oscuro): en la contraportada nocturna reemplazan a
-    //    las mariposas de papel (su blanco de hoja desentona de noche). Técnica
-    //    BARATA a propósito: ~14 puntitos, cada uno con glow por box-shadow y
-    //    animación 100% CSS (deriva translate + parpadeo opacity) — SIN rAF, todo
-    //    en el compositor. Mostrar/ocultar/pausar lo maneja el CSS (body.dark-mode
-    //    + los mismos gates de .cp-sky). Coherente con las luciérnagas del árbol. ──
+    // ── LUCIÉRNAGAS (SOLO modo oscuro):
     var FF_N = 18;
     var FF_COLS = ["#a6c93f", "#bcd24a", "#e0a62e", "#efb43e", "#93c23a"];
     var ffHtml = "";
@@ -6414,11 +5865,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     };
 })();
 
-// ═══ TOUR / TUTORIAL — luciérnaga guía, 1-vez, repetible desde 🪲 del menú ═════
-// NO es el típico tour de flechas: una luciérnaga vuela y se posa (spotlight) sobre
-// cada control REAL con un cartelito manuscrito muy breve. Se dispara UNA vez tras
-// llegar al primer canto (window.__tourMaybeStart desde updatePaperVisibility) y se
-// repite desde la perla 🪲. En lite/reduced-motion la luciérnaga no vuela (estática).
+// ═══ TOUR / TUTORIAL — luciérnaga guía, 1-vez, repetible desde 🪲 del menú ═════ NO es el
+// típico tour de flechas:
 (function initTour() {
     var DONE_KEY = "cantoral-tour-done";
     var idx = 0, root = null, hole = null, ff = null, card = null, stops = [];
@@ -6488,10 +5936,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         hole.style.width = "0px"; hole.style.height = "0px";
         moveFirefly(cx, cy - 44);
     }
-    // El cartel va SIEMPRE fijo y centrado (no persigue al control): así no choca con
-    // la luciérnaga ni con la luz del spotlight, y da sensación estable. La luciérnaga
-    // es la que se mueve y acompaña/ilumina cada control. Se coloca un pelín ABAJO del
-    // centro para despejar la zona alta (top-bar, perlas superiores).
+    // El cartel va SIEMPRE fijo y centrado (no persigue al control):
     function positionCard() {
         var cw = card.offsetWidth, ch = card.offsetHeight;
         var vw = window.innerWidth, vh = window.innerHeight;
@@ -6521,9 +5966,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             var h = r.height + pad * 2;
             hole.style.left = x + "px"; hole.style.top = y + "px";
             hole.style.width = w + "px"; hole.style.height = h + "px";
-            // La luciérnaga se POSA junto al control iluminado, del lado que da hacia
-            // el CENTRO (nunca al borde, donde se cortaba), como si lo iluminara con el
-            // abdomen. El cartel va fijo al centro, así que no chocan.
+            // La luciérnaga se POSA junto al control iluminado, del lado que da hacia el CENTRO (nunca al
+            // borde, donde se cortaba), como si lo iluminara con el
             var cxc = x + w / 2;
             var ffx = (cxc > window.innerWidth / 2) ? (x - 10) : (x + w + 10);
             moveFirefly(ffx, y + h / 2);

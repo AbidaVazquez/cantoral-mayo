@@ -212,16 +212,8 @@ body.dark-mode .theme-emoji.dark {
     opacity: 1;
 }
 
-/* ── Cielo nocturno (solo modo oscuro) ──
-   Canvas fijo detras del libro. Transparente: deja ver el fondo --app-bg y
-   solo pinta estrellas encima. pointer-events:none para no estorbar la
-   lectura ni los gestos. En modo claro el JS lo limpia y lo deja en opacity:0. */
-/* ══ Cielo nocturno (modo oscuro) — CSS/compositor, SOLO en las bandas visibles ══
-   Antes era un <canvas> con requestAnimationFrame que repintaba TODA la pantalla
-   ~25fps en el hilo principal, incluido el ~⅔ tapado por la página del libro.
-   Ahora son estrellas por box-shadow que hacen scroll sin costura (transform →
-   GPU) dentro de dos bandas (arriba/abajo del libro), colocadas por JS según el
-   rectángulo real del libro. Cero hilo principal y no se anima lo que no se ve. */
+/* ── Cielo nocturno (solo modo oscuro) ── Canvas fijo detras del libro. */
+/* ══ Cielo nocturno (modo oscuro) — CSS/compositor, SOLO en las bandas visibles ══ Antes era un <canvas> con requestAnimationFrame que */
 #starfield {
     position: fixed;
     inset: 0;
@@ -278,20 +270,14 @@ body.dark-mode .theme-emoji.dark {
     .sf-layer { animation: none; }
 }
 
-/* ── Acordes interactivos ──
-   Solo los acordes que ya tienen diagrama SVG reciben el indicio (sutil).
-   El borde inferior NO altera el ancho del texto, asi que la alineacion
-   monoespaciada de .chord-row se mantiene intacta. */
+/* ── Acordes interactivos ── Solo los acordes que ya tienen diagrama SVG reciben el indicio (sutil). */
 .chord-ix.has-diagram {
     cursor: pointer;
     position: relative;   /* ancla del área de toque ampliada (::after) */
     /* Sin subrayado: el acorde sigue siendo clicable (la clase .chord-ix.has-diagram
        la detecta el JS del popup); solo se quita el indicador visual punteado. */
 }
-/* Área de TOQUE ampliada: se agranda hacia ARRIBA (y un poco abajo), donde hay
-   espacio libre sobre la letra, para acertar más fácil sin ser tan preciso. NO
-   crece a los lados (left/right:0) para no invadir el acorde vecino ni los pegados
-   como "D7G". El pseudo es invisible; el toque sobre él cuenta como toque del acorde. */
+/* Área de TOQUE ampliada: */
 .chord-ix.has-diagram::after {
     content: "";
     position: absolute;
@@ -446,9 +432,7 @@ body.dark-mode .theme-emoji.dark {
     transition: transform 1.8s cubic-bezier(0.15, 0.6, 0.25, 1);
 }
 
-/* Solo la hoja que esta girando se promueve a capa GPU. Antes las 72 hojas
-   tenian will-change permanente, lo que saturaba la memoria grafica del movil
-   y crasheaba el navegador al voltear pagina, abrir busqueda o hacer zoom. */
+/* Solo la hoja que esta girando se promueve a capa GPU. */
 .paper.turning {
     will-change: transform;
 }
@@ -474,10 +458,7 @@ body.dark-mode .theme-emoji.dark {
     overflow: hidden;
 }
 
-/* Fundido de tema SOLO en las hojas cercanas a la vista (.near = actual ±1).
-   Antes las ~700 caras del libro transicionaban 4 propiedades a la vez al
-   cambiar claro/oscuro y el toggle se sentía trabado en móviles; las caras
-   lejanas no se ven, así que cambian al instante sin costo. */
+/* Fundido de tema SOLO en las hojas cercanas a la vista (.near = actual ±1). */
 .paper.near > .front,
 .paper.near > .back {
     transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
@@ -612,11 +593,7 @@ body.dark-mode .theme-emoji.dark {
     height: 100%;
     width: 100%;
     background: var(--page-bg);
-    /* Fuerza capa GPU dedicada: en iOS Safari, sin esto, cuando la divisora
-       está oculta detrás de otra página, WebKit despinta sus pseudo-elementos
-       pesados (::before starfield, ::after estrella fugaz) y .page-sky. Al
-       retroceder a ella, tarda 1-2 frames en repintar, mostrando brevemente
-       la página que estaba encima. */
+    /* Fuerza capa GPU dedicada: */
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     -webkit-backface-visibility: hidden;
@@ -675,19 +652,13 @@ body.dark-mode .decor-section-title {
     transform: rotateY(-180deg);
 }
 
-/* La cara que mira "de espaldas" (invisible por backface-visibility) no debe
-   capturar punteros, para que el clic llegue siempre a la cara visible (evita
-   que un acorde/enlace quede sin responder). */
+/* La cara que mira "de espaldas" (invisible por backface-visibility) no debe capturar punteros, para que el clic llegue siempre a la cara */
 .paper:not(.flipped) > .back,
 .paper.flipped > .front {
     pointer-events: none;
 }
 
-/* Solo la página EN ESCENA captura toques. La hoja anterior queda .flipped y su
-   cara trasera (en blanco, blank-page) es visible y se SOLAPA sobre la mitad
-   superior de la página actual: si captura punteros, se come los acordes de arriba
-   (no abren el popup) y la navegación "siguiente" (solo respondía "anterior",
-   porque tocabas la hoja previa). Neutralizamos toda hoja que no sea la onstage. */
+/* Solo la página EN ESCENA captura toques. */
 .paper:not(.onstage),
 .paper:not(.onstage) * {
     pointer-events: none;
@@ -875,13 +846,7 @@ body.dark-mode .decor-section-title {
     line-height: 1.05;
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   ACORDES ANCLADOS a la sílaba (todos los cantos).
-   La alineación acorde↔sílaba es ESTRUCTURAL: el acorde es hijo del trozo de
-   letra que le toca, así que se mantiene sobre la sílaba exacta con CUALQUIER
-   fuente, tamaño, negrita o cursiva, y sigue a su sílaba aunque la línea haga
-   wrap. La letra usa --song-font (picker); el acorde usa --chord-font.
-   ══════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════ ACORDES ANCLADOS a la sílaba (todos los cantos). */
 .cline {
     position: relative;
     white-space: pre-wrap;              /* conserva espacios del segmento y permite wrap */
@@ -968,26 +933,17 @@ body.dark-mode .decor-section-title {
     text-align: left;
     text-decoration: underline;
     text-transform: uppercase;
-    /* El título es el primer elemento del .page-content-wrap (que recorta con
-       overflow-y:auto en y=0). En MAYÚSCULAS, la tilde de Í/Ó/… y el ~ de Ñ
-       sobresalen por encima del cuadro de línea y se recortaban contra el borde
-       superior. Un padding-top + line-height holgado reserva ese alto para que
-       los diacríticos nunca queden cortados (funciona con cualquier fuente del picker). */
+    /* El título es el primer elemento del .page-content-wrap (que recorta con overflow-y:auto en y=0). */
     padding-top: 0.3em;
     line-height: 1.2;
 }
 
-/* Páginas de continuación (2ª hoja de un canto de dos páginas): no llevan
-   título, así que la primera línea queda pegada al encabezado y el acorde
-   anclado (bottom:100%, sobresale por encima de la letra) se recortaba con el
-   overflow del .page-content-wrap. Reservamos el alto del acorde con padding. */
+/* Páginas de continuación (2ª hoja de un canto de dos páginas): */
 .song-page.is-continuation {
     padding-top: 0.8em;
 }
 
-/* El NÚMERO del canto dentro del título es un botón: al tocarlo se alterna la
-   clase body.titles-no-underline, que quita el subrayado de TODOS los títulos
-   del libro (preferencia visual persistente). Por defecto van subrayados. */
+/* El NÚMERO del canto dentro del título es un botón: */
 .song-num {
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
@@ -998,9 +954,7 @@ body.dark-mode .decor-section-title {
 body.titles-no-underline .song-title {
     text-decoration: none;
 }
-/* Excepciones PERMANENTES al toggle: las páginas de créditos (pág. física 312
-   "CRÉDITOS." = cred1) y de autores no identificados (pág. 315 = cred4) van
-   siempre SIN subrayado, tenga el toggle el estado que tenga. */
+/* Excepciones PERMANENTES al toggle: */
 .song-title[data-song="cred1"],
 .song-title[data-song="cred4"] {
     text-decoration: none !important;
@@ -1067,11 +1021,7 @@ body.titles-no-underline .song-title {
     font-size: calc(10.5px * var(--font-scale));
 }
 
-/* ── Variantes de acorde en un mismo canto (ej. 114: Am / Em) ──
-   El titulo contiene botones .variant-btn (uno por tonalidad). El boton activo
-   queda en rojo (color de los acordes); el inactivo, gris tenue. Las filas
-   .variant-only solo se muestran cuando coinciden con la variante activa del
-   .song-page (atributo data-active-variant). */
+/* ── Variantes de acorde en un mismo canto (ej. */
 .variant-btn {
     position: relative;   /* ancla del área de toque ampliada (::after) */
     cursor: pointer;
@@ -1081,13 +1031,7 @@ body.titles-no-underline .song-title {
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
-/* Área de TOQUE ampliada (invisible) para acertar la letra sin ser tan preciso.
-   Crece sobre todo HORIZONTAL: la primera letra hacia el "(" y la última hacia el
-   ")", que NO son clicables. Vertical MUY contenido: arriba lo recorta el
-   overflow del .page-content-wrap (y=0) y abajo están los acordes (que expanden
-   su toque -0.75em hacia arriba); por eso solo -0.3em/-0.2em, dentro del margen,
-   sin invadirlos. Entre letra y letra la expansión es mínima para no solaparse
-   sobre el "/". El pseudo es transparente: no cambia nada visual. */
+/* Área de TOQUE ampliada (invisible) para acertar la letra sin ser tan preciso. */
 .variant-btn::after {
     content: "";
     position: absolute;
@@ -1098,10 +1042,7 @@ body.titles-no-underline .song-title {
 }
 .variant-btn:first-of-type::after { left: -0.55em; }   /* hacia el "(" */
 .variant-btn:last-of-type::after  { right: -0.55em; }  /* hacia el ")" */
-/* (Antes: los cantos con doble versión llevaban una línea vacía bajo el título para
-   separar el selector "(D/C)" del primer acorde. Con la TRANSPOSICIÓN ese selector se
-   quitó, así que el espacio ya no aplica: el título va pegado a la letra igual que en
-   TODOS los cantos — mismo margin-bottom normal.) */
+/* (Antes: los cantos con doble versión llevaban una línea vacía bajo el título para separar el selector "(D/C)" del primer acorde. */
 
 .variant-btn.active {
     color: var(--chord);
@@ -1177,9 +1118,7 @@ body.dark-mode .variant-btn:focus {
     overflow-wrap: anywhere;
 }
 
-/* .airy = una LÍNEA EXTRA de aire entre estrofas del bloque "extra"
-   (269 Perdona a tu pueblo: las estrofas de 3 líneas se veían muy juntas).
-   Va en em para que crezca junto con el zoom de fuente del usuario. */
+/* .airy = una LÍNEA EXTRA de aire entre estrofas del bloque "extra" (269 Perdona a tu pueblo: */
 .song-page.airy .extra-lyrics p {
     margin-bottom: calc(7px + 1.05em);
 }
@@ -1310,15 +1249,8 @@ body.dark-mode .footer-line-2 {
     height: 14px;
 }
 
-/* ── Zoom de fuente: botón en el pie del papel + panel deslizante global ──
-   El botón "Aa" (.zoom-toggle) se renderiza DENTRO del .footer de cada canto,
-   igual que el número de página, para que voltee con la hoja y no parezca que
-   flota. El panel (.zoom-widget) es un overlay global que solo aparece al abrir
-   y se despliega justo encima del botón; se colapsa a los 2.5s sin uso o al
-   tocar fuera. z-index muy alto porque los .paper animando llegan muy arriba. */
-/* Sistema "ABANICO": el ANCLA (0×0) coincide con la posición FIJA de la "Aa"
-   en el pie (ya NO se eleva). Al abrir, los controles se despliegan en arco
-   por ENCIMA de la "Aa": arriba=zoom, izquierda=cursiva, derecha=negrita. */
+/* ── Zoom de fuente: */
+/* Sistema "ABANICO": */
 .zoom-widget {
     position: absolute;
     bottom: 26px;
@@ -1375,9 +1307,7 @@ body.font-slider-open .zoom-toggle {
 .zoom-toggle-a.small { font-size: 0.68rem; }
 .zoom-toggle-a.big   { font-size: 1rem; }
 
-/* ══ Control PÍLDORA (overlay) ══
-   Dos píldoras del MISMO ancho (200px), apiladas y centradas sobre la aA del pie:
-   arriba el zoom, abajo la fila C · aA · N. Ambas surgen/colapsan desde el centro. */
+/* ══ Control PÍLDORA (overlay) ══ Dos píldoras del MISMO ancho (200px), apiladas y centradas sobre la aA del pie: */
 .zoom-slider-panel {
     position: absolute;
     left: 0;
@@ -1463,10 +1393,7 @@ body.dark-mode .pill-btn.is-active {
     background: #d79a8c;
 }
 
-/* ÚNICA "aA" (overlay): botón FIJO y origen de las píldoras. Siempre visible en
-   páginas de canto, centrado sobre el ancla. Cerrado = transparente (solo el
-   glifo A+A, sin cambiar tamaño/peso); al abrir aparece el círculo gris que lo
-   RODEA. No sube, no baja, no se pone negrita: es el mismo icono de siempre. */
+/* ÚNICA "aA" (overlay): */
 .pill-center {
     position: absolute;
     left: 0;
@@ -1502,24 +1429,10 @@ body.dark-mode .pill-btn.is-active {
     background: rgba(130, 130, 130, 0.16);
 }
 
-/* ── Aplicación de estilos al texto del canto ──
-   Se aplican al contenedor del canto; los acordes (.cchord) se mantienen limpios
-   y verticales para no deformar el diagrama ni la posición anclada. */
-/* Negrita/cursiva del lector: se aplican al CONTENEDOR de cantos
-   `.page-content-wrap`, que envuelve TODAS las variantes de layout (song-page,
-   song-two, lyrics, short-grid, continuation). Antes sólo cubría .song-page/
-   .song-two → los cantos con layout `lyrics` (p. ej. canto 3) y las mitades sin
-   acordes NO tomaban el estilo. El índice usa .index-content y el diccionario
-   .dict-content, así que NO se ven afectados.
-   font-synthesis explícito: si la fuente elegida NO trae cara real de negrita o
-   cursiva (p. ej. "Courier New" del sistema en iOS), el navegador las SINTETIZA.
-   Negrita a 700 (bold real): las Google fonts sólo cargan 400/700 (600 ya mapeaba
-   a 700, sin cambio visual); en Courier New del sistema el 600 podía caer al
-   regular en iOS → con 700 toma su bold de verdad. */
+/* ── Aplicación de estilos al texto del canto ── Se aplican al contenedor del canto; los acordes (.cchord) se mantienen limpios y verticales */
+/* Negrita/cursiva del lector: */
 .page-content-wrap { font-synthesis: weight style; }
-/* A los DESCENDIENTES también: algunos layouts (p. ej. `lyrics`) fijan
-   font-weight:400 en sus líneas, lo que bloquearía el 700 heredado del
-   contenedor. Los acordes (.cchord) tienen peso propio 700 → no se alteran. */
+/* A los DESCENDIENTES también: */
 body.song-bold   .page-content-wrap,
 body.song-bold   .page-content-wrap * { font-weight: 700; }
 body.song-italic .page-content-wrap,
@@ -1532,10 +1445,7 @@ body.song-bold   .dedication-content, body.song-bold   .dedication-content * { f
 body.song-italic .index-content, body.song-italic .index-content *,
 body.song-italic .dedication-content, body.song-italic .dedication-content * { font-style: italic; }
 
-/* ── Páginas de CRÉDITOS: hoja Arial "limpia" ──
-   Mantiene la fuente Arial (NO responde al selector de fuente --song-font), pero
-   AHORA sí escala con el zoom (--font-scale) y admite negrita/cursiva, para que los
-   adultos mayores puedan leerla. Ya lleva "Aa" en su pie (footerHtml sin noZoom). */
+/* ── Páginas de CRÉDITOS: */
 .song-page.creditos {
     font-family: Arial, Helvetica, sans-serif !important;
     font-size: calc(13px * var(--font-scale, 1)) !important;
@@ -1672,10 +1582,7 @@ body.dark-mode .font-picker-toggle {
     border: none;
     box-shadow: 0 4px 16px var(--book-shadow, rgba(0, 0, 0, 0.2));
     transition: opacity 0.2s ease, visibility 0.2s ease;
-    /* Con muchas fuentes la lista puede ser larga: scroll propio sin arrastrar la
-       página (overscroll contain) y tope de altura para no salir de pantalla.
-       Barra 100% INVISIBLE (es para móvil = touch), pero el scroll sigue activo
-       con touch y con la RUEDA del ratón para pruebas en PC. */
+    /* Con muchas fuentes la lista puede ser larga: */
     max-height: 70vh;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -1761,11 +1668,7 @@ body.dark-mode .font-picker-option.active {
 .short-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    /* minmax(min-content, 1fr): a zoom normal las filas se reparten parejas
-       (1fr) y llenan la página como antes; al AMPLIAR con el zoom, cada fila
-       crece a su contenido (min-content), la rejilla desborda y la página
-       (.page-content-wrap, overflow-y:auto) hace scroll. Así el zoom SÍ funciona
-       en el formato short-grid (antes tenía font-size fijo y no respondía). */
+    /* minmax(min-content, 1fr): */
     grid-template-rows: repeat(4, minmax(min-content, 1fr));
     flex: 1;
     min-height: 0;
@@ -1791,9 +1694,7 @@ body.dark-mode .font-picker-option.active {
 .short-grid .pos-4 { grid-column: 2; grid-row: 2; }
 .short-grid .pos-5 { grid-column: 1; grid-row: 3; }
 .short-grid .pos-8 { grid-column: 2; grid-row: 4; }
-/* Canto LARGO dentro del short-grid: ocupa el ANCHO COMPLETO de su fila (el
-   otro lado del zigzag está vacío) para que sus líneas originales no se partan
-   en la celda estrecha. Conserva su fila del zigzag. */
+/* Canto LARGO dentro del short-grid: */
 .short-grid .short-song.wide { grid-column: 1 / -1; }
 
 .short-grid .short-song .song-title {
@@ -1823,9 +1724,7 @@ body.dark-mode .font-picker-option.active {
 
 
 /* ── Override de padding para pages Aleluya short-grid ── */
-/* m73 (pág 58): margen lateral NORMAL (var --page-pad-x) para que no se pegue al
-   borde; top reducido (10px) para dar más alto a la rejilla; bottom 52 como el
-   resto. Antes tenía 1px lateral (se veía pegado a la izquierda). */
+/* m73 (pág 58): margen lateral NORMAL (var --page-pad-x) para que no se pegue al borde; top reducido (10px) para dar más alto a la rejilla; */
 #m73 > .front,
 #m73 > .back {
     padding: 10px var(--page-pad-x) 52px;
@@ -1865,9 +1764,7 @@ body.dark-mode .font-picker-option.active {
 #pDict2 > .front {
     padding-bottom: 24px;
 }
-/* El índice tampoco tiene pie "Aa": el padding-bottom de 52px de .front sobra.
-   Se recupera (como en el diccionario) para caber más entradas SIN apretar la
-   letra (line-height 1.4 intacto) → suele ahorrar la hoja extra del final. */
+/* El índice tampoco tiene pie "Aa": */
 .front:has(> .index-page) {
     padding-bottom: 24px;
 }
@@ -1876,9 +1773,7 @@ body.dark-mode .font-picker-option.active {
     flex: 1;
     display: flex;
     flex-direction: column;
-    /* overflow-y:auto (antes hidden): al agrandar la letra con el zoom, la hoja de
-       índice hace SCROLL en vez de recortar. La paginación no cambia (se mide con
-       zoom 1 en buildIndex). padding-bottom deja libre el botón "Aa". */
+    /* overflow-y:auto (antes hidden): */
     overflow-y: auto;
     overflow-x: hidden;
     padding-bottom: 30px;
@@ -2007,9 +1902,7 @@ body.dark-mode .font-picker-option.active {
     -webkit-filter: opacity(0.8);
 }
 
-/* ── Botones de índice y diccionario ──
-   Cada uno con su propia burbuja, con el MISMO acabado que la píldora del
-   tema (borde suave + fondo transparente), pero CIRCULAR, no píldora. */
+/* ── Botones de índice y diccionario ── Cada uno con su propia burbuja, con el MISMO acabado que la píldora del tema (borde suave + fondo */
 .index-btn {
     width: 34px;
     height: 34px;
@@ -2216,9 +2109,7 @@ body.searching .top-controls {
     opacity: 0.7;
 }
 
-/* ════════════════════════════════════════════════════════════════
-   RESPONSIVE — Móvil y tablet
-   ════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════ RESPONSIVE — Móvil y tablet */
 
 /* ── Móvil VERTICAL: una sola página ── */
 /* Modo una sola pagina (movil): aplica en CUALQUIER orientacion, para que
@@ -2362,9 +2253,7 @@ body.single-page .container {
     }
 }
 
-/* ════════════════════════════════════════════════════════════════
-   PÁGINA DE ANIMACIÓN — Plumeria Rubra (Flor de Mayo).
-   ════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════ PÁGINA DE ANIMACIÓN — Plumeria Rubra (Flor de Mayo). */
 .plumeria-page {
     padding: 0;
     overflow: hidden;
@@ -2382,9 +2271,7 @@ body:not(.dark-mode) .plumeria-page {
     border-radius: inherit;
     /* Aisla el repaint/relayout: cuando el arbol se anima, no obliga al resto
        del libro a recalcularse. Clave para que el flip de pagina sea fluido. */
-    /* Samsung/Android: `paint` contenia el arbol bitmap animado en una capa que el
-       compositor teselaba y no repintaba al volver del flip (medio negro / cachitos).
-       Sin `paint` deja de recortar/teselar; overflow:hidden ya recorta lo visible. */
+    /* Samsung/Android: */
     contain: layout style;
 }
 .plumeria-stage,
@@ -2437,9 +2324,7 @@ body.dark-mode .plumeria-moon {
     }
 }
 
-/* Montañas de fondo: 2 cordilleras ESTÁTICAS detrás del árbol (z2, entre el
-   cielo z1 y el árbol z3) → asoman en el horizonte, detrás del tronco. Silueta
-   semitransparente = se tiñe con el cielo/temporada/noche sola. */
+/* Montañas de fondo: */
 .plumeria-mountains {
     position: absolute;
     inset: 0;
@@ -2503,9 +2388,7 @@ body.dark-mode .plumeria-flying-bird,
 .nest-birds { display: none; }
 body.dark-mode .nest-birds,
 .plumeria-rainy .nest-birds { display: block; }
-/* Aves del nido como OVERLAY VIVO sobre el bitmap del árbol (el bitmap no puede
-   togglear el CSS, por eso las horneadas quedaban invisibles). Va dentro de
-   .tree-bmp-sway → oscila con el árbol y queda anclado al nido. Solo de noche/lluvia. */
+/* Aves del nido como OVERLAY VIVO sobre el bitmap del árbol (el bitmap no puede togglear el CSS, por eso las horneadas quedaban invisibles). */
 .nest-birds-live {
     position: absolute;
     inset: 0;
@@ -2514,9 +2397,7 @@ body.dark-mode .nest-birds,
     pointer-events: none;
     z-index: 2;
 }
-/* OJO especificidad: `.plumeria-stage svg { display:block }` pisaría a
-   `.nest-birds-live { display:none }`. Por eso el control de display lleva el
-   ancestro `.plumeria-stage` (gana). Solo de noche/lluvia. */
+/* OJO especificidad: */
 .plumeria-stage .nest-birds-live { display: none; }
 body.dark-mode .plumeria-stage .nest-birds-live,
 .plumeria-rainy .plumeria-stage .nest-birds-live { display: block; }
@@ -2571,14 +2452,7 @@ body:not(.dark-mode) .plumeria-page.plumeria-rainy .cloud-part {
     box-shadow: inset 0 -3px 6px rgba(0,0,0,0.05);
 }
 
-/* Paisaje desaturado y opaco por la luz del día lluvioso.
-   PERF: igual que en modo oscuro, el filtro iba por .leafg (~106) y .flowerg
-   (~25-30) individuales = ~136 rasterizaciones separadas. Ahora usa los mismos
-   grupos .leaf-canopy/.flower-canopy → 3 operaciones en total, mismo resultado
-   visual. .bushg se QUITA de la lista: ya vive dentro de .groundg, que también
-   está en esta regla — llevarlo aparte lo filtraba DOS veces (oscurecía los
-   arbustos de más en días de lluvia); con .groundg alone recibe el filtro una
-   sola vez, como el resto del suelo. */
+/* Paisaje desaturado y opaco por la luz del día lluvioso. */
 body:not(.dark-mode) .plumeria-page.plumeria-rainy #branchLayer,
 body:not(.dark-mode) .plumeria-page.plumeria-rainy .leaf-canopy,
 body:not(.dark-mode) .plumeria-page.plumeria-rainy .groundg,
@@ -2597,34 +2471,20 @@ body:not(.dark-mode) .plumeria-page.plumeria-rainy .flower-canopy {
     55%{opacity:1;}
     100%{transform:scaleY(1) scaleX(1);opacity:1;}
 }
-/* ---- Vaivén del viento ----
-   OJO: NO poner will-change:transform aquí. Se probó y fue CONTRAPRODUCENTE:
-   #sway/#canopySway contienen ~800 formas SVG, así que reservan dos capas GPU
-   enormes de forma permanente; el móvil se queda sin memoria de textura y
-   voltear página tardaba 3-5s en responder. Es la misma lección ya aprendida
-   con las hojas del libro (ver .paper.turning, ~línea 448): capa GPU SOLO
-   mientras dura la animación puntual, nunca permanente. */
+/* ---- Vaivén del viento ---- OJO: */
 .plumeria-page #sway{transform-box:view-box;transform-origin:500px 1255px;animation:sway 7s ease-in-out infinite;}
 @keyframes sway{0%,100%{transform:rotate(-1deg);}50%{transform:rotate(1.4deg);}}
 .plumeria-page #canopySway{transform-box:view-box;transform-origin:500px 880px;animation:swayTop 7s ease-in-out infinite;}
 @keyframes swayTop{0%,100%{transform:rotate(.7deg);}50%{transform:rotate(-1deg);}}
 
-/* ══ PRUEBA técnica 1 — ÁRBOL COMO BITMAP (img) ══════════════════════════════
-   El árbol estático se rasteriza a PNG (script.js: rasterize) y se monta como
-   <img>. Ventaja: animar/rotar UNA imagen = 1 composite GPU barato, en vez de
-   re-rasterizar ~800 formas SVG por frame (por eso el SVG apagaba el vaivén en
-   oscuro). Aquí el vaivén se MANTIENE también en oscuro. Se pierde el aleteo
-   por-hoja (no hay hojas vivas) — es el trade-off a evaluar. */
+/* ══ PRUEBA técnica 1 — ÁRBOL COMO BITMAP (img) ══════════════════════════════ El árbol estático se rasteriza a PNG (script.js: */
 .plumeria-stage .tree-bmp-grow,
 .plumeria-stage .tree-bmp-sway{ position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; }
 /* Samsung/Android: sin will-change permanente (forzaba capa GPU del bitmap grande que
    el compositor teselaba mal al repintar = cachitos). El vaiven es lento (7s). */
 .plumeria-stage .tree-bmp-sway{ transform-origin:50% 100%; animation:treeBmpSway 7s ease-in-out infinite; }
 .plumeria-stage .tree-bmp-grow{ transform-origin:50% 100%; animation:treeBmpGrow 1.7s cubic-bezier(.2,.7,.2,1); }
-/* scale >1 = sobre-escaneo: la imagen sobresale del stage (overflow:hidden la
-   recorta) para que, al mecerse la capa, las esquinas de abajo NO dejen ver el
-   fondo del atardecer (la "línea naranja"). Es el precio del bitmap: el suelo va
-   dentro de la imagen y se mece con ella; el sobre-escaneo lo disimula. */
+/* scale >1 = sobre-escaneo: */
 .plumeria-stage .tree-bmp{ width:100%; height:100%; object-fit:contain; object-position:center bottom; display:block; transform:scale(1.06); user-select:none; -webkit-user-select:none; pointer-events:none; }
 @keyframes treeBmpSway{ 0%,100%{transform:rotate(-0.5deg);} 50%{transform:rotate(0.65deg);} }
 @keyframes treeBmpGrow{ 0%{transform:scaleY(.05) scaleX(.5);opacity:.4;} 55%{opacity:1;} 100%{transform:none;opacity:1;} }
@@ -2636,26 +2496,10 @@ body:not(.dark-mode) .plumeria-page.plumeria-rainy .tree-bmp{ filter:brightness(
 body.flipping .plumeria-stage .tree-bmp-sway,
 body.flipping .plumeria-stage .tree-bmp-grow{ animation-play-state:paused !important; }
 @media (prefers-reduced-motion:reduce){ .plumeria-stage .tree-bmp-sway,.plumeria-stage .tree-bmp-grow{ animation:none !important; transform:none !important; } }
-/* ---- Modo oscuro: árbol ESTÁTICO (sin vaivén) — clave contra el CALOR ----
-   En iOS/WebKit un <g> de SVG no se promueve de forma fiable a capa de
-   compositor (el will-change:transform de arriba puede no surtir efecto), así
-   que rotar #sway/#canopySway RE-RASTERIZA las ~800 formas del árbol en cada
-   frame → carga sostenida de GPU → el dispositivo se calienta y throttlea
-   (el lag que aparece al observar la página un rato). El vaivén nocturno ya era
-   ±0.2° (imperceptible), así que apagarlo de noche no se nota y elimina ese
-   re-rasterizado continuo. De día (modo claro) el árbol conserva el vaivén. */
+/* ---- Modo oscuro: */
 body.dark-mode .plumeria-page #sway,
 body.dark-mode .plumeria-page #canopySway{animation:none;will-change:auto;}
-/* ---- Árbol CONGELADO tras crecer la 1ª vez (.plumeria-grown, lo pone
-   setupPlumeria ~6.5s después de la primera vez que se ve) ----
-   CAUSA: .plumeria-wrap se pone display:none cuando la hoja no está .near
-   (buffer de páginas, línea ~2694). Volver de display:none REINICIA todas las
-   animaciones CSS del subárbol → growTree/leafIn/bloom/sprout replayean (el
-   árbol "renace desde 0") y su arranque simultáneo (~180 animaciones) tira los
-   frames del volteo al acercarse. Congelado en estado final, volver es
-   instantáneo y sin tormenta. Se conserva #sway/#canopySway (viento del árbol
-   completo). Mismo patrón que .cover-drawn de la portada. Snapea a scale(1)
-   aunque se congele a mitad del crecimiento (el freeze fuerza el estado final). */
+/* ---- Árbol CONGELADO tras crecer la 1ª vez (.plumeria-grown, lo pone setupPlumeria ~6.5s después de la primera vez que se ve) ---- CAUSA: */
 .plumeria-page.plumeria-grown #branchLayer{animation:none;transform:none;opacity:1;}
 .plumeria-page.plumeria-grown .leaf-pop{animation:none;transform:scale(1);rotate:0deg;}
 .plumeria-page.plumeria-grown .flower-pop{animation:none;transform:scale(1) rotate(0deg);}
@@ -2678,9 +2522,7 @@ body.dark-mode .plumeria-page #canopySway{animation:none;will-change:auto;}
 }
 @keyframes bloom{0%{transform:scale(0) rotate(-35deg);}100%{transform:scale(1) rotate(0);}}
 .plumeria-page .petal{stroke:rgba(255,255,255,.12);stroke-width:.3;}
-/* Sombra de las flores: la dejamos LIGHT pero solo en modo claro y SIN
-   drop-shadow (que es el filtro mas caro del navegador). Una sombra interna
-   sutil va dentro del propio SVG via opacity de los petales. */
+/* Sombra de las flores: */
 /* ---- Césped: brota y se mece ---- */
 .plumeria-page .blade{
     transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);
@@ -2691,11 +2533,7 @@ body.dark-mode .plumeria-page #canopySway{animation:none;will-change:auto;}
 }
 @keyframes sproutY{to{transform:scaleY(1);}}
 @keyframes bladeSway{0%,100%{rotate:-4deg;}50%{rotate:5deg;}}
-/* ---- Versión "quieta": en la escena del LIBRO solo una fracción de hojas y
-   briznas conserva la animación infinita (flutter/bladeSway); las .still solo
-   brotan y quedan fijas. Reduce cientos de animaciones simultáneas que
-   laggeaban el Note 10 en las primeras páginas. Los overlays (orientación /
-   gate) no llevan .still y conservan la escena completa. ---- */
+/* ---- Versión "quieta": */
 .plumeria-page .leaf-pop.still{animation-name:leafIn;animation-iteration-count:1;animation-fill-mode:forwards;}
 .plumeria-page .blade.still{animation-name:sproutY;animation-iteration-count:1;animation-fill-mode:forwards;}
 /* ---- Arbustos: brotan y se mecen ---- */
@@ -2722,27 +2560,14 @@ body:not(.dark-mode) .plumeria-page.plumeria-rainy .firefly { display: block !im
 @keyframes flap{0%,100%{transform:scaleX(1);}50%{transform:scaleX(.34);}}
 .plumeria-page .firefly{
     position:absolute;
-    /* PERF: la posición se mueve por transform (compositor), no por left/top
-       (layout) — ver tickFireflies() en script.js. left/top quedan fijos en 0;
-       el desplazamiento real lo hace transform:translate(Ncqw,Mcqh), mismo
-       truco de unidades de contenedor que ya usan las mariposas de esta misma
-       escena (.plumeria-wrap ya tiene container-type:size). */
+    /* PERF: la posición se mueve por transform (compositor), no por left/top (layout) — ver tickFireflies() en script.js. */
     left:0; top:0;
     border-radius:50%;
     will-change:transform,opacity;
     pointer-events:none;
     opacity:0;
 }
-/* ---- Adaptación nocturna: follaje en penumbra, flores que brillan ----
-   PERF (clave del lag dark+plumeria): antes esto era filter:brightness/saturate
-   sobre los 3 grupos grandes del SVG. Un `filter` OBLIGA a rasterizar el
-   subárbol en un buffer fuera de pantalla + pase de filtro, y como estos grupos
-   viven dentro de #sway/#canopySway y aparecen/desaparecen con display:none del
-   buffer de páginas, ese pase se disparaba al cambiar de tema o al volver a la
-   página → el lag súper notorio SOLO en oscuro (claro no tiene filtro = fluido).
-   Como el cielo nocturno YA es oscuro, `opacity` da casi el mismo resultado
-   (color×0.8 + fondo_oscuro×0.2 ≈ oscurecer) pero es propiedad de COMPOSITOR,
-   sin pase de filtro. Las flores (.flower-canopy) quedan fuera → siguen brillando. */
+/* ---- Adaptación nocturna: */
 body.dark-mode .plumeria-page #branchLayer,
 body.dark-mode .plumeria-page .leaf-canopy,
 body.dark-mode .plumeria-page .groundg{opacity:0.8;}
@@ -2778,24 +2603,8 @@ body.dark-mode .page-sky { display: none; }
     .page-sky { display: none; }
 }
 
-/* ════════════════════════════════════════════════════════════════
-   CIELO ESTRELLADO EN PÁGINAS DECORATIVAS (solo modo oscuro)
-   Estas páginas SIN cantos muestran un cielo nocturno propio que combina con
-   el #starfield del fondo (mismo color base + estrellas blancas). El starfield
-   global no puede "atravesar" el papel por el apilado 3D del libro, así que
-   cada página lleva su propio cielo. NINGUNA página con cantos se toca, para
-   no distraer la lectura.
-   Cubre: árbol Plumeria, cabeceras de sección (incluye ÍNDICE y el separador
-   del Diccionario), páginas del índice y páginas de datos del diccionario.
-   ════════════════════════════════════════════════════════════════ */
-/* ---- Cielo estrellado: pintar 16 radial-gradients por pagina y animar su
-   background-position es CARO (no se acelera por GPU; se repinta en CPU cada
-   frame). En modo oscuro con 5-6 paginas bufferadas se sentia el lag.
-   Solucion: una sola TEXTURA SVG en data URI (el navegador la cachea como
-   bitmap una vez) inyectada via ::before, y la animacion va por TRANSFORM
-   (que SI corre en GPU). will-change: transform promueve la capa.
-   La textura es de 300x300 y se tilea con background-repeat, y el ::before
-   mide 600x600 (doble) para que al desplazar 300px en X/Y todavia cubra todo. */
+/* ════════════════════════════════════════════════════════════════ CIELO ESTRELLADO EN PÁGINAS DECORATIVAS (solo modo oscuro) Estas páginas */
+/* ---- Cielo estrellado: */
 body.dark-mode .plumeria-page,
 body.dark-mode .image-page,
 body.dark-mode .decor-section-page,
@@ -2832,10 +2641,7 @@ body.dark-mode .dict-page::before {
        una capa que el compositor pintaba a MEDIAS (mitad sin pintar). Drift lentisimo -> main thread. */
     animation: plmStarDrift 190s linear infinite;   /* ~1.6px/s: misma calma que las bandas */
 }
-/* Cielo MÁS RICO sólo en plumeria: tile de 600px con 70 estrellas variadas (tamaño
-   y brillo) + glow tenue en algunas. Misma técnica barata que el de 300px (1 textura
-   cacheada, 0 nodos DOM, 1 animación); sólo crece el tile y la variedad → mata la
-   repetición del patrón de 300 y llena más la noche. 380s = misma velocidad (~1.6px/s). */
+/* Cielo MÁS RICO sólo en plumeria: */
 body.dark-mode .plumeria-page::before {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><g fill='%23cfe0ff'><circle cx='510' cy='593' r='5.5' opacity='0.11'/><circle cx='300' cy='106' r='5.7' opacity='0.14'/><circle cx='520' cy='26' r='6.9' opacity='0.1'/><circle cx='344' cy='65' r='5.9' opacity='0.09'/><circle cx='229' cy='99' r='5.8' opacity='0.08'/><circle cx='98' cy='449' r='6.4' opacity='0.1'/><circle cx='555' cy='544' r='5.8' opacity='0.09'/><circle cx='469' cy='312' r='7.1' opacity='0.12'/><circle cx='148' cy='242' r='7.0' opacity='0.1'/></g><g fill='%23ffffff'><circle cx='127' cy='531' r='1.45' opacity='0.75'/><circle cx='598' cy='379' r='0.76' opacity='0.59'/><circle cx='13' cy='215' r='1.65' opacity='0.99'/><circle cx='165' cy='302' r='0.6' opacity='0.66'/><circle cx='564' cy='289' r='1.25' opacity='0.89'/><circle cx='415' cy='583' r='1.44' opacity='0.73'/><circle cx='265' cy='538' r='1.01' opacity='0.62'/><circle cx='431' cy='58' r='1.36' opacity='0.75'/><circle cx='375' cy='29' r='1.15' opacity='0.73'/><circle cx='510' cy='593' r='1.61' opacity='0.9'/><circle cx='57' cy='495' r='1.18' opacity='0.9'/><circle cx='366' cy='511' r='0.72' opacity='0.7'/><circle cx='365' cy='401' r='1.38' opacity='0.9'/><circle cx='267' cy='41' r='0.61' opacity='0.71'/><circle cx='337' cy='338' r='0.95' opacity='0.6'/><circle cx='300' cy='106' r='1.69' opacity='0.96'/><circle cx='476' cy='578' r='0.67' opacity='0.65'/><circle cx='244' cy='592' r='1.3' opacity='0.84'/><circle cx='87' cy='36' r='1.16' opacity='0.9'/><circle cx='541' cy='326' r='1.42' opacity='0.88'/><circle cx='172' cy='575' r='1.3' opacity='0.73'/><circle cx='189' cy='115' r='0.61' opacity='0.72'/><circle cx='385' cy='178' r='1.3' opacity='0.85'/><circle cx='439' cy='523' r='1.38' opacity='0.81'/><circle cx='102' cy='265' r='1.18' opacity='0.73'/><circle cx='520' cy='26' r='2.02' opacity='0.91'/><circle cx='544' cy='232' r='0.85' opacity='0.53'/><circle cx='598' cy='169' r='2.1' opacity='0.99'/><circle cx='409' cy='231' r='0.65' opacity='0.74'/><circle cx='122' cy='412' r='0.61' opacity='0.6'/><circle cx='122' cy='340' r='0.99' opacity='0.68'/><circle cx='58' cy='341' r='1.19' opacity='0.81'/><circle cx='49' cy='120' r='1.41' opacity='0.89'/><circle cx='505' cy='77' r='1.27' opacity='0.86'/><circle cx='432' cy='250' r='0.72' opacity='0.72'/><circle cx='256' cy='426' r='1.18' opacity='0.86'/><circle cx='5' cy='65' r='0.86' opacity='0.62'/><circle cx='331' cy='432' r='1.28' opacity='0.88'/><circle cx='85' cy='150' r='1.44' opacity='0.77'/><circle cx='14' cy='407' r='0.87' opacity='0.51'/><circle cx='223' cy='258' r='0.91' opacity='0.57'/><circle cx='301' cy='166' r='1.23' opacity='0.75'/><circle cx='344' cy='65' r='1.73' opacity='0.98'/><circle cx='540' cy='354' r='1.03' opacity='0.6'/><circle cx='128' cy='94' r='0.74' opacity='0.66'/><circle cx='264' cy='202' r='0.97' opacity='0.66'/><circle cx='505' cy='170' r='0.82' opacity='0.71'/><circle cx='580' cy='268' r='0.98' opacity='0.52'/><circle cx='229' cy='99' r='1.71' opacity='0.93'/><circle cx='98' cy='449' r='1.87' opacity='0.97'/><circle cx='555' cy='544' r='1.7' opacity='0.93'/><circle cx='217' cy='286' r='0.88' opacity='0.72'/><circle cx='340' cy='529' r='0.62' opacity='0.61'/><circle cx='403' cy='313' r='1.03' opacity='0.61'/><circle cx='368' cy='82' r='1.01' opacity='0.68'/><circle cx='198' cy='370' r='0.99' opacity='0.63'/><circle cx='598' cy='497' r='1.18' opacity='0.85'/><circle cx='474' cy='175' r='0.69' opacity='0.53'/><circle cx='340' cy='598' r='1.69' opacity='0.99'/><circle cx='473' cy='457' r='0.82' opacity='0.7'/><circle cx='469' cy='312' r='2.09' opacity='1.0'/><circle cx='148' cy='242' r='2.06' opacity='0.95'/><circle cx='22' cy='582' r='1.46' opacity='0.87'/><circle cx='235' cy='367' r='1.02' opacity='0.63'/><circle cx='517' cy='459' r='0.7' opacity='0.51'/><circle cx='40' cy='162' r='0.62' opacity='0.58'/><circle cx='55' cy='430' r='0.89' opacity='0.6'/><circle cx='288' cy='363' r='0.85' opacity='0.53'/><circle cx='483' cy='408' r='1.27' opacity='0.92'/><circle cx='200' cy='8' r='0.84' opacity='0.6'/></g></svg>");
     background-size: 600px 600px;
@@ -2850,11 +2656,7 @@ body.dark-mode .index-page::before,
 body.dark-mode .dict-page::before {
     inset: calc(-1 * var(--page-pad-y)) calc(-1 * var(--page-pad-x));
 }
-/* OPT: en separadores/índice/diccionario (NO plumeria: ahí el transform tapa las
-   estrellas por el stacking del tree-scene) el cielo va por TRANSFORM (GPU), no
-   background-position (repaint CPU). La capa se ALARGA 300px arriba y se traslada
-   0→300px (tile de 300 = bucle sin salto); el overflow:hidden del .front recorta.
-   El gating .onstage/body.flipping sigue pausándolo. */
+/* OPT: en separadores/índice/diccionario (NO plumeria: */
 body.dark-mode .decor-section-page::before,
 body.dark-mode .index-page::before,
 body.dark-mode .dict-page::before {
@@ -2869,19 +2671,13 @@ body.dark-mode .dict-page::before {
     from { transform: translate3d(0, 0, 0); }
     to   { transform: translate3d(0, 600px, 0); }
 }
-/* Loop por background-position (no transform): asi el cielo se mantiene
-   DENTRO de los bordes de la pagina (overflow:hidden del .front lo recortaria
-   si usaramos translate). Es menos eficiente que transform, pero como solo hay
-   1 textura cacheada y no 16 gradients, sigue siendo barato. */
+/* Loop por background-position (no transform): */
 @keyframes plmStarDrift {
     from { background-position: 0 0; }
     to   { background-position: 0 300px; }   /* vertical puro = bucle sin salto (tile 300px) */
 }
 
-/* ══ GATING del cielo nocturno (background-position es repaint CPU/frame): antes
-   corría SIEMPRE en TODAS las páginas especiales bufferadas a la vez. Ahora solo
-   anima la hoja EN PANTALLA (.onstage); las vecinas fuera de vista y las que están
-   volteando (body.flipping) se pausan → mismo look, mucho menos repaint. */
+/* ══ GATING del cielo nocturno (background-position es repaint CPU/frame): */
 .paper:not(.onstage) .plumeria-page::before,
 .paper:not(.onstage) .decor-section-page::before,
 .paper:not(.onstage) .index-page::before,
@@ -2892,17 +2688,11 @@ body.flipping .index-page::before,
 body.flipping .dict-page::before {
     animation-play-state: paused !important;
 }
-/* Subir el contenido por encima del cielo (z-index:0). Excluimos los wraps de
-   animacion del arbol (.plumeria-wrap, .plumeria-stage, .plumeria-sky) porque
-   ya tienen su propio stacking y aislamiento, y porque .plumeria-wrap usa
-   contain:paint que choca con z-index forzado. */
+/* Subir el contenido por encima del cielo (z-index:0). */
 body.dark-mode .decor-section-page > *,
 body.dark-mode .index-page > *,
 body.dark-mode .dict-page > * { position: relative; z-index: 1; }
-/* La regla `> *` de arriba (sube el contenido sobre el starfield) tambien pegaba a
-   los BOTONES ABSOLUTOS que cuelgan directo de la pagina (guia de acordes, Aa/zoom,
-   T): en oscuro pasaban a `relative` y caian al flujo (abajo-izq, tamano/pos malos).
-   Se les restaura `absolute`. Solo pasa en index/dict/decor (en cantos van en .footer). */
+/* La regla `> *` de arriba (sube el contenido sobre el starfield) tambien pegaba a los BOTONES ABSOLUTOS que cuelgan directo de la pagina */
 body.dark-mode .index-page > .guide-btn,
 body.dark-mode .index-page > .zoom-toggle,
 body.dark-mode .index-page > .transpose-btn,
@@ -2941,9 +2731,7 @@ body.dark-mode .decor-section-content {
     isolation: isolate;
 }
 
-/* ===== Cielo REDUCIDO GENERAL (html.sky-lite fija = todos, incl. WebKit/iOS) =====
-   Starfield acotado a la pagina y ESTATICO: sin teselado/paint-parcial/churn en
-   cualquier GPU (bug visto en Samsung). Siguen las 70 estrellas (solo sin animar). */
+/* ===== Cielo REDUCIDO GENERAL (html.sky-lite fija = todos, incl. */
 .sky-lite body.dark-mode .plumeria-page::before,
 .sky-lite body.dark-mode .decor-section-page::before,
 .sky-lite body.dark-mode .index-page::before,
@@ -3042,35 +2830,19 @@ body.dark-mode .image-page::after {
     body.dark-mode .image-page::after{ animation:none; }
 }
 
-/* Degradado elegante para navegadores SIN container queries (telefonos
-   antiguos): se ocultan mariposas/luciernagas (que dependen de cqw/cqh) para
-   que no se amontonen en una esquina. El arbol y el cielo estrellado siguen
-   funcionando con normalidad. */
+/* Degradado elegante para navegadores SIN container queries (telefonos antiguos): */
 @supports not (container-type: size) {
     .plumeria-sky { display: none; }
 }
 
-/* ════════════════════════════════════════════════════════════════
-   GATING DE ANIMACIONES FUERA DE VISTA
-   El buffer virtual mantiene ±6 hojas con display:"" y TODAS sus animaciones
-   infinitas (mariposas, cielo estrellado, fugaces, árbol) corrían aunque la
-   hoja estuviera tapada por otras. Solo la hoja actual y sus vecinas llevan
-   la clase .near (script.js): en el resto se detiene todo. display:none
-   detiene de verdad las animaciones CSS y los bucles rAF (offsetParent null).
-   :not(.turning) evita cortar el contenido a media vuelta visible. ═══════ */
+/* ════════════════════════════════════════════════════════════════ GATING DE ANIMACIONES FUERA DE VISTA El buffer virtual mantiene ±6 hojas */
 .paper:not(.near) .page-sky,
 .paper.flipped:not(.turning) .page-sky,
 .paper:not(.near) .plumeria-wrap,
 .paper.flipped:not(.turning) .plumeria-wrap {
     display: none;
 }
-/* Mientras una hoja está girando (body.flipping, lo pone animatePaper) se
-   pausan las animaciones decorativas SOLO de la página del árbol Plumeria
-   (la escena pesada) para regalarle el frame budget al volteo; al terminar
-   reanudan donde iban. Las mariposas de .page-sky de las demás páginas NO se
-   pausan: congelarlas a media vuelta se veía raro (pedido del usuario).
-   !important: gana a las animaciones declaradas en style inline
-   (mariposas/nubes/ave llevan animation en el atributo style). */
+/* Mientras una hoja está girando (body.flipping, lo pone animatePaper) se pausan las animaciones decorativas SOLO de la página del árbol */
 body.flipping .plumeria-page #sway,
 body.flipping .plumeria-page #canopySway,
 body.flipping .plumeria-page .leaf-pop,
@@ -3083,12 +2855,7 @@ body.flipping .plumeria-cloud,
 body.flipping .plumeria-flying-bird {
     animation-play-state: paused !important;
 }
-/* ══ Q2: solo la hoja EN PANTALLA (.onstage) anima sus decorativos ══
-   Las 2 hojas vecinas .near están fuera de vista (solo se ve la central), así que
-   se les CONGELAN los decorativos en reposo. Se reanudan durante el volteo
-   (body.flipping, abajo) para que la hoja entrante se vea viva al deslizarse.
-   El árbol Plumeria además ya se pausa en volteo por la regla body.flipping de
-   arriba, así que aquí no hace falta reanudarlo. */
+/* ══ Q2: solo la hoja EN PANTALLA (.onstage) anima sus decorativos ══ Las 2 hojas vecinas .near están fuera de vista (solo se ve la central), */
 .paper.near:not(.onstage) .page-sky .butterfly,
 .paper.near:not(.onstage) .page-sky .bwings,
 .paper.near:not(.onstage) .plumeria-page #sway,
@@ -3110,14 +2877,7 @@ body.flipping .paper.near .page-sky .butterfly,
 body.flipping .paper.near .page-sky .bwings {
     animation-play-state: running !important;
 }
-/* Mientras el overlay de bienvenida (#welcomeIntro, position:fixed inset:0)
-   cubre TODO el viewport, se pausan las animaciones decorativas del libro que
-   corren OCULTAS detrás. En refresh sobre una página profunda, la escena
-   Plumeria + mariposas de .page-sky + starfield animaban a la vez que el canvas
-   del intro y le robaban frames a la emergencia de las mariposas del centro;
-   pausarlas mientras no se ven regala ese frame budget al intro. La clase la
-   pone welcomeIntro al arrancar y la quita firePhase2 al revelar el libro, así
-   que reanudan sin que se note. Aplica a claro y oscuro. */
+/* Mientras el overlay de bienvenida (#welcomeIntro, position:fixed inset:0) cubre TODO el viewport, se pausan las animaciones decorativas del */
 body.intro-active #starfield,
 body.intro-active .plumeria-page #sway,
 body.intro-active .plumeria-page #canopySway,
@@ -3155,10 +2915,7 @@ body.dark-mode .paper.flipped:not(.turning) .image-page::after {
     animation-play-state: paused;
 }
 
-/* Los overlays de orientación y del gate de escritorio están ocultos con
-   visibility:hidden — sus escenas Plumeria completas seguían ANIMANDO de
-   fondo todo el tiempo. display:none las detiene de verdad; el JS además ya
-   no las construye hasta la primera vez que se muestran. */
+/* Los overlays de orientación y del gate de escritorio están ocultos con visibility:hidden — sus escenas Plumeria completas seguían ANIMANDO */
 #orientationOverlay:not(.show) .plumeria-wrap,
 #desktopGate:not(.show) .plumeria-wrap {
     display: none;
@@ -3223,11 +2980,7 @@ body.dark-mode .paper.flipped:not(.turning) .image-page::after {
     box-shadow: 0 0 15px var(--chord) !important;
 }
 
-/* ══ Modo "gestos activos": se sacrifican TODAS las animaciones ambientales para
-   dedicar CPU/GPU a la cámara + inferencia de MediaPipe (que corra fluido incluso
-   en gama baja). Solo pausa ANIMACIONES @keyframes; el volteo de página, el pulso
-   del botón, el toast y la preview son TRANSICIONES → siguen funcionando. El
-   starfield y las luciérnagas (bucles JS) se detienen aparte en turnOn/OffGestures. */
+/* ══ Modo "gestos activos": */
 body.gestures-on *,
 body.gestures-on *::before,
 body.gestures-on *::after {
@@ -3389,10 +3142,7 @@ body.dark-mode .gesture-modal-btn.cancel:hover {
     pointer-events: none;
 }
 
-/* Toast en tono de HOJA (no negro): info que el usuario ya conoce → discreto.
-   Usa las vars del tema (--page-bg/--page-text), así sirve en claro y oscuro. El
-   fondo se oscurece apenas sobre la hoja para leerse como una píldora suave; el
-   texto va tenue. */
+/* Toast en tono de HOJA (no negro): */
 .toast-message {
     background: color-mix(in srgb, var(--page-bg, #fbf9f2) 90%, #cfc7b4);
     color: color-mix(in srgb, var(--page-text, #3f3220) 58%, transparent);
@@ -3413,10 +3163,7 @@ body.dark-mode .gesture-modal-btn.cancel:hover {
     transform: translateY(0);
 }
 
-/* ── Aviso de versión nueva (PWA) ──
-   Misma píldora que el toast, pero SÍ se toca (los toast son pointer-events:none
-   y se van solos): éste espera a que el usuario decida. Un punto más de contraste
-   que el toast porque pide acción, no sólo informa. */
+/* ── Aviso de versión nueva (PWA) ── Misma píldora que el toast, pero SÍ se toca (los toast son pointer-events:none y se van solos): */
 #updateBanner {
     position: fixed;
     bottom: 24px;
@@ -3456,13 +3203,8 @@ body.dark-mode .gesture-modal-btn.cancel:hover {
 }
 #updateBanner:active { transform: translateX(-50%) translateY(1px); }
 
-/* ── Vista previa pequeña de la cámara para control gestual ──
-   IMPORTANTE: iOS Safari deja de actualizar los frames de un <video> que está
-   fuera del viewport (p.ej. left:-9999px). MediaPipe recibiría una imagen
-   congelada y nunca detectaría movimiento. Por eso la vista previa es visible. */
-/* Vista previa de la cámara: lo bastante grande y visible para VER cuándo se
-   detecta la mano y en qué momento se disparan los gestos (antes era 36x27px al
-   15% de opacidad = prácticamente invisible). */
+/* ── Vista previa pequeña de la cámara para control gestual ── IMPORTANTE: */
+/* Vista previa de la cámara: */
 .gesture-preview-container {
     position: fixed !important;
     top: 8px !important;
@@ -3499,9 +3241,7 @@ body.dark-mode .gesture-modal-btn.cancel:hover {
     transform: scaleX(-1) !important; /* Espejo SOLO visual; no afecta lo que recibe MediaPipe */
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   OVERLAY — BLOQUEO DE ORIENTACIÓN HORIZONTAL
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════ OVERLAY — BLOQUEO DE ORIENTACIÓN HORIZONTAL */
 
 #orientationOverlay {
     position: fixed;
@@ -3662,12 +3402,7 @@ body.dark-mode .orientation-card strong {
     color: #f0b5a5;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   OVERLAY — GATE DE ESCRITORIO
-   Aviso suave para usuarios en pantallas grandes, con el estilo
-   visual del cantoral (hojas decorativas, color salmón, tipografía
-   condensada de los separadores de sección).
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════ OVERLAY — GATE DE ESCRITORIO Aviso suave para usuarios en pantallas */
 
 /* Desktop gate: usa la MISMA estructura visual que #orientationOverlay
    (plumeria + dim + orientation-card). Sin botón: bloqueo permanente. */
@@ -3707,9 +3442,7 @@ body.dark-mode .orientation-card strong {
     .orientation-icon { animation: none; }
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   Animaciones de la pasta: título tipo crayón + silueta dibujada a mano
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════ Animaciones de la pasta: */
 
 /* Silueta inline (SVG) - misma posición que la versión <img> anterior */
 svg.cover-silhouette {
@@ -3770,12 +3503,7 @@ svg.cover-silhouette {
     animation: coverStarsFadeIn 1.5s ease 12.5s forwards;
 }
 
-/* Las estrellas de la Virgen giraban con SMIL (24 animaciones <animate*> que
-   corrían SIEMPRE, aun con la pasta volteada e invisible, repintando el SVG
-   enmascarado completo en cada frame — eso robaba los frames del volteo de
-   página en las primeras hojas). Ahora giran/parpadean con CSS: mismo efecto
-   (todas rotaban sobre el mismo centro 338,129), pero pausable cuando la
-   pasta no está a la vista. */
+/* Las estrellas de la Virgen giraban con SMIL (24 animaciones <animate*> que corrían SIEMPRE, aun con la pasta volteada e invisible, */
 .cover-silhouette .virgin-orbit {
     transform-box: view-box;
     transform-origin: 338px 129px;
@@ -3837,15 +3565,7 @@ svg.cover-silhouette {
     to   { opacity: 1; }
 }
 
-/* ── Estado final FIJADO (.cover-drawn) ──
-   El buffer virtual pone display:none a la pasta al alejarse >6 hojas; al
-   volver, el navegador REINICIA las animaciones one-shot (forwards) desde 0:
-   título enmascarado, silueta invisible hasta el seg 7.5 → "pasta en blanco".
-   script.js agrega .cover-drawn la primera vez que la pasta deja de estar
-   cerca (.near): desde entonces el arte se muestra completo AL INSTANTE.
-   La órbita y el parpadeo de estrellas (infinitos) sí siguen corriendo:
-   reiniciar un loop infinito no se nota. Debe ir DESPUÉS de las reglas
-   .cover-animate (misma especificidad, gana por orden). */
+/* ── Estado final FIJADO (.cover-drawn) ── El buffer virtual pone display:none a la pasta al alejarse >6 hojas; al volver, el navegador */
 .cover-page.cover-drawn .cover-title {
     animation: none;
     -webkit-mask-position: 0% 0;
@@ -3889,11 +3609,7 @@ svg.cover-silhouette {
     }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   Welcome Intro Overlay (bienvenida) — cielo estrellado + estrella
-   con 4 picos cayendo. Después de ~1.8s se remueve y arrancan las FX sobre
-   el libro REAL (mariposas, flores, órbita, estrella de la mañana).
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════ Welcome Intro Overlay (bienvenida) — cielo estrellado + estrella con 4 */
 #welcomeIntro {
     position: fixed;
     inset: 0;
@@ -4062,11 +3778,7 @@ svg.cover-silhouette {
     55%  { transform: translateX(-50%) scaleY(1); opacity: 1; }
     100% { transform: translateX(-50%) scaleY(1); opacity: 0; }
 }
-/* ═══════════════════════════════════════════════════════════════
-   FX de bienvenida sobre el LIBRO REAL (mariposas + flores +
-   órbita + estrella de la mañana). Se activan tras el pulso de
-   la estrella (intro). Se remueven permanentemente al 1er avance.
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════ FX de bienvenida sobre el LIBRO REAL (mariposas + flores + órbita + */
 
 /* Mariposas sobre el título real de la portada */
 .cover-butterflies {
@@ -4105,9 +3817,7 @@ svg.cover-silhouette {
 .cover-butterfly.cb-small  { width: 20px; height: 20px; }
 .cover-butterfly.cb-medium { width: 30px; height: 30px; }
 .cover-butterfly.cb-large  { width: 33px; height: 33px; }
-/* cqw = % del ancho del contenedor .cover-butterflies. Recorre de -15cqw
-   (fuera izq) a 115cqw (fuera der) → atraviesa todo el título. Se usa
-   transform (compositor/GPU) en vez de left (layout en cada frame). */
+/* cqw = % del ancho del contenedor .cover-butterflies. */
 @keyframes covFlyAcross {
     0%   { opacity: 0; transform: translate(-15cqw, 0); }
     8%   { opacity: 1; }
@@ -4162,10 +3872,7 @@ svg.cover-silhouette {
     will-change: opacity;
 }
 .morning-star.on { opacity: 1; }
-/* En modo claro, sin .on la estrella es invisible (opacity 0) pero sus 4
-   pulsos infinitos corrían desde el arranque: pausados hasta que enciende.
-   (En modo oscuro es visible siempre por la regla !important de abajo,
-   así que ahí sí deben seguir corriendo.) */
+/* En modo claro, sin .on la estrella es invisible (opacity 0) pero sus 4 pulsos infinitos corrían desde el arranque: */
 body:not(.dark-mode) .morning-star:not(.on) .ms-core,
 body:not(.dark-mode) .morning-star:not(.on) .ms-halo,
 body:not(.dark-mode) .morning-star:not(.on) .ms-spike {
@@ -4184,9 +3891,7 @@ body:not(.dark-mode) .morning-star:not(.on) .ms-spike {
     background: radial-gradient(circle, rgba(255,255,255,0.55) 0%, rgba(224,255,255,0.28) 30%, rgba(224,255,255,0.08) 55%, transparent 75%);
     border-radius: 50%;
     animation: msHaloPulse 3.4s ease-in-out infinite;
-    /* Sin blur: animar scale sobre una capa con filter obligaba a re-rasterizar
-       el desenfoque CADA frame (carísimo en iOS, y en oscuro corre en todas
-       las páginas). El gradiente ya es suave por sí solo. */
+    /* Sin blur: animar scale sobre una capa con filter obligaba a re-rasterizar el desenfoque CADA frame (carísimo en iOS, y en oscuro corre en */
 }
 .ms-spike {
     position: absolute;
@@ -4260,15 +3965,7 @@ body.dark-mode .morning-star {
     .cover-butterflies, .cover-flowers, .morning-star { display: none !important; }
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   LISTONES (separadores de página)
-   La capa vive DENTRO de .book con z-index 0: como las hojas llevan
-   z-index >= 1, la hoja tapa el listón y sólo se ve el trozo que
-   sobresale por arriba del libro. Eso da la sensación física de una
-   cinta que sale de ENTRE las páginas, sin recortes ni máscaras.
-   Al desplegar, la capa sube por encima de las hojas y los listones
-   "se jalan" hacia abajo sobre la página.
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════ LISTONES (separadores de página) La capa vive DENTRO de .book con */
 .ribbon-layer {
     position: absolute;
     inset: 0;
@@ -4298,9 +3995,7 @@ body.dark-mode .morning-star {
     -webkit-tap-highlight-color: transparent;
     background: linear-gradient(180deg, var(--rib-hi) 0%, var(--rib-c) 40%, var(--rib-lo) 100%);
     border-radius: 2px 2px 0 0;
-    /* Muesca en V (cola de golondrina) al final, como marcador real. El 9px se
-       mide desde abajo para NO estirarse cuando el listón crece al desplegarse.
-       Igual para abiertos y colgados. */
+    /* Muesca en V (cola de golondrina) al final, como marcador real. */
     clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 9px), 0 100%);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     transform: translate(calc(var(--off, 0) * 4px), calc(var(--off, 0) * 3px));
@@ -4319,9 +4014,7 @@ body.dark-mode .morning-star {
 .rib[data-slot="3"] { --rib-c: #849ab2; --rib-hi: #9bb0c6; --rib-lo: #687f97; --rib-thread: #566a7f; }
 .rib[data-slot="4"] { --rib-c: #bba874; --rib-hi: #cdbb8b; --rib-lo: #9d8c5c; --rib-thread: #7f7149; }
 
-/* Costura de contorno: dos hilvanes punteados corriendo por los bordes largos,
-   metidos ~3px. Hilo claro semitransparente (mate, sin brillo). El clip-path de
-   la punta también recorta este pseudo, así la costura entra hacia la V. */
+/* Costura de contorno: */
 .rib::before {
     content: "";
     position: absolute;
@@ -4340,9 +4033,7 @@ body.dark-mode .morning-star {
     transform: translate(calc(var(--i, 0) * 38px), 0);
 }
 
-/* Texto a lo largo de la cinta (título completo en .here, id en los demás; "+"
-   en el libre). Se rota -90° una línea horizontal: los glifos quedan DERECHOS y
-   la lectura corre de ABAJO hacia ARRIBA, como una cinta de tela real. */
+/* Texto a lo largo de la cinta (título completo en .here, id en los demás; "+" en el libre). */
 .rib-num {
     position: absolute;
     left: 50%;
@@ -4355,9 +4046,7 @@ body.dark-mode .morning-star {
     font-weight: 600;
     letter-spacing: 0.03em;
     color: rgba(255, 255, 255, 0.95);
-    /* "Bordado" (relieve de hilo hundido): sombra oscura ABAJO + luz ARRIBA +
-       un halo tenue. Da la sensación de que el título fue cosido sobre la tela,
-       sin volver hueca la letra (sigue legible a 11px). */
+    /* "Bordado" (relieve de hilo hundido): */
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5),
                  0 -1px 0 rgba(255, 255, 255, 0.42),
                  0 0 1px rgba(0, 0, 0, 0.3);
@@ -4404,10 +4093,7 @@ body.dark-mode .morning-star {
 }
 .rib.pinned .rib-tip { opacity: 1; }
 
-/* Quitar listón: sólo aparece desplegado y sobre listones ya fijados. Va DENTRO
-   del listón porque el clip-path de la punta recorta también a los hijos.
-   Estilo "costura": una X de hilo bordada cerca de la punta, sin círculo — el
-   relieve (luz arriba, sombra abajo) la funde con la tela del listón. */
+/* Quitar listón: sólo aparece desplegado y sobre listones ya fijados. */
 .rib-x {
     position: absolute;
     left: 50%;
@@ -4424,10 +4110,7 @@ body.dark-mode .morning-star {
     pointer-events: none;
     transition: opacity 0.2s ease 0.14s, transform 0.2s ease 0.14s;
 }
-/* Dos hilvanes cruzados: puntadas de hilo. Van en ROJO (eliminación) para que
-   resalten sobre CUALQUIER color de listón (paleta salvia/tierra), tanto en
-   tonos claros como oscuros; el doble drop-shadow (oscuro + tenue claro) les da
-   contraste y relieve de "cosido" sobre la tela. */
+/* Dos hilvanes cruzados: */
 .rib-x::before,
 .rib-x::after {
     content: "";
@@ -4466,25 +4149,12 @@ body.dark-mode .morning-star {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* ── Listón puesto en LA hoja que se está leyendo ──
-   Cuelga de arriba abajo: como la capa va por debajo de la página, del listón
-   sólo se ven el fragmento de arriba y la cola que asoma bajo el libro. La cinta
-   "atraviesa" la hoja igual que en un libro de papel. Lo mismo con el libro
-   cerrado: los listones fijados cuelgan de la pasta sin ensuciarla.
-   El largo de la cola (34px) está calculado para caber en el hueco que queda
-   bajo el libro; más largo se saldría del viewport. */
-/* TODO listón fijado cuelga su cola bajo el libro en CUALQUIER página. Colas
-   escalonadas: slot0 = 1×--tail, slot1 = 2×, slot2 = 3× → el pico del de delante
-   cae en la mitad del siguiente. El JS fija --tail según el hueco REAL bajo el
-   libro y cuántos listones hay, para que las 3 puntas quepan siempre en pantalla. */
+/* ── Listón puesto en LA hoja que se está leyendo ── Cuelga de arriba abajo: */
+/* TODO listón fijado cuelga su cola bajo el libro en CUALQUIER página. */
 .rib.pinned {
     height: calc(100% + var(--rbase, 42px) + var(--rank, 0) * var(--rstep, 17px));
 }
-/* Colgando (panel cerrado o en la pasta): los listones conservan el MISMO grosor
-   (28px) y la MISMA separación (38px) que cuando están abiertos, para que no se
-   vean delgados ni muy separados. Se corren a la derecha por RANGO y la escalera
-   diagonal ~20° la da sólo la altura de la cola (--rstep). Además el peek de
-   arriba queda TOCABLE (abre el panel) — antes sólo respondía el primero. */
+/* Colgando (panel cerrado o en la pasta): */
 .ribbon-layer:not(.open) .rib.pinned {
     width: 22px;
     transform: translateX(calc(var(--rank, 0) * 30px));
@@ -4499,11 +4169,7 @@ body.dark-mode .morning-star {
 .ribbon-layer.at-cover { pointer-events: none; }
 .ribbon-layer.at-cover .rib { cursor: default; }
 
-/* CONTRAPORTADA en ESPEJO (libro cerrado por detrás): el lomo queda a la DERECHA,
-   así que los listones deben colgar de la DERECHA (pegados al lomo), no de la
-   orilla izquierda. Se reancla a la derecha y la escalera baja hacia la izquierda.
-   Sólo con el panel cerrado (en la pasta trasera). Se REPOSICIONA (no scaleX) para
-   que las etiquetas/números queden derechos y legibles. */
+/* CONTRAPORTADA en ESPEJO (libro cerrado por detrás): */
 body.book-at-back .ribbon-layer:not(.open) .rib { left: auto; right: 26px; }
 body.book-at-back .ribbon-layer:not(.open) .rib.free { transform: none; }
 body.book-at-back .ribbon-layer:not(.open) .rib.pinned {
@@ -4632,11 +4298,7 @@ body.book-at-back .ribbon-layer:not(.open) .rib.pinned {
     .ribbon-layer.open .rib.pinning { animation: none; }
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   BOTÓN "CORREA DE CIERRE" (rediseño del cerrar-libro)
-   Anexado al final: gana por cascada al .rib-close del bloque LISTONES.
-   Sólo toca el botón de cerrar; los listones quedan como estaban.
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════ BOTÓN "CORREA DE CIERRE" (rediseño del cerrar-libro) Anexado al final: */
 
 .rib-close {
     top: 3px;
@@ -4710,11 +4372,7 @@ body.book-at-back .ribbon-layer:not(.open) .rib.pinned {
 
 /* La correa es de piel: no cambia con el modo oscuro, igual que la pasta. */
 
-/* ═══════════════════════════════════════════════════════════════════
-   PÁGINAS DE DEDICATORIA / PRESENTACIÓN
-   Sin encabezado ni número de página. Respeta modo claro/oscuro con las
-   mismas variables que las páginas de canto.
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════ PÁGINAS DE DEDICATORIA / PRESENTACIÓN Sin encabezado ni número de página. */
 .dedication-page {
     background: var(--page-bg);
     color: var(--page-text);
@@ -4799,9 +4457,7 @@ body.book-at-back .ribbon-layer:not(.open) .rib.pinned {
     cursor: default;
 }
 
-/* Overlay tipo hoja del libro (misma crema, textura de puntos, borde y radio
-   que las páginas de canto). Color FIJO del modo claro. Ocupa casi toda la
-   pantalla, con un margen neutro alrededor. */
+/* Overlay tipo hoja del libro (misma crema, textura de puntos, borde y radio que las páginas de canto). */
 .egg-page {
     position: fixed;
     inset: 0;
@@ -4822,9 +4478,7 @@ body.book-at-back .ribbon-layer:not(.open) .rib.pinned {
     pointer-events: auto;
     transition: opacity 0.6s ease;
 }
-/* Velo "AMANECER": cuando el egg sale por el combo se fuerza modo claro; el scrim
-   se aclara (cálido y translúcido) para que se perciba el amanecer / la plumeria de
-   día detrás de la hoja, en vez del velo casi negro. */
+/* Velo "AMANECER": */
 .egg-page.dawn {
     background: rgba(249, 244, 234, 0.55);
 }
@@ -4899,9 +4553,7 @@ body.book-at-back .ribbon-layer:not(.open) .rib.pinned {
     padding-left: 0.6em;
     border-left: 2px solid rgba(120, 100, 70, 0.28);
 }
-/* X discreta: glifo plano en el color del acorde, HIJA de la hoja (.egg-inner es
-   position:relative y overflow:hidden → se ancla a la esquina de la hoja y NO
-   scrollea con el texto). Sin círculo ni caja; sobre la crema no necesita sombra. */
+/* X discreta: glifo plano en el color del acorde, HIJA de la hoja (.egg-inner es position:relative y overflow:hidden → se ancla a la esquina */
 .egg-close {
     position: absolute;
     top: 8px;
@@ -4928,34 +4580,20 @@ body.book-at-back .ribbon-layer:not(.open) .rib.pinned {
 .egg-close:hover { transform: scale(1.12); opacity: 1; }
 .egg-close:active { transform: scale(0.9); }
 
-/* ── SILUETA LITÚRGICA (motor initLiturgicalCover: swap por tiempo) ──────
-   #coverLiturgy vive dentro de .cover-page; el motor inyecta la escena del
-   tiempo (Adviento/Navidad/Cuaresma/Pascua/Pentecostés) y pone .has-liturgy
-   en la pasta para ocultar la Virgen (Ordinario = sin inyección). */
+/* ── SILUETA LITÚRGICA (motor initLiturgicalCover: */
 .cover-liturgy {
     position: absolute;
     left: 50%;
     bottom: 2%;
-    width: 130%;                 /* más grande que la pasta: sangra por los lados
-                                    (la pasta recorta) para que las figuras se
-                                    vean grandes como la Virgen. */
+    width: 130%;                 /* más grande que la pasta: */
     transform: translateX(-50%);
     z-index: 1;
     pointer-events: none;
     line-height: 0;
 }
 .cover-liturgy:empty { display: none; }
-/* A todo el ancho de la pasta (como la Virgen), lo más grande posible para una
-   escena apaisada. Entrada de una sola pasada: sube+aparece+escala suave; la
-   pausa por .near (regla de abajo) la retiene hasta que la pasta se ve, así el
-   "entra" ocurre al mostrarse, no al inyectarse fuera de vista. */
-/* La silueta de temporada se REVELA "como si alguien la dibujara": una máscara
-   con borde difuminado barre de un lado a otro, mismo idiom que el título
-   (coverTitleReveal) y MISMO tiempo que el trazo de la Virgen (5.5s con delay
-   7.5s), para que aparezca al ritmo del intro (cayendo las flores) y NO al
-   instante. Como el arte de temporada es a color/relleno (no línea), no se puede
-   usar el trazo `dashoffset` de la Virgen; la máscara logra el mismo "se va
-   creando" de forma uniforme para las 5 siluetas. */
+/* A todo el ancho de la pasta (como la Virgen), lo más grande posible para una escena apaisada. */
+/* La silueta de temporada se REVELA "como si alguien la dibujara": */
 .cover-liturgy svg {
     width: 100%;
     height: auto;
@@ -4972,11 +4610,7 @@ body.book-at-back .ribbon-layer:not(.open) .rib.pinned {
     -webkit-mask-position: 0% 0;   /* base = revelado (fallback / .cover-drawn) */
     mask-position: 0% 0;
 }
-/* La entrada se dispara con .cover-animate (cuando el intro revela la pasta),
-   igual que la Virgen. Con `both`, durante el delay la máscara queda en el
-   extremo oculto → la silueta NO aparece hasta el seg 7.5, y entonces se
-   "dibuja" en 5.5s. Si se inyecta con el libro ya abierto, .cover-animate ya
-   está puesto y entra al momento. */
+/* La entrada se dispara con .cover-animate (cuando el intro revela la pasta), igual que la Virgen. */
 .cover-page.cover-animate .cover-liturgy svg {
     animation: litDraw 5.5s cubic-bezier(0.4, 0, 0.2, 1) 7.5s both;
     will-change: mask-position;
@@ -4994,11 +4628,7 @@ body.book-at-back .ribbon-layer:not(.open) .rib.pinned {
 }
 .cover-page.has-liturgy .cover-silhouette { display: none; }
 
-/* ── PENTECOSTÉS: dibujado tipo PLUMA (dashoffset) ───────────────────────────
-   Su arte ES línea (centerline, .lit-pentestroke, pathLength=1000), así que —a
-   diferencia de las otras siluetas de relleno— usa el trazo `stroke-dashoffset`
-   igual que la Virgen, en vez del barrido de máscara. Apagamos la máscara para
-   este tiempo y las flamas encienden al terminar de dibujarse. */
+/* ── PENTECOSTÉS: dibujado tipo PLUMA (dashoffset) ─────────────────────────── Su arte ES línea (centerline, .lit-pentestroke, */
 body.lit-pentecostes .cover-liturgy svg,
 body.lit-adviento .cover-liturgy svg,
 body.lit-navidad .cover-liturgy svg,
@@ -5053,11 +4683,7 @@ body.lit-pentecostes .cover-liturgy #lightGlow { opacity: 0; }
     body.lit-pentecostes .cover-liturgy #lightGlow { animation: none; opacity: 1; }
 }
 
-/* Overlays de las 4 siluetas stroke (velas de Adviento, estrella de Navidad,
-   halo de Cuaresma, aura de Pascua): ENCIENDEN al terminar el dibujado. Cada
-   overlay trae su propia animación (flick/belen/haloPulse/glowPulse); aquí solo
-   controlamos su aparición. Las velas de Adviento además respetan .flame.on
-   (una por semana, lógica en script.js). */
+/* Overlays de las 4 siluetas stroke (velas de Adviento, estrella de Navidad, halo de Cuaresma, aura de Pascua): */
 .cover-liturgy .lit-overlay { opacity: 0; }
 .cover-page.cover-animate .cover-liturgy .lit-overlay {
     animation: litFlamesIn 1.4s ease 13s both;
@@ -5070,10 +4696,7 @@ body.lit-pentecostes .cover-liturgy #lightGlow { opacity: 0; }
     .cover-liturgy .lit-overlay { animation: none; opacity: 1; }
 }
 
-/* ── Ajuste POR SILUETA (independiente) ──────────────────────────────────────
-   Cada tiempo puede tener su propio tamaño/posición vía body.lit-<tiempo>.
-   Base compartida: width:130%, bottom:2%, left:50% (+translateX -50%).
-   Empezamos por ADVIENTO: subida ligera para despegarla del borde inferior. */
+/* ── Ajuste POR SILUETA (independiente) ────────────────────────────────────── Cada tiempo puede tener su propio tamaño/posición vía */
 body.lit-adviento .cover-liturgy {
     width: 140%;                 /* tamaño Adviento */
     left: 50%;
@@ -5120,34 +4743,11 @@ body.lit-pentecostes .cover-liturgy {
    de Belén dentro de la silueta. (Va al final: gana a la regla dark-mode.) */
 body.lit-navidad .morning-star { display: none !important; }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   MENÚ SUPERIOR — CUENTAS DE ROSARIO (perla en claro · gota de agua en oscuro)
-   ───────────────────────────────────────────────────────────────────────────
-   Reviste los controles YA existentes (.search-btn, .font-picker-toggle,
-   .menu-btn, .index-btn y los dos switches .theme-toggle/.gesture-toggle) como
-   cuentas redondas colgando del ☰. NO cambia HTML ni JS: solo apariencia.
-     · Reposo: nácar marfil NEUTRO, todas iguales.
-     · "Al accionar": verde salvia — :active (tap), .menu-open (☰ abierto),
-       .gesture-toggle.active (gestos encendidos).
-     · Modo oscuro: gota de agua translúcida con backdrop-filter, para NO tapar
-       el #starfield (se ven las estrellas a través de la cuenta).
-
-   ⚠ RENDIMIENTO: el efecto "gota de agua" del modo oscuro usa `backdrop-filter:
-   blur()`, que en algunos móviles de gama baja puede causar LAG al abrir el menú
-   o al voltear página. SI SE NOTA LAG → usar el FALLBACK SIN BLUR: comenta las
-   líneas `backdrop-filter`/`-webkit-backdrop-filter` de los bloques
-   `body.dark-mode ... (gota de agua)` de abajo y descomenta el bloque
-   marcado «FALLBACK SIN BLUR» al final de esta sección (fondo semiopaco sólido,
-   mismo look pero sin desenfocar; las estrellas se ven menos pero rinde liso).
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════════════ MENÚ SUPERIOR — CUENTAS DE ROSARIO (perla en claro · gota de */
 
 /* Separaciones para que lean como sarta */
 .top-controls .top-bar { gap: 6px; }
-/* overflow:visible → las sombras redondas NO se recortan en un rectángulo.
-   RENDIMIENTO: NO animamos `max-height` (forzaba layout+paint cada frame = lag).
-   El menú vive siempre montado y se abre/cierra SOLO con opacity+transform (GPU),
-   así que colapsar/abrir es liso. Cerrado: opacity:0 + pointer-events:none lo
-   dejan invisible e inerte (queda en su sitio fijo arriba-derecha, no estorba). */
+/* overflow:visible → las sombras redondas NO se recortan en un rectángulo. */
 .top-controls .menu-items {
     position: relative;
     gap: 11px;
@@ -5166,12 +4766,7 @@ body.lit-navidad .morning-star { display: none !important; }
     pointer-events: auto;
 }
 
-/* El CONTENEDOR de controles NO debe capturar toques en su área vacía: el menú
-   colapsado (.menu-items) sigue midiendo en el layout y hacía crecer #topControls
-   a ~356px de alto, una franja fija (z-200) que interceptaba el swipe de AVANZAR
-   en la mitad superior (el handler se autocancela con target.closest('#topControls')).
-   Solo la barra visible y los paneles abiertos capturan; el resto deja pasar el
-   swipe a la página. (.menu-items abierto ya reactiva pointer-events arriba.) */
+/* El CONTENEDOR de controles NO debe capturar toques en su área vacía: */
 #topControls { pointer-events: none; }
 #topControls .top-bar { pointer-events: auto; }
 #topControls .font-picker:not(.hidden) { pointer-events: auto; }
@@ -5294,12 +4889,7 @@ body.dark-mode .top-controls .index-btn,
 body.dark-mode .top-controls .theme-toggle,
 body.dark-mode .top-controls .gesture-toggle {
     color: #ece7de;
-    /* FALLBACK SIN BLUR (activo): fondo sólido semiopaco en vez de backdrop-filter,
-       porque el blur causaba lag al abrir/cerrar. Mismo look de gota; las estrellas
-       se ven un poco menos a través.
-       ¿Quieres recuperar el vidrio que deja ver el #starfield y tu equipo lo aguanta?
-       Cambia el ÚLTIMO layer `rgba(38,44,46,.72)` por `rgba(205,220,228,.05)` y
-       descomenta las 2 líneas `backdrop-filter` de abajo. */
+    /* FALLBACK SIN BLUR (activo): */
     background:  /* sheen -60% */
         radial-gradient(circle at 38% 26%, rgba(255,255,255,.10), rgba(255,255,255,.02) 40%, rgba(255,255,255,0) 66%),
         radial-gradient(120% 90% at 50% 122%, rgba(190,215,225,.12), rgba(255,255,255,0) 58%),
@@ -5363,14 +4953,7 @@ body.dark-mode .top-controls .gesture-toggle.active {
         0 7px 15px -5px rgba(0,0,0,.6);
 }
 
-/* ═══ TINTE LITÚRGICO DE LAS CUENTAS ═══════════════════════════════════════
-   Las cuentas siguen el tiempo litúrgico: el motor (initLiturgicalCover) pone
-   --cover-1/2/3 (luz/base/sombra de la pasta de la temporada) en :root. Aquí
-   tiño el nácar/gota hacia ese color con color-mix, conservando el brillo perla.
-   Va DESPUÉS de los bloques neutros → gana en cascada; si un navegador no soporta
-   color-mix, se queda el gradiente neutro de arriba (fallback). El "accionar"
-   (tap/☰ abierto/gestos on) usa el color de la temporada más saturado (en
-   Ordinario = verde salvia, como antes). ── Ver [[cantoral-menu-rosario]]. */
+/* ═══ TINTE LITÚRGICO DE LAS CUENTAS ═══════════════════════════════════════ Las cuentas siguen el tiempo litúrgico: */
 .top-controls .search-btn,
 .top-controls .font-picker-toggle,
 .top-controls .menu-btn,
@@ -5438,16 +5021,10 @@ body.dark-mode .top-controls .gesture-toggle.active {
         0 7px 15px -5px rgba(0,0,0,.6);
 }
 
-/* NOTA: el FALLBACK SIN BLUR ya está APLICADO por defecto (ver el bloque «GOTA DE
-   AGUA» de arriba: fondo sólido `rgba(38,44,46,.72)` en vez de backdrop-filter),
-   porque el blur causaba lag. Para volver al vidrio real, seguir las instrucciones
-   comentadas en ese bloque. */
+/* NOTA: el FALLBACK SIN BLUR ya está APLICADO por defecto (ver el bloque «GOTA DE AGUA» de arriba: */
 /* ══════════════════════ fin menú rosario ══════════════════════════════════ */
 
-/* ═══ COMPARTIR — perla + nube de destinos (colapsable dentro del menú) ═══════
-   La cuenta Compartir reusa .index-btn (estilo perla + tinte litúrgico). De ella
-   SALE una nube horizontal con WhatsApp/Facebook/Instagram/Copiar/QR. La nube va
-   ABSOLUTA (no reflota el menú) y emana hacia la izquierda de la cuenta. */
+/* ═══ COMPARTIR — perla + nube de destinos (colapsable dentro del menú) ═══════ La cuenta Compartir reusa .index-btn (estilo perla + tinte */
 .top-controls .share-widget {
     position: relative;
     display: flex;
@@ -5515,10 +5092,7 @@ body.dark-mode .top-controls .gesture-toggle.active {
     transition: transform .18s ease, box-shadow .2s ease, color .2s ease;
 }
 .top-controls .share-dot svg { width: 21px; height: 21px; }
-/* Hilo del rosario CONTINÚA por la nube: de centro a centro de las cuentas de
-   compartir, igual estilo que .menu-items::before. Arranca 30px arriba (centro
-   de la perla Compartir: 21px medio-bead + 9px de margen) y baja al centro de
-   la última. z:0 → detrás de las cuentas. */
+/* Hilo del rosario CONTINÚA por la nube: */
 .top-controls .share-cloud::before {
     content: "";
     position: absolute;
@@ -5530,9 +5104,7 @@ body.dark-mode .top-controls .gesture-toggle.active {
     background: rgba(111,128,101,.55);
     z-index: 0;
     pointer-events: none;
-    /* El hilo NO debe verse antes que las cuentas: arranca colapsado (scaleY 0
-       desde arriba) e invisible; al abrir CRECE hacia abajo con un pequeño
-       retraso, entrando junto con el sharepop escalonado de las cuentas. */
+    /* El hilo NO debe verse antes que las cuentas: */
     opacity: 0;
     transform: translateX(-1px) scaleY(0);
     transform-origin: top center;
@@ -5632,12 +5204,7 @@ body.dark-mode .top-controls .share-dot.ig { color: #ff7cc4; }
 }
 /* ══════════════════════ fin compartir ══════════════════════════════════════ */
 
-/* ═══ MODO LIGERO (body.lite) — para equipos MUY modestos (2015/pocos recursos) ═══
-   Apaga TODA animación/transición y OCULTA lo decorativo (no solo lo pausa: se
-   quita del render). El volteo queda INSTANTÁNEO (transition:none). Se conserva lo
-   funcional: zoom de letra, claro/oscuro, buscar, índice, diccionario, navegar,
-   scroll, compartir/QR, listones. Se activa con el botón 🐢 del menú (persistente)
-   o hereda `prefers-reduced-motion` del sistema. */
+/* ═══ MODO LIGERO (body.lite) — para equipos MUY modestos (2015/pocos recursos) ═══ Apaga TODA animación/transición y OCULTA lo decorativo */
 body.lite *,
 body.lite *::before,
 body.lite *::after {
@@ -5645,12 +5212,7 @@ body.lite *::after {
     transition: none !important;
     will-change: auto !important;
 }
-/* EXCEPCIÓN pedida por el user: conservar el VOLTEO de páginas en lite (era lo
-   más brusco al quitarlo). Es barato — solo `transform` en GPU, y solo la hoja
-   .turning se promueve —, así que no traiciona el objetivo del modo ligero (lo
-   caro es el decorativo, que sigue oculto). Duración ágil fija = MIN_FLIP_MS.
-   Se respeta prefers-reduced-motion: si el sistema pide menos movimiento, el
-   volteo sigue instantáneo (este build hereda RM como lite). */
+/* EXCEPCIÓN pedida por el user: */
 @media (prefers-reduced-motion: no-preference) {
     body.lite .paper,
     body.lite .paper > .front,
@@ -5695,11 +5257,7 @@ body.lite .search-clear {
 }
 /* ══════════════════════ fin modo ligero ═════════════════════════════════════ */
 
-/* ═══ Botón GUÍA DE ACORDES (ícono guitarra) ═════════════════════════════════
-   Plano, en el rincón inferior derecho ENCIMA del número de página, con el
-   mismo espíritu que el número (vive dentro del papel → voltea con la hoja).
-   Aparece solo en cantos (dentro de .footer) y en el diccionario (.dict-page).
-   Colores propios del ícono (paleta ukulele), no sigue el tema. */
+/* ═══ Botón GUÍA DE ACORDES (ícono guitarra) ═════════════════════════════════ Plano, en el rincón inferior derecho ENCIMA del número de */
 .guide-btn {
     position: absolute;
     right: 8px;
@@ -5717,9 +5275,7 @@ body.lite .search-clear {
 }
 .guide-btn svg { height: 18px; width: auto; display: block; }
 .guide-btn:active { transform: scale(0.9); }
-/* En el DICCIONARIO no hay pie de página: el rincón inferior derecho lo ocupa la
-   lista de acordes. Se sube el botón a la esquina SUPERIOR derecha (junto al
-   título), fuera de la tabla. */
+/* En el DICCIONARIO no hay pie de página: */
 .dict-page .guide-btn { top: 10px; bottom: auto; right: 12px; }
 
 /* ── Botón "T" de transposición (a la IZQUIERDA de la guía 🎸, mismo rincón) ── */
@@ -5764,9 +5320,7 @@ body.dark-mode .transpose-btn.active { color: #ea9a5f; }
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
 }
 .transpose-pop .tp-step {
-    /* Área TÁCTIL 40×40 (cómoda), SIN círculo ni fondo: sólo el símbolo −/+ en el
-       color del tiempo litúrgico (--cover-2, mezclado un poco con el texto para
-       contrastar en claro y oscuro). Sin highlight/sombra al tocar. */
+    /* Área TÁCTIL 40×40 (cómoda), SIN círculo ni fondo: */
     width: 40px; height: 40px; border: 0; padding: 0; background: none;
     -webkit-appearance: none; appearance: none; outline: none;
     -webkit-tap-highlight-color: transparent;
@@ -5788,13 +5342,8 @@ body.dark-mode .transpose-btn.active { color: #ea9a5f; }
 /* El diccionario no tiene .footer; anclamos el botón a la propia página. */
 .dict-page { position: relative; }
 
-/* ── Pista "Desliza para avanzar" (portada, 1ª vez) ──
-   Un dedo (punto) se desliza de derecha a izquierda hacia dos ‹‹ = gesto de
-   avanzar. Theme-aware (--page-bg/text) y tinte litúrgico (--cover-2). Nunca
-   bloquea el gesto: pointer-events:none. */
-/* Oro litúrgico: resalta sobre TODAS las pastas (verde/rojo/morado/blanco/rosa).
-   El borde oscuro tenue (text-shadow / box-shadow) le da contraste también sobre
-   portadas claras. */
+/* ── Pista "Desliza para avanzar" (portada, 1ª vez) ── Un dedo (punto) se desliza de derecha a izquierda hacia dos ‹‹ = gesto de avanzar. */
+/* Oro litúrgico: resalta sobre TODAS las pastas (verde/rojo/morado/blanco/rosa). */
 .swipe-hint {
     --sh-accent: #e0a52e;
     position: fixed;
@@ -5819,10 +5368,7 @@ body.dark-mode .transpose-btn.active { color: #ea9a5f; }
 .sh-dot {
     position: absolute; top: 50%; margin-top: -12px; left: 0;
     width: 24px; height: 24px; border-radius: 50%;
-    /* El "dedo" CONSERVA el color litúrgico (cambia con la pasta) — solo las
-       flechas van en oro. Color SÓLIDO de pasta (--cover-2, sin blanquear ni
-       color-mix → se ve el color real, no transparente). Anillo negro para
-       resaltar en la caja. */
+    /* El "dedo" CONSERVA el color litúrgico (cambia con la pasta) — solo las flechas van en oro. */
     background: var(--cover-2, #97a78c);
     box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.28);
     animation: shSwipe 1.9s cubic-bezier(0.5, 0, 0.2, 1) infinite;
@@ -5848,10 +5394,7 @@ body.dark-mode .transpose-btn.active { color: #ea9a5f; }
     .sh-chev { animation: none; }
 }
 
-/* ── Tooltip personalizado (mismo lenguaje que la versión DESK) ───────────────
-   Burbuja global flotante posicionada por JS (initTooltips): hover en escritorio,
-   long-press en móvil. Lee el aria-label del control. Es position:fixed → NO
-   depende del position/overflow de cada botón (robusto, no rompe layout). */
+/* ── Tooltip personalizado (mismo lenguaje que la versión DESK) ─────────────── Burbuja global flotante posicionada por JS (initTooltips): */
 #tipBubble {
     position: fixed;
     z-index: 9500;
@@ -5877,9 +5420,7 @@ body.dark-mode #tipBubble {
 /* Evita el menú-callout de iOS al mantener presionado estos botones. */
 [data-tip] { -webkit-touch-callout: none; }
 
-/* ── Overlay de la lámina "Guía Para Acordes" ──
-   Se abre CRECIENDO desde la esquina inferior derecha (donde vive el ícono)
-   hacia arriba (transform-origin bottom-right). */
+/* ── Overlay de la lámina "Guía Para Acordes" ── Se abre CRECIENDO desde la esquina inferior derecha (donde vive el ícono) hacia arriba */
 .guide-modal {
     position: fixed;
     inset: 0;
@@ -5966,13 +5507,7 @@ body.dark-mode #tipBubble {
 }
 /* ══════════════════════ fin guía de acordes ═════════════════════════════════ */
 
-/* ═══ FAB INSTALAR — "guarda el cantoral como app" ═══════════════════════════
-   Fijo, centro-abajo (fuera de las esquinas de volteo y del número de página).
-   NO es un chip genérico: perla alargada con el tinte litúrgico del libro
-   (--cover-1/2/3), borde crema e iluminación interior como las cuentas del
-   rosario. Un halo suave lo señala unas pocas veces al aparecer y luego se
-   calma (para que la gente se ENTERE sin molestar). Se oculta si ya está
-   instalado o tras instalar (JS). */
+/* ═══ FAB INSTALAR — "guarda el cantoral como app" ═══════════════════════════ Fijo, centro-abajo (fuera de las esquinas de volteo y del */
 .install-fab {
     position: fixed;
     left: 50%;
@@ -6076,19 +5611,12 @@ body.lite .install-fab::before { display: none; }
 .ios-share-ico svg { width: 100%; height: 100%; }
 /* ══════════════════════ fin FAB instalar ════════════════════════════════════ */
 
-/* ═══ CONTRAPORTADA — cierre del libro ═══════════════════════════════════════
-   Última hoja (pCoverBack). La cara trasera .contraportada usa la MISMA pasta
-   litúrgica (--cover-1/2/3) que la portada. Al cerrarse el libro al final
-   (body.book-at-back) el contenido de cierre entra con fundido suave. La correa
-   "Volver al inicio" (piel salvia) regresa a la portada con el libro cerrado.
-   Texto (bc-blurb) = PLACEHOLDER; el user pondrá el suyo. */
+/* ═══ CONTRAPORTADA — cierre del libro ═══════════════════════════════════════ Última hoja (pCoverBack). */
 /* .cover-inside = cara interior de la contraportada: pasta lisa, hereda .cover-page (sin estilos propios). */
 
 .contraportada { position: relative; padding: 0; }
 
-/* El contenido llena la hoja: sello+texto ARRIBA (centrados en el hueco), QR+URL+
-   año ABAJO (donde antes quedaba la correa). La correa "Volver al inicio" es la
-   banda de piel de arriba (ver .bc-strap). */
+/* El contenido llena la hoja: */
 .contraportada .bc-content {
     position: absolute;
     inset: 0;
@@ -6178,10 +5706,7 @@ body.book-at-back .contraportada .bc-strap   { animation: bcFadeStrap .52s cubic
     padding-left: .32em; /* compensa el letter-spacing final para centrar */
 }
 
-/* Correa "Volver al inicio" — banda de piel salvia horizontal ARRIBA, MISMO
-   estilo y posición que la correa de CIERRE (.rib-close): gradiente salvia,
-   pespunte crema (::before), pasador/trabilla a la izquierda (::after), etiqueta
-   crema en mayúsculas. Crece desde la izquierda y toca el borde derecho. */
+/* Correa "Volver al inicio" — banda de piel salvia horizontal ARRIBA, MISMO estilo y posición que la correa de CIERRE (.rib-close): */
 .bc-strap {
     position: absolute;
     top: clamp(8px, 1.6vh, 14px);
@@ -6252,17 +5777,7 @@ body.book-at-back .install-fab { display: none !important; }
 /* ══════════════════════ fin contraportada ═══════════════════════════════════ */
 
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   CONTRAPORTADA — ESPIRAL DIAGONAL DE MARIPOSAS DE PAPEL
-   Pegar al FINAL de styles.css.
-
-   Todo anima SÓLO con transform/opacity → capa GPU (igual que el intro), así
-   no le roba frames al hilo principal. Los valores de cada mariposa (radio,
-   deriva, tamaño, aleteo, tono) llegan en custom properties desde script.js.
-
-   Punto de nacimiento de la espiral: 24% / 56% de la hoja. Si lo cambias,
-   cámbialo en LOS TRES sitios marcados con ◆ (deben coincidir).
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════════════ CONTRAPORTADA — ESPIRAL DIAGONAL DE MARIPOSAS DE PAPEL Pegar al */
 
 .cp-sky {
     position: absolute;
@@ -6435,9 +5950,7 @@ body.intro-active .cp-sky *,
     }
 }
 
-/* ── LUCIÉRNAGAS de la contraportada (SOLO modo oscuro; reemplazan las mariposas
-      de papel del modo claro). ~14 puntitos con glow, animación 100% CSS (deriva
-      + parpadeo), sin rAF → baratísimo. Mismos gates de pausa que .cp-sky. ── */
+/* ── LUCIÉRNAGAS de la contraportada (SOLO modo oscuro; reemplazan las mariposas de papel del modo claro). */
 .cp-ff-sky {
     position: absolute;
     inset: 0;
@@ -6530,11 +6043,7 @@ body.book-at-back .book { box-shadow: 0 26px 46px var(--book-shadow), 0 8px 14px
     box-shadow: inset -1px 0 0 rgba(0,0,0,.10);
 }
 
-/* ═══ Pasta trasera CERRADA = REVERSO FÍSICO del libro (ESPEJO de la portada) ══
-   Al llegar a la contraportada (body.book-at-back) el libro se ve CERRADO por
-   detrás: el LOMO pasa a la DERECHA y el CANTO de hojas a la IZQUIERDA (espejo de
-   la portada). Se voltean SOLO las decoraciones de "libro" (lomo, canto, redondeo,
-   correa); el contenido (sello/texto/QR/año) queda derecho y legible. */
+/* ═══ Pasta trasera CERRADA = REVERSO FÍSICO del libro (ESPEJO de la portada) ══ Al llegar a la contraportada (body.book-at-back) el libro se */
 body.book-at-back .contraportada { border-radius: 7px 3px 3px 7px; }
 body.book-at-back .bc-spine {
     left: auto; right: 0;
@@ -6554,9 +6063,7 @@ body.book-at-back .bc-strap {
     left: 0; right: clamp(34px, 11vw, 52px);
     transform-origin: right center;
 }
-/* UNA sola correa con DOS acciones dentro: "Volver al inicio" (izq) y "Ant"
-   (der, pegado al lomo → reabre a la página anterior/créditos). Los botones son
-   transparentes; la piel/pespunte/pasador siguen en el contenedor .bc-strap. */
+/* UNA sola correa con DOS acciones dentro: */
 .bc-strap-btn {
     display: inline-flex; align-items: center; gap: 8px;
     background: none; border: 0; margin: 0; padding: 0;
@@ -6665,9 +6172,7 @@ body.tour-center #tourHole::after { display: none; }
 #tourCard .t-btns  { display: flex; justify-content: flex-end; gap: 8px; }
 #tourCard button   { font: inherit; font-size: .94rem; border: none; border-radius: 999px; padding: 6px 14px; cursor: pointer; }
 #tourCard .t-skip  { background: transparent; color: var(--page-text); opacity: .55; }
-/* El botón «Siguiente» adopta el TONO LITÚRGICO (--cover-2, que el JS pone en :root
-   por temporada) — más saturado para que el cambio se note; borde en tono pleno y
-   texto oscuro para leerse sobre cualquier estación (verde/morado/rojo/dorado). */
+/* El botón «Siguiente» adopta el TONO LITÚRGICO (--cover-2, que el JS pone en :root por temporada) — más saturado para que el cambio se note; */
 #tourCard .t-next  {
     background: color-mix(in srgb, var(--cover-2, #8b9c80) 90%, #ffffff);
     border: 1.5px solid color-mix(in srgb, var(--cover-2, #8b9c80) 88%, #3a352a);
