@@ -187,23 +187,23 @@
       "label": "Animación",
       "songRange": [
         294,
-        322
+        321
       ]
     },
     {
       "key": "mananitas",
       "label": "Mañanitas",
       "songRange": [
-        323,
-        323
+        322,
+        322
       ]
     },
     {
       "key": "creditos",
       "label": "Créditos",
       "songRange": [
-        324,
-        324
+        323,
+        323
       ]
     }
   ],
@@ -272,7 +272,7 @@
       "type": "entry",
       "songTarget": "7",
       "sectionTarget": null,
-      "name": "El Señor nos llama, (D) y (C).",
+      "name": "El Señor nos llama.",
       "pageNum": "7",
       "isDict": false
     },
@@ -320,7 +320,7 @@
       "type": "entry",
       "songTarget": "13",
       "sectionTarget": null,
-      "name": "Reunidos en el nombre del Señor, (G) Y (E).",
+      "name": "Reunidos en el nombre del Señor.",
       "pageNum": "13",
       "isDict": false
     },
@@ -524,7 +524,7 @@
       "type": "entry",
       "songTarget": "37",
       "sectionTarget": null,
-      "name": "Nos has llamado al desierto (Em / Dm)",
+      "name": "Nos has llamado al desierto",
       "pageNum": "39",
       "isDict": false
     },
@@ -552,7 +552,7 @@
       "type": "entry",
       "songTarget": "40",
       "sectionTarget": null,
-      "name": "Vamos con gozo (E) Y (D)",
+      "name": "Vamos con gozo",
       "pageNum": "43",
       "isDict": false
     },
@@ -640,7 +640,7 @@
       "type": "entry",
       "songTarget": "62",
       "sectionTarget": null,
-      "name": "E (G/F)",
+      "name": "E",
       "pageNum": "56",
       "isDict": false
     },
@@ -716,7 +716,7 @@
       "type": "entry",
       "songTarget": "90",
       "sectionTarget": null,
-      "name": "Acepta Señor, nuestros dones, (C) y (A)",
+      "name": "Acepta Señor, nuestros dones",
       "pageNum": "65",
       "isDict": false
     },
@@ -764,7 +764,7 @@
       "type": "entry",
       "songTarget": "96",
       "sectionTarget": null,
-      "name": "Hemos entregado, (C) y (A)",
+      "name": "Hemos entregado",
       "pageNum": "71",
       "isDict": false
     },
@@ -860,7 +860,7 @@
       "type": "entry",
       "songTarget": "108",
       "sectionTarget": null,
-      "name": "Vino y pan (Am / Em)",
+      "name": "Vino y pan",
       "pageNum": "83",
       "isDict": false
     },
@@ -920,7 +920,7 @@
       "type": "entry",
       "songTarget": "115",
       "sectionTarget": null,
-      "name": "G (Bm / Am)",
+      "name": "G",
       "pageNum": "88",
       "isDict": false
     },
@@ -992,7 +992,7 @@
       "type": "entry",
       "songTarget": "123",
       "sectionTarget": null,
-      "name": "A (A / G)",
+      "name": "A",
       "pageNum": "95",
       "isDict": false
     },
@@ -1124,7 +1124,7 @@
       "type": "entry",
       "songTarget": "139",
       "sectionTarget": null,
-      "name": "Amén. El cuerpo de Cristo (Em / Bm)",
+      "name": "Amén. El cuerpo de Cristo",
       "pageNum": "107",
       "isDict": false
     },
@@ -1400,7 +1400,7 @@
       "type": "entry",
       "songTarget": "173",
       "sectionTarget": null,
-      "name": "María mírame, (D) y (G)",
+      "name": "María mírame",
       "pageNum": "144",
       "isDict": false
     },
@@ -1611,7 +1611,7 @@
     {
       "type": "entry",
       "songTarget": "199",
-      "name": "Sembrador, (G) y (E)",
+      "name": "Sembrador",
       "pageNum": 173,
       "sectionTarget": null,
       "isDict": false
@@ -1711,7 +1711,7 @@
     {
       "type": "entry",
       "songTarget": "211",
-      "name": "Entraré, (G) y (E)",
+      "name": "Entraré",
       "pageNum": 187,
       "sectionTarget": null,
       "isDict": false
@@ -1887,7 +1887,7 @@
     {
       "type": "entry",
       "songTarget": "233",
-      "name": "Venimos adorar, (D) y (C).",
+      "name": "Venimos adorar.",
       "pageNum": 210,
       "sectionTarget": null,
       "isDict": false
@@ -2224,7 +2224,7 @@
       "type": "entry",
       "songTarget": "273",
       "name": "Si yo no tengo amor",
-      "pageNum": 258,
+      "pageNum": 257,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2232,7 +2232,7 @@
       "type": "entry",
       "songTarget": "274",
       "name": "Un mandamiento nuevo",
-      "pageNum": 259,
+      "pageNum": 258,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2240,7 +2240,7 @@
       "type": "entry",
       "songTarget": "275",
       "name": "Venid, oh cristianos, venid",
-      "pageNum": 260,
+      "pageNum": 259,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2252,7 +2252,7 @@
       "type": "entry",
       "songTarget": "276",
       "name": "Amar es entregarse",
-      "pageNum": 261,
+      "pageNum": 260,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2260,7 +2260,7 @@
       "type": "entry",
       "songTarget": "277",
       "name": "Como el Padre me amó",
-      "pageNum": 262,
+      "pageNum": 261,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2268,7 +2268,7 @@
       "type": "entry",
       "songTarget": "278",
       "name": "Creados para ti",
-      "pageNum": 263,
+      "pageNum": 262,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2276,7 +2276,7 @@
       "type": "entry",
       "songTarget": "279",
       "name": "El retorno del Señor",
-      "pageNum": 264,
+      "pageNum": 263,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2284,7 +2284,7 @@
       "type": "entry",
       "songTarget": "280",
       "name": "Ha vencido el Cordero",
-      "pageNum": 265,
+      "pageNum": 264,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2292,7 +2292,7 @@
       "type": "entry",
       "songTarget": "281",
       "name": "Himno al amor",
-      "pageNum": 266,
+      "pageNum": 265,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2300,7 +2300,7 @@
       "type": "entry",
       "songTarget": "282",
       "name": "Himno a San José",
-      "pageNum": 267,
+      "pageNum": 266,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2308,7 +2308,7 @@
       "type": "entry",
       "songTarget": "283",
       "name": "Hoy Señor, te damos gracias",
-      "pageNum": 268,
+      "pageNum": 267,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2316,7 +2316,7 @@
       "type": "entry",
       "songTarget": "284",
       "name": "Hoy venimos ante ti",
-      "pageNum": 269,
+      "pageNum": 268,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2324,7 +2324,7 @@
       "type": "entry",
       "songTarget": "285",
       "name": "In persona Christi",
-      "pageNum": 270,
+      "pageNum": 269,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2332,7 +2332,7 @@
       "type": "entry",
       "songTarget": "286",
       "name": "Oración de los esposos",
-      "pageNum": 272,
+      "pageNum": 271,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2340,7 +2340,7 @@
       "type": "entry",
       "songTarget": "287",
       "name": "Plegaria guadalupana",
-      "pageNum": 273,
+      "pageNum": 272,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2348,7 +2348,7 @@
       "type": "entry",
       "songTarget": "288",
       "name": "San José tu favor imploramos",
-      "pageNum": 274,
+      "pageNum": 273,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2356,7 +2356,7 @@
       "type": "entry",
       "songTarget": "289",
       "name": "Sois la semilla",
-      "pageNum": 275,
+      "pageNum": 274,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2364,7 +2364,7 @@
       "type": "entry",
       "songTarget": "290",
       "name": "Tarde te amé",
-      "pageNum": 276,
+      "pageNum": 275,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2372,7 +2372,7 @@
       "type": "entry",
       "songTarget": "291",
       "name": "Tu palabra me da vida",
-      "pageNum": 278,
+      "pageNum": 277,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2380,7 +2380,7 @@
       "type": "entry",
       "songTarget": "292",
       "name": "Tú pones lo demás",
-      "pageNum": 279,
+      "pageNum": 278,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2388,7 +2388,7 @@
       "type": "entry",
       "songTarget": "293",
       "name": "Viva Cristo Rey",
-      "pageNum": 280,
+      "pageNum": 279,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2400,7 +2400,7 @@
       "type": "entry",
       "songTarget": "294",
       "name": "Amar por amar",
-      "pageNum": 282,
+      "pageNum": 281,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2408,7 +2408,7 @@
       "type": "entry",
       "songTarget": "295",
       "name": "Amén",
-      "pageNum": 283,
+      "pageNum": 282,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2416,7 +2416,7 @@
       "type": "entry",
       "songTarget": "296",
       "name": "Andar en tren",
-      "pageNum": 283,
+      "pageNum": 282,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2424,7 +2424,7 @@
       "type": "entry",
       "songTarget": "297",
       "name": "Buenos días y buenas noches",
-      "pageNum": 284,
+      "pageNum": 283,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2432,7 +2432,7 @@
       "type": "entry",
       "songTarget": "298",
       "name": "Caminando voy",
-      "pageNum": 285,
+      "pageNum": 284,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2440,7 +2440,7 @@
       "type": "entry",
       "songTarget": "299",
       "name": "Canción del astronauta",
-      "pageNum": 286,
+      "pageNum": 285,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2448,7 +2448,7 @@
       "type": "entry",
       "songTarget": "300",
       "name": "Demos gracias al Señor",
-      "pageNum": 287,
+      "pageNum": 286,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2456,7 +2456,7 @@
       "type": "entry",
       "songTarget": "301",
       "name": "Dios es amor",
-      "pageNum": 288,
+      "pageNum": 287,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2464,7 +2464,7 @@
       "type": "entry",
       "songTarget": "302",
       "name": "El amor de Dios",
-      "pageNum": 289,
+      "pageNum": 288,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2472,7 +2472,7 @@
       "type": "entry",
       "songTarget": "303",
       "name": "El gallo",
-      "pageNum": 290,
+      "pageNum": 289,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2480,7 +2480,7 @@
       "type": "entry",
       "songTarget": "304",
       "name": "El granito de mostaza",
-      "pageNum": 291,
+      "pageNum": 290,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2488,7 +2488,7 @@
       "type": "entry",
       "songTarget": "305",
       "name": "El mero, mero",
-      "pageNum": 292,
+      "pageNum": 291,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2496,7 +2496,7 @@
       "type": "entry",
       "songTarget": "306",
       "name": "El sapo",
-      "pageNum": 293,
+      "pageNum": 292,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2504,7 +2504,7 @@
       "type": "entry",
       "songTarget": "307",
       "name": "Este gozo no va a pasar",
-      "pageNum": 294,
+      "pageNum": 293,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2512,7 +2512,7 @@
       "type": "entry",
       "songTarget": "308",
       "name": "La hormiga",
-      "pageNum": 295,
+      "pageNum": 294,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2520,54 +2520,54 @@
       "type": "entry",
       "songTarget": "309",
       "name": "Mi mano está llena",
-      "pageNum": 296,
+      "pageNum": 295,
       "sectionTarget": null,
       "isDict": false
     },
     {
       "type": "entry",
       "songTarget": "310",
-      "name": "No hay Dios",
-      "pageNum": 297,
+      "name": "Por la calzada de Emaús",
+      "pageNum": 296,
       "sectionTarget": null,
       "isDict": false
     },
     {
       "type": "entry",
       "songTarget": "311",
-      "name": "Por la calzada de Emaús",
-      "pageNum": 298,
+      "name": "Rock del Espíritu Santo",
+      "pageNum": 297,
       "sectionTarget": null,
       "isDict": false
     },
     {
       "type": "entry",
       "songTarget": "312",
-      "name": "Rock del Espíritu Santo",
-      "pageNum": 299,
+      "name": "Si el pecado llega a tu corazón",
+      "pageNum": 298,
       "sectionTarget": null,
       "isDict": false
     },
     {
       "type": "entry",
       "songTarget": "313",
-      "name": "Si el pecado llega a tu corazón",
-      "pageNum": 300,
+      "name": "Soy yo, Señor",
+      "pageNum": 299,
       "sectionTarget": null,
       "isDict": false
     },
     {
       "type": "entry",
       "songTarget": "314",
-      "name": "Soy yo, Señor",
-      "pageNum": 301,
+      "name": "Tengo que gritar",
+      "pageNum": 300,
       "sectionTarget": null,
       "isDict": false
     },
     {
       "type": "entry",
       "songTarget": "315",
-      "name": "Tengo que gritar",
+      "name": "Una tortuguita",
       "pageNum": 302,
       "sectionTarget": null,
       "isDict": false
@@ -2575,56 +2575,48 @@
     {
       "type": "entry",
       "songTarget": "316",
-      "name": "Una tortuguita",
-      "pageNum": 304,
+      "name": "Viva la fe",
+      "pageNum": 303,
       "sectionTarget": null,
       "isDict": false
     },
     {
       "type": "entry",
       "songTarget": "317",
-      "name": "Viva la fe",
-      "pageNum": 305,
+      "name": "Ya llegó",
+      "pageNum": 304,
       "sectionTarget": null,
       "isDict": false
     },
     {
       "type": "entry",
       "songTarget": "318",
-      "name": "Ya llegó",
-      "pageNum": 306,
+      "name": "Yo canto como David",
+      "pageNum": 305,
       "sectionTarget": null,
       "isDict": false
     },
     {
       "type": "entry",
       "songTarget": "319",
-      "name": "Yo canto como David",
-      "pageNum": 307,
+      "name": "Yo le quiero cantar",
+      "pageNum": 306,
       "sectionTarget": null,
       "isDict": false
     },
     {
       "type": "entry",
       "songTarget": "320",
-      "name": "Yo le quiero cantar",
-      "pageNum": 308,
+      "name": "Yo te alabo con el corazón",
+      "pageNum": 307,
       "sectionTarget": null,
       "isDict": false
     },
     {
       "type": "entry",
       "songTarget": "321",
-      "name": "Yo te alabo con el corazón",
-      "pageNum": 309,
-      "sectionTarget": null,
-      "isDict": false
-    },
-    {
-      "type": "entry",
-      "songTarget": "322",
       "name": "Yo tengo un amigo que me ama",
-      "pageNum": 310,
+      "pageNum": 308,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2634,9 +2626,9 @@
     },
     {
       "type": "entry",
-      "songTarget": "323",
+      "songTarget": "322",
       "name": "Mañanitas",
-      "pageNum": 311,
+      "pageNum": 309,
       "sectionTarget": null,
       "isDict": false
     },
@@ -2649,7 +2641,7 @@
       "songTarget": null,
       "sectionTarget": "creditos",
       "name": "Lista de autores",
-      "pageNum": 312
+      "pageNum": 310
     }
   ],
   "cantos": [
@@ -3372,7 +3364,7 @@
           ]
         }
       ],
-      "indexName": "El Señor nos llama, (D) y (C)."
+      "indexName": "El Señor nos llama."
     },
     {
       "id": "8",
@@ -4056,7 +4048,7 @@
           ]
         }
       ],
-      "indexName": "Reunidos en el nombre del Señor, (G) Y (E)."
+      "indexName": "Reunidos en el nombre del Señor."
     },
     {
       "id": "14",
@@ -6323,7 +6315,7 @@
           "text": "Se acerca Señor tu día,\nen el que todo florece\ncon su luz y su alegría\ny el camino resplandece\nen la nueva creación."
         }
       ],
-      "indexName": "Nos has llamado al desierto (Em / Dm)"
+      "indexName": "Nos has llamado al desierto"
     },
     {
       "id": "38",
@@ -6708,7 +6700,7 @@
           ]
         }
       ],
-      "indexName": "Vamos con gozo (E) Y (D)"
+      "indexName": "Vamos con gozo"
     },
     {
       "id": "41",
@@ -9273,7 +9265,7 @@
           "text": "Gracias, Señor, de tu eterna bondad,\nnuestra vida es don, te venimos a dar."
         }
       ],
-      "indexName": "Acepta Señor, nuestros dones, (C) y (A)"
+      "indexName": "Acepta Señor, nuestros dones"
     },
     {
       "id": "91",
@@ -9902,7 +9894,7 @@
           ]
         }
       ],
-      "indexName": "Hemos entregado, (C) y (A)"
+      "indexName": "Hemos entregado"
     },
     {
       "id": "97",
@@ -10920,7 +10912,7 @@
           "variant": "Em"
         }
       ],
-      "indexName": "Vino y pan (Am / Em)"
+      "indexName": "Vino y pan"
     },
     {
       "id": "109",
@@ -11483,7 +11475,7 @@
           "text": "HOSANA…"
         }
       ],
-      "indexName": "G (Bm / Am)"
+      "indexName": "G"
     },
     {
       "id": "116",
@@ -12109,7 +12101,7 @@
           "variant": "G"
         }
       ],
-      "indexName": "A (A / G)"
+      "indexName": "A"
     },
     {
       "id": "124",
@@ -13242,7 +13234,7 @@
           "text": "Amén, tu regreso en la gloria anhelamos.\nAmén, esperamos el día de tu venida,\namén."
         }
       ],
-      "indexName": "Amén. El cuerpo de Cristo (Em / Bm)"
+      "indexName": "Amén. El cuerpo de Cristo"
     },
     {
       "id": "140",
@@ -14788,7 +14780,7 @@
           "text": "En la mesa de Dios se sentarán,\ncomo hijos su pan comulgarán.\nUna misma esperanza caminando cantarán,\nen la vida como hermanos se amarán."
         }
       ],
-      "indexName": "Una espiga (G / E)"
+      "indexName": "Una espiga"
     },
     {
       "id": "156",
@@ -16670,7 +16662,7 @@
           "variant": "G"
         }
       ],
-      "indexName": "María mírame, (D) y (G)"
+      "indexName": "María mírame"
     },
     {
       "id": "174",
@@ -26049,7 +26041,8 @@
       "paperId": "m273",
       "layout": "song-page",
       "classes": [
-        "small"
+        "small",
+        "airy"
       ],
       "note": null,
       "variants": null,
@@ -26358,7 +26351,8 @@
       "paperId": "m278",
       "layout": "song-page",
       "classes": [
-        "small"
+        "small",
+        "airy"
       ],
       "note": null,
       "variants": null,
@@ -26407,7 +26401,10 @@
             "De agudos juncos, corona han hecho,\ny de vil caña, le dan el cetro.",
             "\"Ecce Homo\" dice el juez al pueblo,\nmas este pide que muera luego.",
             "Pilatos firma contra mi dueño,\nque muera infame, en un madero.",
-            "Ya la cruz carga, mi Nazareno,\n¡ay! que mis culpas son aquel peso."
+            "Ya la cruz carga, mi Nazareno,\n¡ay! que mis culpas son aquel peso.",
+            "Tres veces postra el duro leño,\nen tierra, el Hijo del Padre Eterno.",
+            "Su amante Madre lo encuentra tierno,\ny queda herido de ambos el pecho.",
+            "El de Cirinea, Simón por nombre,\nle ayuda presto y sube al monte."
           ]
         }
       ]
@@ -26421,7 +26418,8 @@
       "paperId": "m279",
       "layout": "continuation",
       "classes": [
-        "small"
+        "small",
+        "airy"
       ],
       "note": null,
       "variants": null,
@@ -26429,9 +26427,6 @@
         {
           "type": "extra",
           "paragraphs": [
-            "Tres veces postra el duro leño,\nen tierra, el Hijo del Padre Eterno.",
-            "Su amante Madre lo encuentra tierno,\ny queda herido de ambos el pecho.",
-            "El de Cirinea, Simón por nombre,\nle ayuda presto y sube al monte.",
             "Mujer piadosa le ofrece un lienzo,\ny el rostro santo recibe en premio.",
             "A las que lloran por sus tormentos,\nque lloren manda, por sí y sus deudos.",
             "Con crueles clavos, en tronco acerbo,\nclavan verdugos al Rey del Cielo.",
@@ -26440,28 +26435,7 @@
             "La gloria ofrece a un ladrón recto,\ny en confesarle, su Rey Supremo.",
             "Luego encomienda, de amores lleno,\na Juan su Madre, desde aquel tiempo.",
             "Desamparado de Dios inmenso,\nse queja triste de sentimiento.",
-            "Siguen las penas y ya sediento,\ndice que se halla de más tormento."
-          ]
-        }
-      ]
-    },
-    {
-      "id": "272C",
-      "title": "",
-      "section": "cuaresma",
-      "sectionLabel": "Cuaresma",
-      "pageNum": 257,
-      "paperId": "m280",
-      "layout": "continuation",
-      "classes": [
-        "small"
-      ],
-      "note": null,
-      "variants": null,
-      "content": [
-        {
-          "type": "extra",
-          "paragraphs": [
+            "Siguen las penas y ya sediento,\ndice que se halla de más tormento.",
             "Que está acabado, clama el misterio\nde redimirnos, que era su intento.",
             "Y en santas manos del Padre eterno,\nentrega su alma y último aliento.",
             "Llega el soldado con cruel acero,\nsu costado abre, que es feliz puerto.",
@@ -26478,7 +26452,7 @@
       "title": "273. SI YO NO TENGO AMOR.",
       "section": "cuaresma",
       "sectionLabel": "Cuaresma",
-      "pageNum": 258,
+      "pageNum": 257,
       "paperId": "m281",
       "layout": "song-page",
       "classes": [
@@ -26549,7 +26523,7 @@
       "title": "274. UN MANDAMIENTO NUEVO.",
       "section": "cuaresma",
       "sectionLabel": "Cuaresma",
-      "pageNum": 259,
+      "pageNum": 258,
       "paperId": "m282",
       "layout": "song-page",
       "classes": [
@@ -26617,7 +26591,7 @@
       "title": "275. VENID, OH CRISTIANOS.",
       "section": "cuaresma",
       "sectionLabel": "Cuaresma",
-      "pageNum": 260,
+      "pageNum": 259,
       "paperId": "m283",
       "layout": "song-page",
       "classes": [
@@ -26689,7 +26663,7 @@
       "title": "276. AMAR ES ENTREGARSE.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 261,
+      "pageNum": 260,
       "paperId": "m284",
       "layout": "song-page",
       "classes": [
@@ -26762,7 +26736,7 @@
       "title": "277. COMO EL PADRE ME AMÓ.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 262,
+      "pageNum": 261,
       "paperId": "m285",
       "layout": "song-page",
       "classes": [
@@ -26832,7 +26806,7 @@
       "title": "278. CREADOS PARA TI.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 263,
+      "pageNum": 262,
       "paperId": "m286",
       "layout": "song-page",
       "classes": [
@@ -26919,7 +26893,7 @@
       "title": "279. EL RETORNO DEL SEÑOR.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 264,
+      "pageNum": 263,
       "paperId": "m287",
       "layout": "song-page",
       "classes": [
@@ -27003,7 +26977,7 @@
       "title": "280. HA VENCIDO EL CORDERO.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 265,
+      "pageNum": 264,
       "paperId": "m288",
       "layout": "song-page",
       "classes": [
@@ -27085,7 +27059,7 @@
       "title": "281. HIMNO AL AMOR.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 266,
+      "pageNum": 265,
       "paperId": "m289",
       "layout": "song-page",
       "classes": [
@@ -27190,7 +27164,7 @@
       "title": "282. HIMNO A SAN JOSÉ.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 267,
+      "pageNum": 266,
       "paperId": "m290",
       "layout": "song-page",
       "classes": [
@@ -27267,7 +27241,7 @@
       "title": "283. HOY SEÑOR, TE DAMOS GRACIAS.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 268,
+      "pageNum": 267,
       "paperId": "m291",
       "layout": "song-page",
       "classes": [
@@ -27336,7 +27310,7 @@
       "title": "284. HOY VENIMOS ANTE TI.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 269,
+      "pageNum": 268,
       "paperId": "m292",
       "layout": "song-page",
       "classes": [
@@ -27395,7 +27369,7 @@
       "title": "285. IN PERSONA CHRISTI.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 270,
+      "pageNum": 269,
       "paperId": "m293",
       "layout": "song-page",
       "classes": [
@@ -27509,7 +27483,7 @@
       "title": "",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 271,
+      "pageNum": 270,
       "paperId": "m294",
       "layout": "continuation",
       "classes": [
@@ -27628,7 +27602,7 @@
       "title": "286. ORACIÓN DE LOS ESPOSOS.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 272,
+      "pageNum": 271,
       "paperId": "m295",
       "layout": "song-page",
       "classes": [
@@ -27743,7 +27717,7 @@
       "title": "287. PLEGARIA GUADALUPANA.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 273,
+      "pageNum": 272,
       "paperId": "m296",
       "layout": "song-page",
       "classes": [
@@ -27842,7 +27816,7 @@
       "title": "288. SAN JOSÉ TU FAVOR IMPLORAMOS.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 274,
+      "pageNum": 273,
       "paperId": "m297",
       "layout": "song-page",
       "classes": [
@@ -27918,7 +27892,7 @@
       "title": "289. SOIS LA SEMILLA.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 275,
+      "pageNum": 274,
       "paperId": "m298",
       "layout": "song-page",
       "classes": [
@@ -28027,7 +28001,7 @@
       "title": "290. TARDE TE AMÉ.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 276,
+      "pageNum": 275,
       "paperId": "m299",
       "layout": "song-page",
       "classes": [
@@ -28142,7 +28116,7 @@
       "title": "",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 277,
+      "pageNum": 276,
       "paperId": "m300",
       "layout": "continuation",
       "classes": [
@@ -28224,7 +28198,7 @@
       "title": "291. TU PALABRA ME DA VIDA.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 278,
+      "pageNum": 277,
       "paperId": "m301",
       "layout": "song-page",
       "classes": [
@@ -28294,7 +28268,7 @@
       "title": "292. TÚ PONES LO DEMÁS.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 279,
+      "pageNum": 278,
       "paperId": "m302",
       "layout": "song-page",
       "classes": [
@@ -28413,7 +28387,7 @@
       "title": "293. VIVA CRISTO REY.",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 280,
+      "pageNum": 279,
       "paperId": "m303",
       "layout": "song-page",
       "classes": [
@@ -28538,7 +28512,7 @@
       "title": "",
       "section": "varios",
       "sectionLabel": "Varios",
-      "pageNum": 281,
+      "pageNum": 280,
       "paperId": "m304",
       "layout": "continuation",
       "classes": [
@@ -28617,7 +28591,7 @@
       "title": "294. AMAR POR AMAR.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 282,
+      "pageNum": 281,
       "paperId": "m305",
       "layout": "song-page",
       "classes": [
@@ -28740,7 +28714,7 @@
       "title": "295. AMÉN.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 283,
+      "pageNum": 282,
       "paperId": "m306",
       "layout": "shared",
       "classes": [
@@ -28776,7 +28750,7 @@
       "title": "296. ANDAR EN TREN.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 283,
+      "pageNum": 282,
       "paperId": "m306",
       "layout": "shared",
       "classes": [
@@ -28817,7 +28791,7 @@
       "title": "297. BUENOS DÍAS Y BUENAS NOCHES.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 284,
+      "pageNum": 283,
       "paperId": "m307",
       "layout": "song-page",
       "classes": [
@@ -28912,7 +28886,7 @@
       "title": "298. CAMINANDO VOY.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 285,
+      "pageNum": 284,
       "paperId": "m308",
       "layout": "song-page",
       "classes": [
@@ -28962,7 +28936,7 @@
       "title": "299. CANCIÓN DEL ASTRONAUTA.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 286,
+      "pageNum": 285,
       "paperId": "m309",
       "layout": "song-page",
       "classes": [
@@ -29056,7 +29030,7 @@
       "title": "300. DEMOS GRACIAS AL SEÑOR.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 287,
+      "pageNum": 286,
       "paperId": "m310",
       "layout": "song-page",
       "classes": [
@@ -29111,7 +29085,7 @@
       "title": "301. DIOS ES AMOR.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 288,
+      "pageNum": 287,
       "paperId": "m311",
       "layout": "song-page",
       "classes": [
@@ -29162,7 +29136,7 @@
       "title": "302. EL AMOR DE DIOS.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 289,
+      "pageNum": 288,
       "paperId": "m312",
       "layout": "song-page",
       "classes": [
@@ -29236,7 +29210,7 @@
       "title": "303. EL GALLO.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 290,
+      "pageNum": 289,
       "paperId": "m313",
       "layout": "song-page",
       "classes": [
@@ -29277,7 +29251,7 @@
       "title": "304. EL GRANITO DE MOSTAZA.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 291,
+      "pageNum": 290,
       "paperId": "m314",
       "layout": "song-page",
       "classes": [
@@ -29329,7 +29303,7 @@
       "title": "305. EL MERO, MERO.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 292,
+      "pageNum": 291,
       "paperId": "m315",
       "layout": "song-page",
       "classes": [
@@ -29377,7 +29351,7 @@
       "title": "306. EL SAPO.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 293,
+      "pageNum": 292,
       "paperId": "m316",
       "layout": "song-page",
       "classes": [
@@ -29433,7 +29407,7 @@
       "title": "307. ESTE GOZO NO VA A PASAR.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 294,
+      "pageNum": 293,
       "paperId": "m317",
       "layout": "song-page",
       "classes": [
@@ -29497,7 +29471,7 @@
       "title": "308. LA HORMIGA.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 295,
+      "pageNum": 294,
       "paperId": "m318",
       "layout": "song-page",
       "classes": [
@@ -29565,7 +29539,7 @@
       "title": "309. MI MANO ESTÁ LLENA.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 296,
+      "pageNum": 295,
       "paperId": "m319",
       "layout": "song-page",
       "classes": [
@@ -29688,90 +29662,10 @@
     },
     {
       "id": "310",
-      "title": "310. NO HAY DIOS.",
+      "title": "310. POR LA CALZADA DE EMAÚS.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 297,
-      "paperId": "m320",
-      "layout": "song-page",
-      "classes": [
-        "small"
-      ],
-      "note": null,
-      "variants": null,
-      "content": [
-        {
-          "type": "pair",
-          "chord": "D",
-          "lyric": "NO HAY DIOS TAN GRANDE COMO TÚ,"
-        },
-        {
-          "type": "pair",
-          "chord": "       A7         D",
-          "lyric": "NO LO HAY, NO LO HAY (2v)."
-        },
-        {
-          "type": "pair",
-          "chord": "       G                 D",
-          "lyric": "NO HAY DIOS QUE HAGA MARAVILLAS"
-        },
-        {
-          "type": "pair",
-          "chord": "      A7           D",
-          "lyric": "COMO LAS QUE HACES TÚ (2v)."
-        },
-        {
-          "type": "space"
-        },
-        {
-          "type": "pair",
-          "chord": "D",
-          "lyric": "No con espadas, ni con ejércitos,"
-        },
-        {
-          "type": "pair",
-          "chord": "            G       A7  D",
-          "lyric": "más con tu Santo Espíritu (2v)."
-        },
-        {
-          "type": "pair",
-          "chord": "        G             D",
-          "lyric": "Y esos montes se moverán,"
-        },
-        {
-          "type": "pair",
-          "chord": "        A7            D",
-          "lyric": "y esos montes se moverán,"
-        },
-        {
-          "type": "pair",
-          "chord": "        G             D",
-          "lyric": "y esos montes se moverán,"
-        },
-        {
-          "type": "pair",
-          "chord": "            A7          D",
-          "lyric": "más con tu Santo Espíritu."
-        },
-        {
-          "type": "space"
-        },
-        {
-          "type": "extra",
-          "paragraphs": [
-            "No con la fuerza, ni la violencia,\nes como el mundo cambiará (2v),\nsolo el amor lo cambiará (3v),\nsolo el amor lo salvará.",
-            "No con las armas, ni con la guerra,\nes como el mundo cambiará (2v),\nsolo el amor lo cambiará (3v),\nsolo el amor lo salvará.",
-            "No con los pactos, ni con discursos,\nes como el mundo cambiará (2v),\nsolo el amor lo cambiará (3v),\nsolo el amor lo salvará."
-          ]
-        }
-      ]
-    },
-    {
-      "id": "311",
-      "title": "311. POR LA CALZADA DE EMAÚS.",
-      "section": "animacion",
-      "sectionLabel": "Animación",
-      "pageNum": 298,
+      "pageNum": 296,
       "paperId": "m321",
       "layout": "song-page",
       "classes": [
@@ -29851,11 +29745,11 @@
       ]
     },
     {
-      "id": "312",
-      "title": "312. ROCK DEL ESPÍRITU SANTO.",
+      "id": "311",
+      "title": "311. ROCK DEL ESPÍRITU SANTO.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 299,
+      "pageNum": 297,
       "paperId": "m322",
       "layout": "song-page",
       "classes": [
@@ -29923,11 +29817,11 @@
       ]
     },
     {
-      "id": "313",
-      "title": "313. SI EL PECADO LLEGA A TU CORAZÓN.",
+      "id": "312",
+      "title": "312. SI EL PECADO LLEGA A TU CORAZÓN.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 300,
+      "pageNum": 298,
       "paperId": "m323",
       "layout": "song-page",
       "classes": [
@@ -30016,11 +29910,11 @@
       ]
     },
     {
-      "id": "314",
-      "title": "314. SOY YO, SEÑOR.",
+      "id": "313",
+      "title": "313. SOY YO, SEÑOR.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 301,
+      "pageNum": 299,
       "paperId": "m324",
       "layout": "song-page",
       "classes": [
@@ -30080,11 +29974,11 @@
       ]
     },
     {
-      "id": "315",
-      "title": "315. TENGO QUE GRITAR.",
+      "id": "314",
+      "title": "314. TENGO QUE GRITAR.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 302,
+      "pageNum": 300,
       "paperId": "m325",
       "layout": "song-page",
       "classes": [
@@ -30178,11 +30072,11 @@
       ]
     },
     {
-      "id": "315B",
+      "id": "314B",
       "title": "",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 303,
+      "pageNum": 301,
       "paperId": "m326",
       "layout": "continuation",
       "classes": [
@@ -30201,11 +30095,11 @@
       ]
     },
     {
-      "id": "316",
-      "title": "316. UNA TORTUGUITA.",
+      "id": "315",
+      "title": "315. UNA TORTUGUITA.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 304,
+      "pageNum": 302,
       "paperId": "m327",
       "layout": "song-page",
       "classes": [
@@ -30253,11 +30147,11 @@
       ]
     },
     {
-      "id": "317",
-      "title": "317. VIVA LA FE.",
+      "id": "316",
+      "title": "316. VIVA LA FE.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 305,
+      "pageNum": 303,
       "paperId": "m328",
       "layout": "song-page",
       "classes": [
@@ -30332,11 +30226,11 @@
       ]
     },
     {
-      "id": "318",
-      "title": "318. YA LLEGÓ.",
+      "id": "317",
+      "title": "317. YA LLEGÓ.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 306,
+      "pageNum": 304,
       "paperId": "m329",
       "layout": "song-page",
       "classes": [
@@ -30378,11 +30272,11 @@
       ]
     },
     {
-      "id": "319",
-      "title": "319. YO CANTO COMO DAVID.",
+      "id": "318",
+      "title": "318. YO CANTO COMO DAVID.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 307,
+      "pageNum": 305,
       "paperId": "m330",
       "layout": "song-page",
       "classes": [
@@ -30426,11 +30320,11 @@
       ]
     },
     {
-      "id": "320",
-      "title": "320. YO LE QUIERO CANTAR.",
+      "id": "319",
+      "title": "319. YO LE QUIERO CANTAR.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 308,
+      "pageNum": 306,
       "paperId": "m331",
       "layout": "song-page",
       "classes": [
@@ -30484,11 +30378,11 @@
       ]
     },
     {
-      "id": "321",
-      "title": "321. YO TE ALABO CON EL CORAZÓN.",
+      "id": "320",
+      "title": "320. YO TE ALABO CON EL CORAZÓN.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 309,
+      "pageNum": 307,
       "paperId": "m332",
       "layout": "song-page",
       "classes": [
@@ -30550,11 +30444,11 @@
       ]
     },
     {
-      "id": "322",
-      "title": "322. YO TENGO UN AMIGO QUE ME AMA.",
+      "id": "321",
+      "title": "321. YO TENGO UN AMIGO QUE ME AMA.",
       "section": "animacion",
       "sectionLabel": "Animación",
-      "pageNum": 310,
+      "pageNum": 308,
       "paperId": "m333",
       "layout": "song-page",
       "classes": [
@@ -30610,11 +30504,11 @@
       ]
     },
     {
-      "id": "323",
-      "title": "323. MAÑANITAS.",
+      "id": "322",
+      "title": "322. MAÑANITAS.",
       "section": "mananitas",
       "sectionLabel": "Mañanitas",
-      "pageNum": 311,
+      "pageNum": 309,
       "paperId": "m334",
       "layout": "song-page",
       "classes": [
@@ -30811,7 +30705,7 @@
       "title": "CRÉDITOS.",
       "section": "creditos",
       "sectionLabel": "Créditos",
-      "pageNum": 312,
+      "pageNum": 310,
       "paperId": "m335",
       "layout": "song-page",
       "classes": [
@@ -30823,17 +30717,7 @@
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Manuel de Terry."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Pbro. Francisco Palazón Martínez."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Pbro. Carmelo Erdozáin Gil."
+          "lyric": "•  Adriana Bezanilla."
         },
         {
           "type": "pair",
@@ -30843,22 +30727,12 @@
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Pbro. Cesáreo Gabaráin Azurmendi."
+          "lyric": "•  Alejandro Mejía Pereda."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Pedro Curiel Méndez."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Pbro. Lucien Deiss."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Pbro. Emilio Vicente Mateu."
+          "lyric": "•  Alejandro Sáenz y Guenyveau."
         },
         {
           "type": "pair",
@@ -30868,42 +30742,72 @@
         {
           "type": "pair",
           "chord": "",
+          "lyric": "•  Fray Antonio Martín de Jesús."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Benigna Carrillo Alday F.Sp.S."
+        },
+        {
+          "type": "pair",
+          "chord": "",
           "lyric": "•  Pbro. Bernardo Velado Grana."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Pbro. Juan Antonio Espinosa Bote."
+          "lyric": "•  Carlos Bravo."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Pbro. Horacio López Ramírez."
+          "lyric": "•  Carlos Camacho."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Pbro. Víctor Manuel Aguilar."
+          "lyric": "•  Pbro. Carmelo Erdozáin Gil."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Pbro. John Schiavone."
+          "lyric": "•  Pbro. Cesáreo Gabaráin Azurmendi."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Pbro. Joaquín Madurga Oteiza."
+          "lyric": "•  Charles Gounod."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Pbro. Néstor Jáen."
+          "lyric": "•  Daniel Poli."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Pbro. José Fernándes de Oliveira."
+          "lyric": "•  David A. Mijares."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Eleazar Cortés."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Elías Flores Flores y Gabriel Flores Flores."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Emilio Pascual."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pbro. Emilio Vicente Mateu."
         },
         {
           "type": "pair",
@@ -30913,67 +30817,7 @@
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Pbro. Restituto del Valle."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Pbro. Pierangelo Sequeri."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Pbro. Germán Bernal Londoño."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Pbro. José Antonio Olivar."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Rufino Zaragoza O.F.M."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Pbro. José Guadalupe Treviño."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Fray Antonio Martín de Jesús."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Fray Francisco Javier Moreau."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Fray José Antonio Poblete."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Seminario de la Inmaculada Concepción, Diócesis de Chilpancingo-Chilapa, Gro."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Hermanas de María de Schoenstatt."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Misioneros Servidores de la Palabra."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  José María Mármol."
+          "lyric": "•  Ernesto Cortázar."
         },
         {
           "type": "pair",
@@ -30983,12 +30827,62 @@
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Luis Dávalos."
+          "lyric": "•  Federico Carranza Almaguer."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Carlos Bravo."
+          "lyric": "•  Fernando J. Villarreal."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Fray Francisco Javier Moreau."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pbro. Francisco Palazón Martínez."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  George Misulia."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pbro. Germán Bernal Londoño."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Gregorio Fernández."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Grupo generación de Jesús."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Hermanas de María de Schoenstatt."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pbro. Horacio López Ramírez."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Hugo Oviedo."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Ignacio Busca de Sagastizábal."
         }
       ]
     },
@@ -30997,7 +30891,7 @@
       "title": "",
       "section": "creditos",
       "sectionLabel": "Créditos",
-      "pageNum": 313,
+      "pageNum": 311,
       "paperId": "m336",
       "layout": "continuation",
       "classes": [
@@ -31009,82 +30903,7 @@
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Miguel Manzano."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  John Brownlie."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Gregorio Fernández."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Moisés Alejandro Sáenz."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Liturgia Trapense."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Ministerio de música Jésed."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Federico Carranza Almaguer."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Marcos López."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Kiko Argüello."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Tadeo Castro."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Alejandro Mejía Pereda."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Benigna Carrillo Alday F.Sp.S."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Wilfrido Íñiguez Jaramillo."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Elías Flores Flores y Gabriel Flores Flores."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Alejandro Sáenz y Guenyveau."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Jesús Rincón."
+          "lyric": "•  Irving Ortega Malacate."
         },
         {
           "type": "pair",
@@ -31094,47 +30913,72 @@
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Irving Ortega Malacate."
+          "lyric": "•  Javier Lieras González."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Manuel Salvador Dávila."
+          "lyric": "•  Javier Noriega."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Carlos Camacho."
+          "lyric": "•  Jesús Rincón."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Plácido Flores Cervantes."
+          "lyric": "•  Pbro. Joaquín Madurga Oteiza."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Vicente Bianchi."
+          "lyric": "•  John Brownlie."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Emilio Pascual."
+          "lyric": "•  Pbro. John Schiavone."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Suzanne Toolan."
+          "lyric": "•  Jorge Baylach."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Manuel Esperón."
+          "lyric": "•  Jorge Luis Bohórquez."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Ernesto Cortázar."
+          "lyric": "•  Pbro. José Antonio Olivar."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Fray José Antonio Poblete."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  José Cantú."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pbro. José Fernándes de Oliveira."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pbro. José Guadalupe Treviño."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  José María Mármol."
         },
         {
           "type": "pair",
@@ -31144,12 +30988,47 @@
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Paola Rimada Diz."
+          "lyric": "•  Josías Cardoso de Almeida."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Adriana Bezanilla."
+          "lyric": "•  Pbro. Juan Antonio Espinosa Bote."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Juan José López Sedano."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Kiko Argüello."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Liturgia Trapense."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Lourdes C. Montgomery."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pbro. Lucien Deiss."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Luis Alfredo Díaz."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Luis Dávalos."
         },
         {
           "type": "pair",
@@ -31159,17 +31038,32 @@
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Rafael Moreno."
+          "lyric": "•  Manuel de Terry."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Movimiento Maranatha."
+          "lyric": "•  Manuel Esperón."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Josías Cardoso de Almeida."
+          "lyric": "•  Manuel Salvador Dávila."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Marcos López."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Mari Cruz Giménez."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  María Constanza Fernández."
         }
       ]
     },
@@ -31178,7 +31072,7 @@
       "title": "",
       "section": "creditos",
       "sectionLabel": "Créditos",
-      "pageNum": 314,
+      "pageNum": 312,
       "paperId": "m337",
       "layout": "continuation",
       "classes": [
@@ -31190,112 +31084,17 @@
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Mari Cruz Giménez."
-        },
-        {
-          "type": "pair",
-          "chord": "",
           "lyric": "•  María José Vázquez."
         },
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Rafael Valadez."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Daniel Poli."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Charles Gounod."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Paullo Roberto Oliveira."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Javier Noriega."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  George Misulia."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Hugo Oviedo."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Sebastián Temple."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Ignacio Busca de Sagastizábal."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Javier Lieras González."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  María Constanza Fernández."
+          "lyric": "•  Martha Hernández."
         },
         {
           "type": "pair",
           "chord": "",
           "lyric": "•  Martín Valverde."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Juan José López Sedano."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Fernando J. Villarreal."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Tomás Espinosa."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  José Cantú."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Jorge Luis Bohórquez."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Luis Alfredo Díaz."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  S, Valadez."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Ricardo Misher."
         },
         {
           "type": "pair",
@@ -31310,37 +31109,7 @@
         {
           "type": "pair",
           "chord": "",
-          "lyric": "•  Pedro Díaz Landa."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Lourdes C. Montgomery."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Martha Hernández."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Grupo generación de Jesús."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  David A. Mijares."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Jorge Baylach."
-        },
-        {
-          "type": "pair",
-          "chord": "",
-          "lyric": "•  Eleazar Cortés."
+          "lyric": "•  Miguel Manzano."
         },
         {
           "type": "pair",
@@ -31350,7 +31119,132 @@
         {
           "type": "pair",
           "chord": "",
+          "lyric": "•  Ministerio de música Jésed."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Misioneros Servidores de la Palabra."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Moisés Alejandro Sáenz."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Movimiento Maranatha."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pbro. Néstor Jáen."
+        },
+        {
+          "type": "pair",
+          "chord": "",
           "lyric": "•  Nora Nelly Rodríguez."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Paola Rimada Diz."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Paullo Roberto Oliveira."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pedro Curiel Méndez."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pedro Díaz Landa."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pbro. Pierangelo Sequeri."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Plácido Flores Cervantes."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Rafael Moreno."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Rafael Valadez."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pbro. Restituto del Valle."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Ricardo Misher."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Rufino Zaragoza O.F.M."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  S, Valadez."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Sebastián Temple."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Seminario de la Inmaculada Concepción, Diócesis de Chilpancingo-Chilapa, Gro."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Suzanne Toolan."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Tadeo Castro."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Tomás Espinosa."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Vicente Bianchi."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Pbro. Víctor Manuel Aguilar."
+        },
+        {
+          "type": "pair",
+          "chord": "",
+          "lyric": "•  Wilfrido Íñiguez Jaramillo."
         }
       ]
     },
@@ -31359,7 +31253,7 @@
       "title": "A LOS AUTORES NO IDENTIFICADOS.",
       "section": "creditos",
       "sectionLabel": "Créditos",
-      "pageNum": 315,
+      "pageNum": 313,
       "paperId": "m338",
       "layout": "song-page",
       "classes": [
