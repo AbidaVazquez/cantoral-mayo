@@ -1,0 +1,5 @@
+# El Cantoral Mayo es de acceso libre: que lo encuentre quien lo necesite.
+User-agent: *
+Allow: /
+
+Sitemap: https://cantoralmayo.com/sitemap.xml

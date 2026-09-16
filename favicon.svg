@@ -1,10 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" rx="20" fill="#8FA388" />
-  
-  <path d="M25 75 L25 35 L50 60 L75 35 L75 75" 
-        fill="none" 
-        stroke="#D0897C" 
-        stroke-width="12" 
-        stroke-linecap="round" 
-        stroke-linejoin="round"/>
+  <defs><linearGradient id="p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aab69f"/><stop offset="1" stop-color="#879979"/></linearGradient></defs>
+  <rect width="100" height="100" rx="20" fill="url(#p)"/>
+  <path d="M25 74 L25 34 L50 59 L75 34 L75 74" fill="none" stroke="#7c5b52" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.28" transform="translate(1.6,2.2)"/>
+  <path d="M25 74 L25 34 L50 59 L75 34 L75 74" fill="none" stroke="#D0897C" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

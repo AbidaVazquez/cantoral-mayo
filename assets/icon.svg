@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Cantoral Mayo">
+  <defs>
+    <linearGradient id="pasta" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#aab69f"/><stop offset="1" stop-color="#879979"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="22" fill="url(#pasta)"/>
+
+  <!-- Sombritas (silueta monocroma, sin color): plumeria abajo-izq -->
+  <g fill="#3a352a" opacity="0.14">
+    <g transform="translate(20,80)">
+      <ellipse cx="0" cy="-7.5" rx="4.2" ry="7.4"/>
+      <ellipse cx="0" cy="-7.5" rx="4.2" ry="7.4" transform="rotate(72)"/>
+      <ellipse cx="0" cy="-7.5" rx="4.2" ry="7.4" transform="rotate(144)"/>
+      <ellipse cx="0" cy="-7.5" rx="4.2" ry="7.4" transform="rotate(216)"/>
+      <ellipse cx="0" cy="-7.5" rx="4.2" ry="7.4" transform="rotate(288)"/>
+    </g>
+  </g>
+
+  <!-- Mariposa de la CONTRAPORTADA (misma forma), como sombrita plana arriba-der.
+       opacity en el grupo → silueta uniforme sin dobles. -->
+  <g fill="#3a352a" opacity="0.16" transform="translate(82,20) scale(0.11) translate(-100,-100)">
+    <path d="M100 82 C 128 60 166 42 188 34 C 194 32 197 36 196 44 C 194 62 180 84 156 100 C 140 110 112 108 100 96 Z"/>
+    <path d="M100 100 C 126 98 152 110 163 126 C 172 140 166 160 146 168 C 128 175 107 166 100 142 Z"/>
+    <g transform="translate(200,0) scale(-1,1)">
+      <path d="M100 82 C 128 60 166 42 188 34 C 194 32 197 36 196 44 C 194 62 180 84 156 100 C 140 110 112 108 100 96 Z"/>
+      <path d="M100 100 C 126 98 152 110 163 126 C 172 140 166 160 146 168 C 128 175 107 166 100 142 Z"/>
+    </g>
+    <path d="M100 158 C 94.5 138 94.5 110 100 90 C 105.5 110 105.5 138 100 158 Z"/>
+    <ellipse cx="100" cy="92" rx="8.4" ry="14"/>
+    <circle cx="100" cy="75" r="6.8"/>
+    <g fill="none" stroke="#3a352a" stroke-width="2.8" stroke-linecap="round">
+      <path d="M96 70 C 88 56 78 44 68 37"/><path d="M104 70 C 112 56 122 44 132 37"/>
+    </g>
+    <circle cx="67" cy="36" r="3.3"/><circle cx="133" cy="36" r="3.3"/>
+  </g>
+
+  <!-- M (Mayo) con sombra sutil + brillo interior (estilo A) -->
+  <path d="M25 74 L25 34 L50 59 L75 34 L75 74" fill="none" stroke="#7c5b52"
+        stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.28" transform="translate(1.6,2.2)"/>
+  <path d="M25 74 L25 34 L50 59 L75 34 L75 74" fill="none" stroke="#D0897C"
+        stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="3" width="94" height="94" rx="20" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="2"/>
+</svg>

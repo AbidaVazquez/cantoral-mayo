@@ -1,3 +1,4 @@
+// Hash con el que se ABRIÓ la app.
 (function initLiteEarly() {
     try {
         const stored = localStorage.getItem("cantoral-lite");
@@ -15,8 +16,12 @@ try {
     if (v !== null && v !== "") BOOK_WAS_CLOSED = parseInt(v, 10);
     LAST_SAVED_HASH = localStorage.getItem("cantoral-last-hash") || "";
 } catch (e) {}
+// Prioridad al abrir la app:
 const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_SAVED_HASH || "");
 
+// ═══════════════════════════════════════════════════════════════════
+// Bienvenida (intro). Dark = estrella cayendo con picos sobre cielo estrellado (1.8s CSS).
+// ═══════════════════════════════════════════════════════════════════
 (function welcomeIntro() {
     const intro = document.getElementById("welcomeIntro");
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -25,11 +30,15 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
         return;
     }
 
+    // Mientras el overlay de bienvenida cubre TODO el viewport, el libro que quedó montado detrás
+    // (en refresh sobre una página profunda) sigue animando su
     document.body.classList.add("intro-active");
 
     let isDark = false;
     try { isDark = localStorage.getItem("cantoral-theme") === "dark"; } catch(e) {}
 
+    // Paleta pensada para CONTRASTAR sobre las 5 pastas litúrgicas (verde salvia, lavanda, morado,
+    // perla clara, terracota).
     const BUTTERFLY_COLORS = [
         "#e8402f","#ff5a1f","#ff7a18","#ff9500","#f4b400","#ffd21e",
         "#c3e021","#3fd45f","#06d6a0","#12b5c9","#1f7be0","#3b5bff",
@@ -44,6 +53,7 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
     ];
     const PETAL_PATH = "M0 0 C -18 -24 -21 -60 -6 -84 C 0 -93 12 -93 18 -81 C 30 -48 21 -18 0 0 Z";
 
+    // ─── Mariposas sobre el título REAL ───────────────────────────
     function seedCoverButterflies() {
         const bCont = document.getElementById("coverButterflies");
         if (!bCont) return;
@@ -78,6 +88,7 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
         bCont.appendChild(frag);
     }
 
+    // ─── Flores plumeria sobre libro ──────────────────────────────
     function seedCoverFlowers() {
         const fCont = document.getElementById("coverFlowers");
         if (!fCont) return;
@@ -129,6 +140,7 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
             </svg>`;
             frag.appendChild(div);
         });
+        // ── +10 PÉTALOS sueltos cayendo junto a las flores (antes de la silueta) ──
         const petalPos = [
             ["6%",  20, "covFallA", 5.6, 3.8], ["18%", 24, "covFallB", 6.1, 4.2],
             ["34%", 18, "covFallB", 5.4, 4.6], ["46%", 22, "covFallA", 5.9, 3.4],
@@ -155,7 +167,10 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
         fCont.appendChild(frag);
     }
 
+    // ─── Dispara las FX post-intro sobre el libro real ────────────
     function firePhase2() {
+        // El libro se revela: reanudar sus animaciones decorativas (estaban
+        // pausadas mientras el overlay las tapaba, ver body.intro-active arriba).
         document.body.classList.remove("intro-active");
         if (intro) intro.classList.add("wi-hide");
         if (window.__coverAnimateOnIntroEnd) {
@@ -165,35 +180,46 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
         seedCoverButterflies();
         seedCoverFlowers();
         setTimeout(() => intro && intro.parentNode && intro.parentNode.removeChild(intro), 950);
+        if (window.__onIntroEnd) window.__onIntroEnd();   // pista "desliza para avanzar"
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // MODO CLARO: canvas con mariposas saliendo del centro +
+    // ═══════════════════════════════════════════════════════════════
     if (!isDark) {
+        // Atardeceres realistas:
         const SUNSETS = [
-            [[0,"#5b6aa8"],[0.34,"#c98aad"],[0.60,"#ff9d7a"],[0.82,"#ffb057"],[1,"#ffcf7a"]], 
-            [[0,"#6d6fae"],[0.34,"#d68f9e"],[0.60,"#ff9b6a"],[0.82,"#ff9f52"],[1,"#ffc266"]], 
-            [[0,"#7a5f9c"],[0.34,"#e0899f"],[0.60,"#ff8f72"],[0.82,"#ff9a4f"],[1,"#ffbe6b"]], 
-            [[0,"#4f6bb0"],[0.34,"#b98bb6"],[0.60,"#f79a86"],[0.82,"#ffab5e"],[1,"#ffd089"]], 
-            [[0,"#8a6bab"],[0.34,"#e79aa0"],[0.60,"#ffa878"],[0.82,"#ffbc63"],[1,"#ffdc8e"]], 
-            [[0,"#63709f"],[0.34,"#cf95a4"],[0.60,"#ff9a72"],[0.82,"#ff8f45"],[1,"#ffb35c"]], 
-            [[0,"#7e6aa2"],[0.34,"#d98fae"],[0.60,"#ff9e88"],[0.82,"#ffab5a"],[1,"#ffc978"]], 
-            [[0,"#93739e"],[0.34,"#e6a08c"],[0.60,"#ffab6f"],[0.82,"#ffb85c"],[1,"#ffd583"]], 
-            [[0,"#586bad"],[0.34,"#c58ea8"],[0.60,"#ff9f7c"],[0.82,"#ffae5c"],[1,"#ffcf82"]], 
-            [[0,"#6f5f9e"],[0.34,"#d287a1"],[0.60,"#f89a84"],[0.82,"#ff9d55"],[1,"#ffc06f"]], 
-            [[0,"#8f6db4"],[0.34,"#eb9fab"],[0.60,"#ffaa82"],[0.82,"#ffbe70"],[1,"#ffd98a"]], 
-            [[0,"#4a6ea8"],[0.34,"#b58aa8"],[0.60,"#f2977f"],[0.82,"#ff9a52"],[1,"#ffbf6d"]], 
-            [[0,"#7a2f5e"],[0.34,"#c0335a"],[0.60,"#ff5a3c"],[0.82,"#ff7e2e"],[1,"#ffb347"]], 
-            [[0,"#2b2a5e"],[0.34,"#4a3a7a"],[0.60,"#7d4a86"],[0.82,"#b5567a"],[1,"#e8825e"]], 
-            [[0,"#8ea6d8"],[0.34,"#d9a7cf"],[0.60,"#ffc3c0"],[0.82,"#ffd9b0"],[1,"#fff0cf"]], 
-            [[0,"#3f6d7a"],[0.34,"#5f9a8c"],[0.60,"#9fbf7e"],[0.82,"#e8c56b"],[1,"#ffd98a"]]  
+            [[0,"#5b6aa8"],[0.34,"#c98aad"],[0.60,"#ff9d7a"],[0.82,"#ffb057"],[1,"#ffcf7a"]], // coral-oro
+            [[0,"#6d6fae"],[0.34,"#d68f9e"],[0.60,"#ff9b6a"],[0.82,"#ff9f52"],[1,"#ffc266"]], // rosa-ámbar
+            [[0,"#7a5f9c"],[0.34,"#e0899f"],[0.60,"#ff8f72"],[0.82,"#ff9a4f"],[1,"#ffbe6b"]], // magenta-fuego
+            [[0,"#4f6bb0"],[0.34,"#b98bb6"],[0.60,"#f79a86"],[0.82,"#ffab5e"],[1,"#ffd089"]], // violeta-durazno
+            [[0,"#8a6bab"],[0.34,"#e79aa0"],[0.60,"#ffa878"],[0.82,"#ffbc63"],[1,"#ffdc8e"]], // lavanda-melocotón
+            [[0,"#63709f"],[0.34,"#cf95a4"],[0.60,"#ff9a72"],[0.82,"#ff8f45"],[1,"#ffb35c"]], // azul-naranja
+            [[0,"#7e6aa2"],[0.34,"#d98fae"],[0.60,"#ff9e88"],[0.82,"#ffab5a"],[1,"#ffc978"]], // ciruela-coral
+            [[0,"#93739e"],[0.34,"#e6a08c"],[0.60,"#ffab6f"],[0.82,"#ffb85c"],[1,"#ffd583"]], // hora dorada
+            [[0,"#586bad"],[0.34,"#c58ea8"],[0.60,"#ff9f7c"],[0.82,"#ffae5c"],[1,"#ffcf82"]], // índigo-rosa cálido
+            [[0,"#6f5f9e"],[0.34,"#d287a1"],[0.60,"#f89a84"],[0.82,"#ff9d55"],[1,"#ffc06f"]], // púrpura-brasa
+            [[0,"#8f6db4"],[0.34,"#eb9fab"],[0.60,"#ffaa82"],[0.82,"#ffbe70"],[1,"#ffd98a"]], // orquídea-ámbar
+            [[0,"#4a6ea8"],[0.34,"#b58aa8"],[0.60,"#f2977f"],[0.82,"#ff9a52"],[1,"#ffbf6d"]], // crepúsculo azul
+            // ── Atardeceres con MÁS carácter (2026-07-20): claramente distintos
+            //    de los 12 anteriores para que el sorteo aleatorio se note. ──
+            [[0,"#7a2f5e"],[0.34,"#c0335a"],[0.60,"#ff5a3c"],[0.82,"#ff7e2e"],[1,"#ffb347"]], // 🔥 fuego
+            [[0,"#2b2a5e"],[0.34,"#4a3a7a"],[0.60,"#7d4a86"],[0.82,"#b5567a"],[1,"#e8825e"]], // 🌌 crepúsculo profundo
+            [[0,"#8ea6d8"],[0.34,"#d9a7cf"],[0.60,"#ffc3c0"],[0.82,"#ffd9b0"],[1,"#fff0cf"]], // 🌸 pastel rosado
+            [[0,"#3f6d7a"],[0.34,"#5f9a8c"],[0.60,"#9fbf7e"],[0.82,"#e8c56b"],[1,"#ffd98a"]]  // 🟢 verde-teal
         ];
         const BCOLORS = ["#ff8a3c","#5aa0ff","#ffd24a","#ff7bbf","#7be0c0","#b98cff","#ff6b6b","#a8e06c"];
 
         const hasHash = window.location.hash && window.location.hash.length > 1;
         const bookClosed = !hasHash;
+        // Refresh desde una página del libro: 1800 ms, igual que el intro del
+        // modo oscuro. La portada cerrada conserva su animación más larga.
         const DUR = bookClosed ? 3000 : 1800;
 
+        // ═══ Intro claro 100% CSS/compositor ═══════════════════════════════ Antes esto era un canvas
+        // con requestAnimationFrame en el HILO PRINCIPAL, que
         document.querySelectorAll(".wi-sky-stars,.wi-trail,.wi-lead-star").forEach(el => el.style.display = "none");
-        document.getElementById("wiLightCanvas")?.remove();   
+        document.getElementById("wiLightCanvas")?.remove();   // el canvas ya no se usa
 
         const titleEl = document.getElementById("wiLightTitle");
         const W = intro.clientWidth || window.innerWidth;
@@ -201,16 +227,20 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
         const rnd = (a, b) => a + Math.random() * (b - a);
         const pick = a => a[Math.floor(Math.random() * a.length)];
 
+        // Fondo atardecer como gradiente CSS estático (el compositor lo pinta una vez).
         const sunset = SUNSETS[Math.floor(Math.random() * SUNSETS.length)];
         intro.style.background = "linear-gradient(to bottom," +
             sunset.map(([p, c]) => c + " " + Math.round(p * 100) + "%").join(",") + ")";
 
+        // @keyframes generados + nodos; todo dentro del overlay para que se
+        // elimine junto con él (firePhase2 → removeChild).
         let css = ".wi-bfly{position:absolute;left:50%;top:50%;opacity:0;will-change:transform,opacity}" +
             ".wi-bfly svg{display:block;width:100%;height:100%;transform-origin:50% 50%;" +
             "animation:covFlap .18s ease-in-out infinite alternate}" +
             ".wi-petal{position:absolute;top:0;border-radius:50% 0 50% 50%;opacity:0;will-change:transform,opacity}";
         let bodyHTML = "";
 
+        // ── Mariposas emergiendo del centro ──
         const numB = bookClosed ? 40 : 30;
         for (let i = 0; i < numB; i++) {
             const ang = Math.random() * Math.PI * 2;
@@ -222,6 +252,8 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
             const col = pick(BCOLORS);
             const flap = rnd(0.14, 0.24).toFixed(2);
             const nm = "wiB" + i;
+            // Emergen del centro (scale .35), se dispersan hasta ~65% y salen
+            // desvaneciéndose. Solo transform+opacity → animación compositada.
             css += "@keyframes " + nm + "{" +
                 "0%{opacity:0;transform:translate(0,0) scale(.35)}" +
                 "6%{opacity:1}" +
@@ -240,6 +272,8 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
                 "<ellipse cx='12' cy='12' rx='.9' ry='4' fill='#2a1810'/></svg></div>";
         }
 
+        // ── Pétalos cayendo: SIEMPRE en el intro (portada o refresh en cualquier canto/página) — el
+        // overlay del intro va encima de todo.
         {
             const petalMaxDelay = bookClosed ? 2.5 : 0.6;
             for (let i = 0; i < 12; i++) {
@@ -258,9 +292,11 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
             }
         }
 
+        // ── Título (SVG pesado): capa propia + pre-decode; anima por CSS ──
         if (titleEl) {
             titleEl.style.display = "block";
             titleEl.style.willChange = "transform, opacity";
+            // Rasterizar el SVG a alta resolución en un bitmap y usarlo como fuente del <img>:
             const dispW = (intro.clientWidth || window.innerWidth) * 0.55;
             const rw = Math.max(600, Math.round(dispW * 2.5));
             const rh = Math.round(rw / (507 / 353));
@@ -281,7 +317,7 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
                 im.onerror = () => URL.revokeObjectURL(url);
                 im.src = url;
             }).catch(() => {});
-            if (titleEl.decode) titleEl.decode().catch(() => {});   
+            if (titleEl.decode) titleEl.decode().catch(() => {});   // pre-rasteriza antes de que el hilo se ocupe
             css += "@keyframes wiTitle{" +
                 "0%,18%{opacity:0;transform:translate(-50%,-50%) scale(.92)}" +
                 "30%{opacity:1;transform:translate(-50%,-50%) scale(1)}" +
@@ -298,6 +334,7 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
         intro.appendChild(styleEl);
         intro.appendChild(fx);
 
+        // Fin por temporizador (no hay rAF): al cumplir DUR, o al tocar para saltar.
         let done = false;
         function finish() { if (done) return; done = true; firePhase2(); }
         const finishTimer = setTimeout(finish, DUR);
@@ -306,12 +343,16 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
         intro.addEventListener("touchstart", skipAnim, { once: true, passive: true });
 
     } else {
+        // ═══════════════════════════════════════════════════════════
+        // MODO OSCURO: estrella con picos (CSS puro,
+        // ═══════════════════════════════════════════════════════════
         document.getElementById("wiLightCanvas")?.remove();
         document.getElementById("wiLightTitle")?.remove();
 
         setTimeout(() => firePhase2(), 1800);
     }
 
+    // ─── Fase 3: estrella de la mañana ────────────────────────────
     const phase3delay = isDark ? 15800 : 17000;
     setTimeout(() => {
         if (document.body.classList.contains("intro-fx-off")) return;
@@ -331,6 +372,10 @@ window.__killIntroFx = function() {
 };
 
 (async function () {
+// ═══════════════════════════════════════════════════════════════════
+// FASE 1 — Cargar JSON y generar todas las páginas del libro cache:"no-cache" → el navegador
+// REVALIDA cantos.json contra el servidor en cada carga (304
+// ═══════════════════════════════════════════════════════════════════
 const DATA = await fetch("cantos.json", { cache: "no-cache" }).then(r => r.json());
 
 const SECTION_ALIASES = {
@@ -400,6 +445,9 @@ const SEPARATOR_TITLES = {
     creditos:      "CRÉDITOS",
 };
 
+// ═══════════════════════════════════════════════════════════════════
+// Acordes ANCLADOS a la sílaba (fuente variable).
+// ═══════════════════════════════════════════════════════════════════
 function pairToLine(pair) {
     const chordStr = pair.chord || "";
     const lyric = pair.lyric || "";
@@ -413,6 +461,8 @@ function pairToLine(pair) {
         segments.push({ text: lyric });
         return { type: "line", segments, variant: pair.variant };
     }
+    // Rellena con espacios cuando la letra se acaba antes que los acordes, para que cada tramo
+    // conserve el ANCHO de columna del renglón de acordes.
     const pad = (text, width) => (text.length < width ? text + " ".repeat(width - text.length) : text);
     if (chords[0].col > 0) segments.push({ text: pad(lyric.slice(0, chords[0].col), chords[0].col) });
     for (let i = 0; i < chords.length; i++) {
@@ -488,8 +538,12 @@ function makePaper(id, frontHTML) {
     return `<div class="paper" id="${id}"><div class="front">${frontHTML}</div><div class="back blank-page"></div></div>`;
 }
 
+// Contraportada (última hoja):
 function makeBackCoverPaper() {
+    // Sello = la PLUMERIA REAL del árbol: mismo PETAL_PATH + gradiente de FLOWER_GRADS
+    // (frangipani amarillo→rosa, índice 2) + centro cálido, igual que seedCoverFlowers.
     const PETAL = "M0 0 C -18 -24 -21 -60 -6 -84 C 0 -93 12 -93 18 -81 C 30 -48 21 -18 0 0 Z";
+    // Tono ALEATORIO por carga (los mismos 5 gradientes que el árbol, FLOWER_GRADS).
     const FG = [
         ["#ffcf3f", "#fff0b0", "#fffdf3", "#ffffff"],
         ["#ff9e00", "#ffd633", "#ffe97a", "#fff3a8"],
@@ -498,6 +552,8 @@ function makeBackCoverPaper() {
         ["#ffd23f", "#ffb060", "#ff8a3c", "#f4632a"]
     ];
     const g = FG[Math.floor(Math.random() * FG.length)];
+    // DEBOSS: la flor se ve PRENSADA en la piel (sombra interior arriba + luz interior abajo, con
+    // la luz desde arriba) + desaturada para compartir el
     const petalsHtml = [0, 72, 144, 216, 288].map(a => `<path d="${PETAL}" fill="url(#bcSealG)" transform="rotate(${a})"/>`).join("");
     const seal = `<svg class="bc-seal" viewBox="-100 -100 200 200" aria-hidden="true">`
         + `<defs>`
@@ -525,14 +581,23 @@ function makeBackCoverPaper() {
         + `</defs>`
         + `<g filter="url(#bcDeboss)">${petalsHtml}<circle r="10" fill="url(#bcSealC)"/></g>`
         + `</svg>`;
+    // La contraportada va en la cara FRONTAL (es la última parada del libro; en móvil single-page
+    // queda a pantalla completa).
     return `<div class="paper" id="pCoverBack">`
         + `<div class="front cover-page contraportada">`
         +   `<div class="bc-spine" aria-hidden="true"></div>`
         +   `<div class="bc-block" aria-hidden="true"></div>`
-        +   `<button class="bc-strap" id="backToStart" type="button" aria-label="Volver al inicio del cantoral">`
-        +     `<svg class="bc-strap-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5 L6 12 L13 19 M6 12 H19" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-        +     `<span class="bc-strap-label">Volver al inicio</span>`
-        +   `</button>`
+        +   `<div class="bc-strap">`
+        +     `<button class="bc-strap-btn" id="backToStart" type="button" aria-label="Volver al inicio del cantoral">`
+        +       `<svg class="bc-strap-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5 L6 12 L13 19 M6 12 H19" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+        +       `<span class="bc-strap-label">Volver al inicio</span>`
+        +     `</button>`
+        +     `<span class="bc-strap-div" aria-hidden="true"></span>`
+        +     `<button class="bc-strap-btn bc-strap-prev" id="backToPrev" type="button" aria-label="Volver a la página anterior">`
+        +       `<svg class="bc-strap-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5 L6 12 L13 19 M6 12 H19" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+        +       `<span class="bc-strap-label">Ant</span>`
+        +     `</button>`
+        +   `</div>`
         +   `<div class="bc-content">`
         +     `<div class="bc-top">`
         +       seal
@@ -555,8 +620,17 @@ function makeDecorSep(title, sectionKey, isLong) {
     return `<div class="decor-section-page"><div class="decor-section-content"><div class="${cls}"${attr}>${esc(title)}</div><img class="decor-section-leaves" src="assets/hojasdis.png" alt=""></div></div>`;
 }
 
+// Botón "Aa" (zoom + negrita/cursiva).
+function zoomBtnHtml(extraClass) {
+    return `<button class="zoom-toggle${extraClass ? " " + extraClass : ""}" type="button" aria-label="Tamaño de letra" aria-expanded="false" data-tip="up">`
+        + `<span class="aa-glyph"><span class="zoom-toggle-a small">A</span><span class="zoom-toggle-a big">A</span></span>`
+        + `</button>`;
+}
+
 function makeIndexPage() {
-    return '<div class="index-page"><div class="header">Índice</div><div class="index-content"></div></div>';
+    // El "Aa" se ancla a la propia página (mismo patrón que el diccionario): la
+    // .index-page es position:relative y el botón va absolute (ver CSS).
+    return `<div class="index-page"><div class="header">Índice</div><div class="index-content"></div>${zoomBtnHtml("zoom-toggle-loose")}</div>`;
 }
 
 function makeDictPage(idx) {
@@ -566,36 +640,35 @@ function makeDictPage(idx) {
 function makeSongTitle(canto) {
     if (!canto.title) return "";
     let t = esc(canto.title);
-    if (canto.variants) {
-        const btns = canto.variants.keys.map(k =>
-            `<a class="variant-btn${k === canto.variants.active ? " active" : ""}" data-variant="${esc(k)}">${esc(k)}</a>`
-        ).join("/");
-        const plainTitle = t.replace(/\(.*$/, "").trim();
-        t = `${wrapSongNum(plainTitle)} (${btns})`;
-    } else {
-        t = wrapSongNum(t);
-    }
+    // El selector de versiones "(A/B)" ya NO se muestra en el título:
+    if (canto.variants) t = t.replace(/\s*\(.*$/, "").trim();
+    t = wrapSongNum(t);
     return `<div class="song-title" data-song="${esc(canto.id)}">${t}</div>`;
 }
+// Envuelve el "N." inicial del título en un span clicable. Al tocarlo se alterna
+// el subrayado de TODOS los títulos del libro (ver initTitleUnderlineToggle).
 function wrapSongNum(html) {
     return html.replace(/^(\s*)(\d+\.)/, '$1<span class="song-num" role="button" tabindex="0" aria-label="Mostrar u ocultar el subrayado de los títulos">$2</span>');
 }
 
+// Pie de página de cada canto:
 function footerHtml(pageNum, noZoom) {
-    const zoomBtn = noZoom ? "" :
-        `<button class="zoom-toggle" type="button" aria-label="Ajustar tamaño de letra" aria-expanded="false">`
-        + `<span class="aa-glyph"><span class="zoom-toggle-a small">A</span><span class="zoom-toggle-a big">A</span></span>`
-        + `</button>`;
+    // La "aA" vive en el PIE (dentro del papel) para que gire con la hoja al pasar página y no
+    // parezca que flota.
+    const zoomBtn = noZoom ? "" : zoomBtnHtml();
     return `<div class="footer">`
         + `<div class="footer-line-2">${esc(pageNum)}</div>`
         + `<div class="footer-line-1"></div>`
         + guideBtnHtml()
+        + `<button class="transpose-btn" type="button" aria-label="Transponer acordes" data-tip="up"><span class="t-ico">T</span><span class="t-num" style="display:none"></span></button>`
         + zoomBtn
         + `</div>`;
 }
 
+// Botón "Guía de Acordes": ícono plano ENCIMA del número de página (mismo rincón,
+// vuela con la hoja). Aparece solo en cantos (este pie) y en el diccionario.
 function guideBtnHtml() {
-    return `<button class="guide-btn" type="button" aria-label="Guía de acordes" title="Guía de acordes">`
+    return `<button class="guide-btn" type="button" aria-label="Guía de acordes" data-tip="up">`
         + `<svg viewBox="0 0 880 512" aria-hidden="true"><use href="#guideIcon"/></svg></button>`;
 }
 
@@ -634,6 +707,8 @@ function buildSongPage(cantos) {
 
     const c = first;
     const layout = c.layout === "continuation" ? "song-page" : c.layout;
+    // Página SIN TÍTULO (continuaciones de cantos de 2+ páginas y el caso especial del canto 137,
+    // cuya 2ª hoja es song-page sin título):
     const contCls = !c.title ? " is-continuation" : "";
     const extra = c.classes.length ? " " + c.classes.join(" ") : "";
     const av = c.variants ? ` data-active-variant="${esc(c.variants.active)}"` : "";
@@ -644,13 +719,13 @@ function buildSongPage(cantos) {
     html += renderContent(anchorizeContent(c.content));
     html += "</div>";
     html += `</div>`;
-    html += footerHtml(c.pageNum, c.section === "creditos");
+    html += footerHtml(c.pageNum);   // créditos también lleva "Aa" (zoom para adultos mayores)
     return html;
 }
 
-const VPAGE_GROUP = {};    
-const SONG_TO_PAPER = {};  
-let indexBuilt = false;    
+const VPAGE_GROUP = {};    // POC ventana: paperId -> group (cantos de esa hoja), para construir lazy
+const SONG_TO_PAPER = {};  // POC ventana: id de canto -> paperId (resolver saltos SIN leer el DOM del contenido, que puede estar desmontado)
+let indexBuilt = false;    // OPT arranque: el índice se arma diferido (ensureIndexBuilt); declarado arriba para evitar zona muerta
 function generatePages() {
     const book = document.getElementById("book");
     let allHTML = "";
@@ -660,7 +735,7 @@ function generatePages() {
     for (const id of indexIds) allHTML += makePaper(id, makeIndexPage());
 
     allHTML += makePaper("pDictSep", makeDecorSep("DICCIONARIO DE ACORDES PARA GUITARRA", "diccionario", true));
-    for (let i = 0; i < 2; i++) allHTML += makePaper("pDict" + (i + 1), makeDictPage(i));
+    for (let i = 0; i < 5; i++) allHTML += makePaper("pDict" + (i + 1), makeDictPage(i));
 
     const grouped = new Map();
     for (const c of DATA.cantos) {
@@ -683,11 +758,12 @@ function generatePages() {
         }
 
         const group = grouped.get(c.paperId);
-        VPAGE_GROUP[c.paperId] = group;             
-        for (const cc of group) SONG_TO_PAPER[cc.id] = c.paperId;   
-        allHTML += makePaperShell(c.paperId);       
+        VPAGE_GROUP[c.paperId] = group;             // POC: contenido lazy por ventana
+        for (const cc of group) SONG_TO_PAPER[cc.id] = c.paperId;   // mapa canto->cáscara para saltos
+        allHTML += makePaperShell(c.paperId);       // cáscara vacía (se llena al entrar al buffer)
     }
 
+    // Secciones ya declaradas pero aún sin cantos:
     const sectionsWithSongs = new Set(DATA.cantos.map(c => c.section));
     for (const sec of DATA.sections) {
         if (sectionsWithSongs.has(sec.key)) continue;
@@ -695,6 +771,7 @@ function generatePages() {
         allHTML += makePaper("sep_" + sec.key, makeDecorSep(sepTitle, sec.key));
     }
 
+    // Contraportada: SIEMPRE la última hoja del libro (después de todo canto/sección).
     allHTML += makeBackCoverPaper();
 
     book.insertAdjacentHTML("beforeend", allHTML);
@@ -720,10 +797,16 @@ function populateIndexTemplate() {
     tpl.innerHTML = html;
 }
 
+// Preferencia de subrayado de títulos: aplicar ANTES de renderizar para evitar
+// parpadeo (el toggle vive en initTitleUnderlineToggle, más abajo).
 try { if (localStorage.getItem("cantoral-title-underline") === "0") document.body.classList.add("titles-no-underline"); } catch (e) {}
 
 generatePages();
+// OPT arranque: populateIndexTemplate + buildIndex + collapse se difieren (ver
+// ensureIndexBuilt más abajo) para sacar del arranque el armado del índice
 
+// Dispara la animación de la pasta (título + silueta) una vez que termine la intro de bienvenida.
+// Si la intro sigue viva, se registra el callback; si ya terminó o no existe, dispara al momento.
 function triggerCoverAnimate() {
     const coverFront = document.querySelector("#pCoverFront .front.cover-page");
     if (coverFront) coverFront.classList.add("cover-animate");
@@ -735,10 +818,12 @@ if (intro && !intro.classList.contains("wi-hide")) {
     requestAnimationFrame(triggerCoverAnimate);
 }
 
+// Mapa de song ID → slug para hashes legibles
 const SONG_SLUGS = new Map();
-const SONG_CONT = new Map(); 
+const SONG_CONT = new Map(); // paperId de continuación → song ID padre
 for (const c of DATA.cantos) {
     if (c.layout === "continuation") {
+        // Buscar el canto anterior con el mismo id para vincular
         for (let j = DATA.cantos.indexOf(c) - 1; j >= 0; j--) {
             if (DATA.cantos[j].id === c.id || DATA.cantos[j].layout !== "continuation") {
                 SONG_CONT.set(c.paperId, String(DATA.cantos[j].id));
@@ -753,6 +838,9 @@ for (const c of DATA.cantos) {
     SONG_SLUGS.set(String(c.id), slug);
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// FASE 2 — Inicialización del libro (lógica original
+// ═══════════════════════════════════════════════════════════════════
 
 const prevBtn = document.querySelector("#prevBtn");
 const nextBtn = document.querySelector("#nextBtn");
@@ -761,6 +849,7 @@ const themeToggle = document.querySelector("#themeToggle");
 const papers = Array.from(document.querySelectorAll(".paper"));
 
 let currentLocation = 1;
+// maxLocation es `let` porque el índice es RESPONSIVE:
 let maxLocation = papers.length;
 const pageTurnDuration = 1050;
 
@@ -768,6 +857,7 @@ papers.forEach((paper, index) => {
     paper.style.zIndex = papers.length - index;
 });
 
+// Ubicación (1-index) del primer paper cuya cara frontal contiene el selector.
 function locOfPaperWith(selector) {
     for (let i = 0; i < papers.length; i++) {
         if (papers[i].querySelector(selector)) return i + 1;
@@ -786,12 +876,16 @@ function getHashForLocation(loc) {
     const face = paper.querySelector(".front");
     if (!face) return "";
 
+    // Contraportada (última hoja)
     if (face.classList.contains("contraportada")) return "contraportada";
 
+    // Dedicatoria / descripción
     if (face.classList.contains("dedication-page")) return "dedicatoria";
 
+    // Plumeria page
     if (face.classList.contains("plumeria-page")) return "plumeriarubra";
 
+    // Song pages
     const songTitle = face.querySelector(".song-title");
     if (songTitle) {
         const num = songTitle.dataset.song;
@@ -799,19 +893,23 @@ function getHashForLocation(loc) {
         return num + slug;
     }
 
+    // Continuation pages (page-content-wrap without song-title).
     if (face.querySelector(".page-content-wrap")) {
         const num = SONG_CONT.get(paper.id);
         if (num) return num + (SONG_SLUGS.get(num) || "") + "p2";
     }
 
+    // Section separators (use section name directly)
     const sectionTitle = face.querySelector("[data-section]");
     if (sectionTitle) {
         return sectionTitle.dataset.section;
     }
 
+    // Section separator without data-section (e.g. ÍNDICE separator)
     const decorPage = face.querySelector(".decor-section-page");
     if (decorPage) return "indice";
 
+    // Index pages
     const indexPage = face.querySelector(".index-page");
     if (indexPage) {
         const idxPages = Array.from(document.querySelectorAll(".index-page"));
@@ -819,6 +917,7 @@ function getHashForLocation(loc) {
         return idx >= 0 ? "indice-" + (idx + 1) : "indice";
     }
 
+    // Dictionary pages
     const dictPage = face.querySelector(".dict-page");
     if (dictPage) {
         const dictPages = Array.from(document.querySelectorAll(".dict-page"));
@@ -840,12 +939,14 @@ function getLocationForHash(hash) {
     if (hash === "plumeriarubra" || hash === "arbol") return locOfPaperWith(".plumeria-page") || 3;
     if (hash === "contraportada") return maxLocation;
 
+    // Legacy canto-N format
     if (hash.startsWith("canto-")) {
         const songNum = hash.replace("canto-", "");
         const loc = locationOfSong(songNum);
         if (loc !== null) return loc;
     }
 
+    // New slug format: #Ntituloslug or #Ntituloslugp2
     const songHashMatch = hash.match(/^(\d+)([a-z].*)$/);
     if (songHashMatch) {
         const songNum = songHashMatch[1];
@@ -855,6 +956,8 @@ function getLocationForHash(hash) {
         if (loc !== null) return isP2 ? loc + 1 : loc;
     }
 
+    // Section names directly (e.g. #ordinario, #kirie, #gloria)
+    // Also keep legacy seccion- prefix working
     if (hash.startsWith("seccion-")) {
         const secName = hash.replace("seccion-", "");
         const loc = locationOfSection(secName);
@@ -908,6 +1011,7 @@ function updateHashFromLocation() {
         if (window.location.hash !== "#" + hash) {
             history.replaceState(null, null, "#" + hash);
         }
+        // Auto-guardado de la última página.
         try {
             localStorage.setItem("cantoral-last-hash", hash);
         } catch (e) {}
@@ -916,6 +1020,8 @@ function updateHashFromLocation() {
 
 const VIRTUAL_BUFFER = 6;
 
+// ── POC virtualización por VENTANA (solo EriTest) ───────────────────────── Las páginas de
+// CANTO se inyectan como cáscaras vacías (.vpage) y su
 function makePaperShell(id) {
     return `<div class="paper vpage" id="${id}"><div class="front"></div><div class="back blank-page"></div></div>`;
 }
@@ -924,7 +1030,7 @@ function mountVPage(p) {
     const f = p.querySelector(":scope > .front");
     if (f && !f.firstChild) f.innerHTML = buildSongPage(VPAGE_GROUP[p.id] || []);
     p.dataset.vmounted = "1";
-    delete p.dataset.fitted;   
+    delete p.dataset.fitted;   // re-ajustar al remontar
 }
 function unmountVPage(p) {
     if (!p || !p.classList.contains("vpage") || !p.dataset.vmounted) return;
@@ -934,17 +1040,22 @@ function unmountVPage(p) {
     delete p.dataset.fitted;
 }
 let fontsReady = false;
-let coverDrawnDone = false; 
+let coverDrawnDone = false; // pasta ya fijada en su estado final (.cover-drawn)
 function updatePaperVisibility() {
     const center = currentLocation - 1;
     for (let i = 0; i < papers.length; i++) {
         const visible = i >= center - VIRTUAL_BUFFER && i <= center + VIRTUAL_BUFFER;
         papers[i].style.display = visible ? "" : "none";
+        // Solo la hoja actual y sus vecinas (.near) mantienen sus animaciones decorativas corriendo;
+        // el CSS detiene el resto del buffer (que está con
         papers[i].classList.toggle("near", i >= center - 1 && i <= center + 1);
+        // .onstage = SOLO la hoja realmente visible.
         papers[i].classList.toggle("onstage", i === center);
+        // POC ventana: monta el contenido de canto al entrar al buffer, lo vacía al salir.
         if (visible) mountVPage(papers[i]); else unmountVPage(papers[i]);
         if (visible && fontsReady && !papers[i].dataset.fitted) fitPaper(papers[i]);
     }
+    // La primera vez que la pasta deja de estar cerca, fijamos su estado FINAL (.cover-drawn):
     if (!coverDrawnDone) {
         const cp = document.getElementById("pCoverFront");
         if (cp && !cp.classList.contains("near")) {
@@ -952,13 +1063,146 @@ function updatePaperVisibility() {
             if (cf) { cf.classList.add("cover-drawn"); coverDrawnDone = true; }
         }
     }
+    // Contraportada a la vista (libro cerrado al final) → dispara el fundido suave
+    // del contenido de cierre (sello + texto + QR + año) vía CSS.
     document.body.classList.toggle("book-at-back", currentLocation >= maxLocation);
     updateHashFromLocation();
     updateFontControlsVisibility();
     if (window.__syncRibbons) window.__syncRibbons();
-    if (window.__tourMaybeStart) window.__tourMaybeStart();   
+    if (window.__tourMaybeStart) window.__tourMaybeStart();   // tour 1-vez al llegar al 1er canto
+    if (currentLocation > 2 && window.__hideSwipeHint) window.__hideSwipeHint();  // avanzó: fuera la pista
 }
 
+// ── Pista "Desliza para avanzar" ── Aparece en la portada al TERMINAR el intro
+// (silueta/flores) y se retira sola en cuanto el usuario avanza al primer
+(function initSwipeHint() {
+    const hint = document.getElementById("swipeHint");
+    if (!hint) return;
+    const SEEN = "cantoral-swipe-hint-seen";
+    let shown = false, done = false, timer = 0;
+    const seen = () => { try { return localStorage.getItem(SEEN) === "1"; } catch (e) { return false; } };
+    function hide() {
+        clearTimeout(timer);
+        if (!shown) return;   // nunca se mostró (p.ej. abrió directo en una página): no consumir la 1ª vez
+        shown = false; done = true;
+        hint.classList.remove("show");
+        hint.setAttribute("aria-hidden", "true");
+        try { localStorage.setItem(SEEN, "1"); } catch (e) {}
+    }
+    // Anclaje al TÍTULO REAL (no al viewport).
+    const MAYO_BOT = 0.776, GAP_FRAC = 0.05, RIGHT_INSET = 0.015;
+    function position() {
+        const title = document.querySelector(".cover-title");
+        const bookEl = document.querySelector(".book");
+        if (!title || !bookEl) return;
+        const r = title.getBoundingClientRect();
+        const b = bookEl.getBoundingClientRect();
+        if (r.width < 2 || b.width < 2) return;                 // aún no renderiza
+        const top = r.top + (MAYO_BOT + GAP_FRAC) * r.height;   // debajo de MAYO, con aire proporcional
+        // Horizontal: pegado al borde DERECHO del libro (invariante), con inset chico.
+        hint.style.top = Math.round(top) + "px";
+        hint.style.right = Math.round(window.innerWidth - (b.right - RIGHT_INSET * b.width)) + "px";
+        hint.style.left = "auto";
+        hint.style.bottom = "auto";
+    }
+    function show() {
+        if (done || shown || seen()) return;
+        if (typeof currentLocation === "number" && currentLocation > 2) return;  // ya pasó la portada
+        shown = true;
+        position();
+        requestAnimationFrame(position);
+        hint.classList.add("show");
+        hint.setAttribute("aria-hidden", "false");
+    }
+    // Re-anclar si cambia tamaño/escala mientras se ve.
+    const onResize = () => { if (shown) position(); };
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", () => setTimeout(onResize, 180));
+    if (window.visualViewport) window.visualViewport.addEventListener("resize", onResize);
+    window.__repositionSwipeHint = position;
+    // La portada tarda ~14s en dibujarse (título, silueta, estrellas). A los 15s
+    // ya terminó todo y la pista encaja perfecto (medido con el user).
+    window.__onIntroEnd = function () { if (!seen()) timer = window.setTimeout(show, 15000); };
+    window.__hideSwipeHint = hide;
+})();
+
+// ── Tooltips personalizados (estilo DESK) ──────────────────────────────────── Burbuja global
+// #tipBubble para cualquier control con
+(function initTooltips() {
+    const TIP = document.createElement("div");
+    TIP.id = "tipBubble";
+    TIP.setAttribute("aria-hidden", "true");
+    document.body.appendChild(TIP);
+    let hideTimer = 0;
+    const target = (e) => (e.target && e.target.closest) ? e.target.closest("[data-tip][aria-label]") : null;
+    function hide() { TIP.classList.remove("show"); }
+    function show(el) {
+        const label = el.getAttribute("aria-label");
+        if (!label) { hide(); return; }
+        clearTimeout(hideTimer);
+        TIP.textContent = label;
+        TIP.style.left = "0px"; TIP.style.top = "0px";
+        TIP.classList.add("show");
+        const r = el.getBoundingClientRect();
+        const tb = TIP.getBoundingClientRect();
+        const dir = el.getAttribute("data-tip") || "up";
+        const GAP = 8;
+        let x, y;
+        if (dir === "down") { x = r.right - tb.width; y = r.bottom + GAP; }
+        else if (dir === "left") { x = r.left - tb.width - GAP; y = r.top + r.height / 2 - tb.height / 2; }
+        else { x = r.left + r.width / 2 - tb.width / 2; y = r.top - tb.height - GAP; } // up
+        x = Math.max(6, Math.min(x, window.innerWidth - tb.width - 6));
+        y = Math.max(6, Math.min(y, window.innerHeight - tb.height - 6));
+        TIP.style.left = Math.round(x) + "px";
+        TIP.style.top = Math.round(y) + "px";
+    }
+
+    // Escritorio (hover real): mostrar/ocultar al entrar/salir del control.
+    if (window.matchMedia && window.matchMedia("(hover: hover)").matches) {
+        document.addEventListener("mouseover", (e) => { const el = target(e); if (el) show(el); });
+        document.addEventListener("mouseout", (e) => { const el = target(e); if (el) hide(); });
+    }
+
+    // Móvil: LONG-PRESS.
+    let pressTimer = 0, pressEl = null, sx = 0, sy = 0, moved = false, suppressEl = null;
+    document.addEventListener("touchstart", (e) => {
+        suppressEl = null;                                   // reset por si quedó colgado
+        const el = target(e);
+        if (!el || !e.touches || e.touches.length !== 1) { pressEl = null; return; }
+        pressEl = el; moved = false;
+        sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+        clearTimeout(pressTimer);
+        pressTimer = window.setTimeout(() => {
+            if (pressEl && !moved) {
+                show(pressEl);
+                suppressEl = pressEl;                        // el próximo click (de este long-press) se anula
+                hideTimer = window.setTimeout(hide, 1800);
+            }
+        }, 500);
+    }, { passive: true });
+    document.addEventListener("touchmove", (e) => {
+        if (!pressEl || !e.touches[0]) return;
+        if (Math.abs(e.touches[0].clientX - sx) > 10 || Math.abs(e.touches[0].clientY - sy) > 10) {
+            moved = true; clearTimeout(pressTimer); pressEl = null;
+        }
+    }, { passive: true });
+    document.addEventListener("touchend", () => { clearTimeout(pressTimer); pressEl = null; }, { passive: true });
+    document.addEventListener("touchcancel", () => { clearTimeout(pressTimer); pressEl = null; hide(); }, { passive: true });
+
+    // Suprimir el click SÓLO si vino de un long-press (captura = antes que la app).
+    document.addEventListener("click", (e) => {
+        const el = (e.target && e.target.closest) ? e.target.closest("[data-tip][aria-label]") : null;
+        if (el && el === suppressEl) {
+            e.preventDefault(); e.stopPropagation();
+            suppressEl = null;
+            hideTimer = window.setTimeout(hide, 900);
+        }
+    }, true);
+
+    document.addEventListener("scroll", hide, true);
+})();
+
+// FIX Android (segundo plano):
 document.addEventListener("visibilitychange", () => {
     if (document.hidden) return;
     requestAnimationFrame(() => {
@@ -966,7 +1210,7 @@ document.addEventListener("visibilitychange", () => {
         const bookEl = document.getElementById("book");
         if (bookEl) {
             bookEl.style.display = "none";
-            void bookEl.offsetHeight;   
+            void bookEl.offsetHeight;   // reflow síncrono
             bookEl.style.display = "";
         }
     });
@@ -977,14 +1221,22 @@ function updateFontControlsVisibility() {
     if (!fc) return;
     const paper = papers[currentLocation - 1];
     const face = paper ? paper.querySelector(":scope > .front") : null;
+    // Todos los layouts de canto (song-page, shared, short-grid, song-two, lyrics, continuation)
+    // usan .page-content-wrap como contenedor.
     const isSongFace = !!(face && face.querySelector(".page-content-wrap"));
-    fc.classList.toggle("hidden", !isSongFace);
+    // El índice y presentación/dedicatoria también llevan control de letra (zoom +
+    // negrita/cursiva) para adultos mayores, aunque no sean cantos.
+    const hasTextCtrl = isSongFace || !!(face && (face.querySelector(".index-content") || face.querySelector(".dedication-content")));
+    fc.classList.toggle("hidden", !hasTextCtrl);
     const fpBtn = document.getElementById("fontPickerBtn");
-    if (fpBtn) fpBtn.classList.toggle("hidden", !isSongFace);
+    if (fpBtn) fpBtn.classList.toggle("hidden", !isSongFace);   // el selector de FUENTE sigue solo en cantos
+    if (!hasTextCtrl) {
+        // Colapsa el slider de zoom si estaba abierto al abandonar una página con control.
+        if (window.__closeFontSlider) window.__closeFontSlider();
+    }
     if (!isSongFace) {
         const fp = document.getElementById("fontPicker");
         if (fp) fp.classList.add("hidden");
-        if (window.__closeFontSlider) window.__closeFontSlider();
     }
 }
 
@@ -1007,6 +1259,7 @@ function fitPaper(paper) {
     const fullW = content.scrollWidth;
     const fullH = content.scrollHeight;
     if (!boxW || !fullW || !fullH || availH <= 0) return;
+    // Los cantos (.page-content-wrap) tienen overflow-y:auto:
     const scrolls = content.classList.contains("page-content-wrap");
     const scale = scrolls
         ? Math.min(1, boxW / fullW)
@@ -1030,13 +1283,16 @@ function isSinglePageMode() {
 function getViewportSize() {
     const root = document.querySelector(".container") || document.documentElement;
     // iOS Safari: `.container` es 100dvh, pero en la 1a carga (barra de URL sin asentar)
-    // clientHeight reporta un alto que no coincide con lo VISIBLE -> el libro se escala mal
-    // (chico, con negro abajo) hasta recargar. `visualViewport.height` da el area visible
-    // REAL en todo momento; se prefiere cuando existe.
+    // clientHeight reporta un alto que no coincide con lo VISIBLE -> el
     const vv = window.visualViewport;
+    const innerH = window.innerHeight || 0;
+    let height = (vv && vv.height) || root.clientHeight || innerH;
+    // ★TECLADO: al enfocar un input, iOS encoge visualViewport.height MUCHO (~300px) pero NO
+    // window.innerHeight (alto de layout, estable).
+    if (vv && innerH && vv.height < innerH - 150) height = innerH;
     return {
         width: (vv && vv.width) || root.clientWidth || window.innerWidth,
-        height: (vv && vv.height) || root.clientHeight || window.innerHeight,
+        height,
     };
 }
 
@@ -1111,20 +1367,17 @@ try {
         applyScale(); refitVisible();
     });
 } catch (e) {}
-// FIX iOS Safari: en la 1a carga la barra de URL aun no se asienta, asi que la
-// medicion del viewport sale distinta del area real y el libro se escala mal (chico,
-// choca con la barra) hasta recargar. iOS NO dispara "resize" fiable al mostrar/ocultar
-// la barra, pero SI reporta el area visible por visualViewport; escuchamos ahi y
-// re-aplicamos unas veces tras load para atrapar el asentamiento inicial.
+// FIX iOS Safari: en la 1a carga la barra de URL aun no se asienta, asi que la medicion del
+// viewport (100dvh / innerHeight) sale mas alta que el area
 if (window.visualViewport) {
     let vvTimer = null;
     const onVV = () => {
-        // NO re-escalar cuando el teclado está abierto: al enfocar el buscador iOS
-        // encoge visualViewport y esto disparaba un re-fit que MOVÍA el libro entero
-        // (bug reportado). El buscador tapa el libro de todos modos.
+        // NO re-escalar cuando el teclado está abierto:
         if (document.body.classList.contains("searching")) return;
         const ae = document.activeElement;
         if (ae && (ae.tagName === "INPUT" || ae.tagName === "TEXTAREA" || ae.isContentEditable)) return;
+        // La escala ya es independiente del teclado (getViewportSize ignora la caída de visualViewport
+        // por el teclado), así que aquí re-escalamos directo (1a
         applyScale();
         clearTimeout(vvTimer);
         vvTimer = window.setTimeout(refitVisible, 200);
@@ -1133,19 +1386,23 @@ if (window.visualViewport) {
     window.visualViewport.addEventListener("scroll", onVV);
 }
 window.addEventListener("load", () => {
+    // Reasentar tras el 1er layout y de nuevo cuando la barra de Safari se estabiliza.
     requestAnimationFrame(() => { applyScale(); refitVisible(); });
     setTimeout(() => { applyScale(); refitVisible(); }, 300);
     setTimeout(() => { applyScale(); refitVisible(); }, 800);
 });
 
-function setTheme(isDark) {
+function setTheme(isDark, persist = true) {
     document.body.classList.toggle("dark-mode", isDark);
     themeToggle.setAttribute("aria-label", isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
+    // Con el control gestual ACTIVO todo lo ambiental está sacrificado a propósito:
     if (window.__starfield && !document.body.classList.contains("gestures-on")) {
         window.__starfield.update(isDark);
     }
-    try { localStorage.setItem("cantoral-theme", isDark ? "dark" : "light"); } catch {}
+    if (persist) { try { localStorage.setItem("cantoral-theme", isDark ? "dark" : "light"); } catch {} }
 }
+// Expuesto para módulos que viven en otro scope (p.ej. el easter egg).
+try { window.__setTheme = setTheme; } catch (e) {}
 
 function loadTheme() {
     try { setTheme(localStorage.getItem("cantoral-theme") === "dark"); } catch { setTheme(false); }
@@ -1160,6 +1417,8 @@ function speedMultiplier(location) {
     const bucket = Math.floor((Math.max(1, location) - 1) / 25);
     return 1 + bucket * 0.2;
 }
+// Volteo forzado de la ÚLTIMA hoja: gira más despacio (peso del cierre del libro).
+// Lo pone goNextPage justo antes de animatePaper y lo limpia enseguida.
 let FINAL_FLIP_MS = 0;
 function currentFlipDuration() {
     if (FINAL_FLIP_MS) return FINAL_FLIP_MS;
@@ -1170,6 +1429,7 @@ function currentStepDelay() {
     return Math.max(MIN_STEP_MS, Math.round(BASE_STEP_MS / speedMultiplier(currentLocation)));
 }
 
+// body.flipping pausa las animaciones decorativas (árbol/mariposas) mientras alguna hoja gira.
 function syncFlippingClass() {
     document.body.classList.toggle("flipping", !!document.querySelector(".paper.turning"));
 }
@@ -1217,6 +1477,8 @@ function closeBook(isAtBeginning) {
     }
 }
 
+// ── CIERRE DEL LIBRO — gesto al llegar a la contraportada ────────────────── El libro entero
+// se abate sobre el lomo hasta quedar plano y ASIENTA con
 let closeFxTimer = null;
 let bookCloseAnim = null;
 function cancelBookCloseFx() {
@@ -1232,11 +1494,13 @@ function playBookCloseFx() {
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (closeFxTimer) { clearTimeout(closeFxTimer); closeFxTimer = null; }
     body.classList.remove("book-closing");
-    void body.offsetWidth;              
+    void body.offsetWidth;              // reinicia si se vuelve a llegar
     body.classList.add("book-closing");
     closeFxTimer = window.setTimeout(() => { closeFxTimer = null; body.classList.remove("book-closing"); }, 1700);
     if (book.animate) {
         const b = book.style.transform || "";
+        // rotateY entre translateX(∓50%) para girar sobre el LOMO (borde izq), no
+        // sobre el centro: la pasta se abate y queda plana.
         const f = (ry, y, rx, sc) => ({
             transform: `perspective(1500px) ${b} translateX(-50%) rotateY(${ry}deg) translateX(50%)`
                 + ` translateY(${y}px) rotateX(${rx}deg) scale(${sc})`
@@ -1252,9 +1516,12 @@ function playBookCloseFx() {
             bookCloseAnim.onfinish = () => { bookCloseAnim = null; };
         } catch (e) { bookCloseAnim = null; }
     }
+    // El golpe también se siente (solo con movimiento pleno; ya salimos arriba en
+    // lite/reduced-motion). Dos toques cortos al asentar.
     try { if (navigator.vibrate) window.setTimeout(() => navigator.vibrate([14, 36, 22]), 900); } catch (e) {}
 }
 
+// El libro CERRADO no se hojea hacia atrás:
 let __closedHintShown = false;
 function resistClosedBook() {
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1283,13 +1550,17 @@ function resistClosedBook() {
 }
 
 function goNextPage() {
-    if (document.body.classList.contains("tour-on")) return;   
+    if (document.body.classList.contains("tour-on")) return;   // durante el tour no se cambia de página
     if (document.body.classList.contains("font-slider-open")) return;
     if (currentLocation >= maxLocation) return;
     if (window.__closeRibbons) window.__closeRibbons();
+    if (window.__closeGuide) window.__closeGuide();
     if (currentLocation === 1) {
         openBook();
+        // Primer avance desde la portada: mata FX de bienvenida para siempre
         if (window.__killIntroFx) window.__killIntroFx();
+        // Reanudar en el listón: la portada y su intro se ven completas y es el
+        // PRIMER avance el que lleva a la página marcada, no a la página 2.
         const resume = window.__ribbonResume;
         window.__ribbonResume = null;
         if (window.__ribbonConsumeClosed) window.__ribbonConsumeClosed();
@@ -1304,6 +1575,7 @@ function goNextPage() {
         }
     }
     const paper = papers[currentLocation - 1];
+    // Última hoja del libro:
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const closing = currentLocation + 1 >= maxLocation
         && !document.body.classList.contains("lite") && !reduce;
@@ -1317,14 +1589,17 @@ function goNextPage() {
 }
 
 function goPrevPage() {
-    if (document.body.classList.contains("tour-on")) return;   
+    if (document.body.classList.contains("tour-on")) return;   // durante el tour no se cambia de página
     if (document.body.classList.contains("font-slider-open")) return;
     if (currentLocation <= 1) return;
+    // Libro CERRADO (contraportada): NO se hojea hacia atrás. Solo la correa
+    // "Volver al inicio" sale (goToPage → burst → isAnimating=true, no se bloquea).
     if (currentLocation >= maxLocation) {
         if (!isAnimating) { resistClosedBook(); return; }
-        cancelBookCloseFx();   
+        cancelBookCloseFx();   // salida programática (correa): reabrir
     }
     if (window.__closeRibbons) window.__closeRibbons();
+    if (window.__closeGuide) window.__closeGuide();
     currentLocation--;
     if (currentLocation === 1) closeBook(true);
     else openBook();
@@ -1334,17 +1609,22 @@ function goPrevPage() {
     updatePaperVisibility();
 }
 
+// Restaurar la página guardada ANTES de aplicar visibilidad/escala.
 (function restoreInitialLocation(){
+    // Sólo enlaces directos (#canto-123). La página "donde me quedé" ya no se
+    // restaura de golpe: la marca el listón y el salto ocurre al primer avance.
     const saved = INITIAL_HASH;
     if (!saved) return;
     const loc = getLocationForHash(saved);
     if (loc > 1 && loc <= maxLocation) {
         currentLocation = loc;
+        // Aplicar estado flipped a las páginas anteriores, sin animación
         for (let i = 0; i < papers.length; i++) {
             const flipped = (i + 1) < currentLocation;
             papers[i].classList.toggle("flipped", flipped);
             papers[i].style.zIndex = flipped ? (i + 1) : (papers.length - i);
         }
+        // Si iniciamos después de la portada, apagamos los efectos de intro de inmediato para no gastar recursos
         if (window.__killIntroFx) window.__killIntroFx();
     }
 })();
@@ -1353,6 +1633,9 @@ loadTheme();
 applyScale();
 updatePaperVisibility();
 
+// ═══════════════════════════════════════════════════════════════════
+// LISTONES (separadores de página) — sustituyen al auto-guardado Modelo:
+// ═══════════════════════════════════════════════════════════════════
 (function initRibbons() {
     const layer = document.getElementById("ribbonLayer");
     const hit = document.getElementById("ribbonHit");
@@ -1365,18 +1648,31 @@ updatePaperVisibility();
     const KEY = "cantoral-ribbons";
     const COLOR_KEY = "cantoral-ribbon-colors";
     const CLOSED_KEY = "cantoral-closed";
-    const MAX = 3;   
-    const STAIR_ANGLE = 10;                    
-    let slots = [null, null, null];   
-    let lastSlot = -1;                
+    const MAX = 5;
+    // Escalera de las colas: ángulo de bajada de la diagonal (paso horizontal fijo
+    // a 38px en CSS, igual que los listones abiertos).
+    const STAIR_ANGLE = 10;                    // grados de la diagonal izq→der
+    let slots = [null, null, null, null, null];   // { hash, label }
+    let lastSlot = -1;                // último listón fijado/usado → reanudación
     let isOpen = false;
-    let paintMode = false;            
+    let paintMode = false;            // modo "elegir color" (botón 🎨)
 
+    // ── Colores de los listones (20 tonos mate, familia de la pasta salvia) ── Cada color es UN
+    // tono base; brillo (arriba), sombra (abajo) e hilo de
     const PALETTE = [
+        // 1-20 salvia base (original)
         "#9aa890", "#909a78", "#84a094", "#79a0a0", "#849ab2",
         "#7c8aa4", "#9e98bb", "#a897b9", "#a189a0", "#b498a7",
         "#c7a2a8", "#c89b8e", "#bd8b81", "#b4907c", "#c1a98c",
-        "#bba874", "#b6a271", "#a8a079", "#96a0a3", "#a89a8e"
+        "#bba874", "#b6a271", "#a8a079", "#96a0a3", "#a89a8e",
+        // 21-24 liturgicos
+        "#6d5a8c", "#a8484a", "#c9a24b", "#e8e2d0",
+        // 25-28 joya mate
+        "#4f8b6e", "#8a4152", "#3f7d84", "#7a4b6b",
+        // 29-31 tierra
+        "#b56a4a", "#c08a3e", "#c9b48a",
+        // 32-35 extra
+        "#6f5140", "#c98b93", "#7d7f4e", "#4a5a7a"
     ];
     const DEFAULT_COLORS = ["#9aa890", "#c89b8e", "#a897b9", "#849ab2", "#bba874"];
     let colors = DEFAULT_COLORS.slice();
@@ -1424,6 +1720,7 @@ updatePaperVisibility();
     function saveColors() {
         try { localStorage.setItem(COLOR_KEY, JSON.stringify(colors)); } catch (e) {}
     }
+    // Pinta cada listón con su color base + los 3 derivados (inline → gana al CSS).
     function applyColors() {
         ribs.forEach((r, i) => {
             const d = derive(colors[i] || DEFAULT_COLORS[i] || "#9aa890");
@@ -1442,6 +1739,8 @@ updatePaperVisibility();
                 if (typeof raw.last === "number") lastSlot = raw.last;
             }
         } catch (e) {}
+        // Una sola marca por página: si por datos viejos quedaron dos listones en
+        // la misma hoja, se descarta el duplicado y se compactan las ranuras.
         const seen = {};
         for (let i = 0; i < MAX; i++) {
             const s = slots[i];
@@ -1450,6 +1749,8 @@ updatePaperVisibility();
                 else seen[s.hash] = true;
             }
         }
+        // Ranuras POSICIONALES: cada slot conserva su color/lugar; NO se compactan
+        // al quitar uno (quitar el rojo deja su hueco libre y no recorre los demás).
         if (lastSlot >= 0 && !slots[lastSlot]) lastSlot = firstPinned();
     }
     function save() {
@@ -1468,6 +1769,7 @@ updatePaperVisibility();
         return -1;
     }
 
+    // Etiqueta = el número de página impreso en el pie de la hoja actual.
     function currentLabel() {
         const paper = papers[currentLocation - 1];
         const face = paper ? paper.querySelector(":scope > .front") : null;
@@ -1476,6 +1778,7 @@ updatePaperVisibility();
         return txt || String(currentLocation);
     }
 
+    // Datos del canto de la hoja actual para escribir en el listón:
     function currentSongInfo() {
         const paper = papers[currentLocation - 1];
         const face = paper ? paper.querySelector(":scope > .front") : null;
@@ -1486,6 +1789,8 @@ updatePaperVisibility();
                 const t = papers[i].querySelector(".front .song-title");
                 if (t) { title = t; break; }
             }
+            // OPT ventana: si el canto padre está DESMONTADO (fuera del buffer), resolver
+            // por datos (SONG_CONT + DATA.cantos) para no perder la etiqueta del canto.
             if (!title) {
                 const num = SONG_CONT.get(paper.id);
                 if (num) {
@@ -1504,35 +1809,47 @@ updatePaperVisibility();
 
     function render() {
         const atCover = currentLocation <= 1;
+        // Hash de la hoja abierta: el listón puesto AQUÍ se queda colgando.
         const hereHash = atCover ? null : getHashForLocation(currentLocation);
+        // UN solo listón por página: si esta hoja ya tiene uno, NO se ofrece el
+        // listón libre (+) para que no se pueda marcar dos veces la misma página.
         const alreadyHere = !!(hereHash && slots.some(s => s && s.hash === hereHash));
         const free = alreadyHere ? -1 : firstFree();
+        // Colapsado el fragmento visible es el listón LIBRE; cuando ya no queda
+        // ninguno, es el color del PRIMER listón fijado (lo pidió así el boceto).
         const top = free >= 0 ? free : firstPinned();
+        // Cada slot es POSICIONAL:
         let visCount = 0;
         let stack = 0;
-        let rank = 0;   
+        let rank = 0;   // orden ENTRE los fijados (para el escalonado de colas)
         for (let i = 0; i < MAX; i++) {
             const r = ribs[i];
             const pinned = !!slots[i];
+            // En modo pintar se muestran los 5 (aunque estén libres) para poder elegir su color.
             const on = paintMode ? true
                 : (atCover ? pinned : (pinned || (i === free && (isOpen || pinnedCount() === 0))));
             if (on) visCount++;
             r.classList.toggle("show", on);
             r.classList.toggle("pinned", pinned);
             r.classList.toggle("free", on && !pinned);
+            // .here = cuelga de arriba abajo cruzando por detrás de la hoja.
             const isHere = (pinned && hereHash && slots[i].hash === hereHash) || (atCover && pinned);
             r.classList.toggle("here", isHere);
             if (!on) continue;
             r.style.setProperty("--i", String(i));
+            // Cola escalonada por RANGO entre fijados (no por índice de slot):
             if (pinned) r.style.setProperty("--rank", String(rank++));
+            // Encimados: el visible al frente, los demás asomando apenas detrás.
             r.style.setProperty("--off", String(i === top ? 0 : ++stack));
             r.style.zIndex = String(i === top ? 30 : 20 - i);
+            // Cada listón fijado lleva su título ABREVIADO a lo largo (el id ya va en la punta, así que
+            // quitamos el "NN." del inicio y recortamos para que no se
             const num = r.querySelector(".rib-num");
             if (num) {
                 if (pinned) {
                     let t = (slots[i].full || slots[i].label || "");
-                    t = t.replace(/^\s*\d+\s*[.\-)]\s*/, "");   
-                    t = t.replace(/[.\s]+$/, "");                
+                    t = t.replace(/^\s*\d+\s*[.\-)]\s*/, "");   // quita "19. " (id va en la punta)
+                    t = t.replace(/[.\s]+$/, "");                // quita punto/espacios finales
                     const MAXLEN = 16;
                     if (t.length > MAXLEN) t = t.slice(0, MAXLEN).trim() + "…";
                     num.textContent = t || slots[i].id || "";
@@ -1540,23 +1857,29 @@ updatePaperVisibility();
                     num.textContent = "+";
                 }
             }
+            // Punta que cuelga: el id ("C172"). CSS sólo lo muestra en .here.
             const tip = r.querySelector(".rib-tip");
             if (tip) tip.textContent = (pinned && slots[i].id) ? slots[i].id : "";
             r.setAttribute("aria-label", pinned
                 ? "Ir a la página " + slots[i].label
                 : "Fijar listón en esta página");
         }
+        // Cuántas cintas hay desplegadas: coloca el botón de cerrar a su derecha.
         layer.style.setProperty("--n", String(visCount));
         if (closeBtn) closeBtn.classList.toggle("hidden", pinnedCount() === 0);
+        // 🎨 sólo con el panel desplegado (o pintando).
         if (paintBtn) paintBtn.classList.toggle("hidden", !(isOpen || paintMode));
 
+        // Colas adaptables al hueco REAL bajo el libro:
         const bookEl = document.getElementById("book");
         if (bookEl) {
             const gap = window.innerHeight - bookEl.getBoundingClientRect().bottom;
             const n = Math.max(1, pinnedCount());
-            const d0 = Math.max(12, Math.min(16, gap * 0.28)); 
-            const dLast = Math.max(d0, gap - 8);               
+            const d0 = Math.max(12, Math.min(16, gap * 0.28)); // asomo del primero
+            const dLast = Math.max(d0, gap - 8);               // el último, casi al borde
             let step = n > 1 ? (dLast - d0) / (n - 1) : 18;
+            // El paso HORIZONTAL es fijo (38px, igual que abiertos); la escalera la da la altura de la
+            // cola.
             const ideal = 30 * Math.tan(STAIR_ANGLE * Math.PI / 180);
             step = Math.max(6, Math.min(step, ideal, 16));
             layer.style.setProperty("--rbase", (26 + d0).toFixed(1) + "px");
@@ -1574,6 +1897,7 @@ updatePaperVisibility();
         render();
     }
 
+    // ── Modo pintar (botón 🎨) + paleta de colores por listón ──
     function buildPalette() {
         if (!paletteEl || paletteEl.childElementCount) return;
         PALETTE.forEach((hex) => {
@@ -1607,6 +1931,7 @@ updatePaperVisibility();
         buildPalette();
         paintTarget = i;
         markSwatch();
+        // Ancla la paleta bajo el listón elegido.
         paletteEl.style.setProperty("--px", (26 + i * 38) + "px");
         paletteEl.classList.add("open");
     }
@@ -1625,6 +1950,7 @@ updatePaperVisibility();
     function pin(i) {
         const hash = getHashForLocation(currentLocation);
         if (!hash) return;
+        // Un listón por página: si ya hay uno en esta hoja, no duplicar.
         if (slots.some((s, j) => s && s.hash === hash && j !== i)) return;
         const info = currentSongInfo();
         slots[i] = { hash: hash, label: currentLabel(), full: info.full, id: info.id };
@@ -1634,11 +1960,14 @@ updatePaperVisibility();
         const r = ribs[i];
         r.classList.add("pinning");
         window.setTimeout(() => r.classList.remove("pinning"), 520);
+        // Se cierra solo: el listón queda puesto y la vista vuelve limpia.
         window.setTimeout(() => setOpen(false), 900);
     }
 
     function unpin(i) {
         slots[i] = null;
+        // Ranuras POSICIONALES: el hueco se queda en su sitio (no se recorren los
+        // demás listones), así conservan color y página los que siguen fijados.
         if (lastSlot === i) lastSlot = firstPinned();
         save();
         render();
@@ -1647,13 +1976,27 @@ updatePaperVisibility();
 
     hit.addEventListener("click", (e) => {
         e.stopPropagation();
+        // En la contraportada (libro cerrado por detrás) NO se abre el panel de
+        // gestión: chocaría con la correa "Volver al inicio/Ant".
+        if (document.body.classList.contains("book-at-back")) return;
         setOpen(!isOpen);
     });
 
     ribs.forEach((r, i) => {
         r.addEventListener("click", (e) => {
             e.stopPropagation();
+            // Contraportada: tocar un listón ABRE el libro en esa página (como agarrar el separador), sin
+            // desplegar el panel (que se iría a la izquierda
+            if (document.body.classList.contains("book-at-back")) {
+                if (slots[i]) {
+                    const loc = getLocationForHash(slots[i].hash);
+                    lastSlot = i; save();
+                    if (loc > 0) goToPage(loc);
+                }
+                return;
+            }
             if (!isOpen) { setOpen(true); return; }
+            // Modo pintar: tocar un listón abre su paleta (no fija ni navega).
             if (paintMode) { openPalette(i); return; }
             if (slots[i]) {
                 const loc = getLocationForHash(slots[i].hash);
@@ -1673,6 +2016,7 @@ updatePaperVisibility();
         });
     });
 
+    // "Cerrar libro": el ritual.
     function closeBook() {
         const active = (lastSlot >= 0 && slots[lastSlot]) ? lastSlot : firstPinned();
         if (active < 0) return;
@@ -1698,10 +2042,16 @@ updatePaperVisibility();
         if (isOpen && !layer.contains(e.target) && e.target !== hit) setOpen(false);
     });
 
+    // Colapsar los listones desde fuera (p. ej. al cambiar de página con swipe o
+    // teclado, que no disparan el click de arriba).
     window.__closeRibbons = function () { if (isOpen) setOpen(false); };
 
+    // Al cambiar tamaño/orientación cambia el hueco bajo el libro: recalcular
+    // --tail para que las puntas sigan cabiendo.
     window.addEventListener("resize", () => { if (window.__syncRibbons) window.__syncRibbons(); });
 
+    // En la pasta no hay página que marcar: se va el botón de toque y el listón
+    // libre, pero los fijados se quedan colgando del libro cerrado.
     window.__syncRibbons = function () {
         const atCover = currentLocation <= 1;
         layer.classList.toggle("at-cover", atCover);
@@ -1711,6 +2061,8 @@ updatePaperVisibility();
         render();
     };
 
+    // Se consume la marca de "libro cerrado" en el primer avance (no al cargar:
+    // si el usuario refresca sin abrir, el ritual sigue en pie).
     window.__ribbonConsumeClosed = function () {
         try { localStorage.removeItem(CLOSED_KEY); } catch (e) {}
     };
@@ -1721,6 +2073,7 @@ updatePaperVisibility();
     render();
     setOpen(false);
 
+    // Reanudación diferida:
     const resumeSlot = BOOK_WAS_CLOSED;
     if (resumeSlot >= 0 && slots[resumeSlot]) {
         const loc = getLocationForHash(slots[resumeSlot].hash);
@@ -1737,17 +2090,21 @@ themeToggle.addEventListener("click", () => {
     setTheme(!document.body.classList.contains("dark-mode"));
 });
 
+// ── Modo LIGERO: toggle + persistencia.
 function setLite(on, persist) {
     document.body.classList.toggle("lite", !!on);
     const b = document.getElementById("liteBtn");
     if (b) {
         b.setAttribute("aria-pressed", on ? "true" : "false");
         b.classList.toggle("is-active", !!on);
+        // La MISMA perla cambia de emoji según la acción disponible:
+        // lite OFF → 🐢 (activar ligero) · lite ON → ⚡ (volver a normal con animaciones).
         b.textContent = on ? "⚡" : "🐢";
         b.setAttribute("aria-label", on ? "Volver a versión con animaciones" : "Modo ligero (apagar animaciones)");
         b.setAttribute("title", on ? "Volver a versión con animaciones" : "Modo ligero (apagar animaciones)");
     }
     if (persist) { try { localStorage.setItem("cantoral-lite", on ? "1" : "0"); } catch (e) {} }
+    // Starfield (WAAPI/JS): apagar en lite; reanudar según tema al salir.
     try { if (window.__starfield) window.__starfield.update(!on && document.body.classList.contains("dark-mode")); } catch (e) {}
 }
 (function wireLite() {
@@ -1766,6 +2123,7 @@ function setLite(on, persist) {
 
     b.addEventListener("click", (e) => {
         e.stopPropagation();
+        // Apagar = directo. Encender = mostrar aviso de qué hace la función.
         if (document.body.classList.contains("lite")) { setLite(false, true); return; }
         if (modal) openModal(); else setLite(true, true);
     });
@@ -1776,6 +2134,9 @@ function setLite(on, persist) {
     }
 })();
 
+// ═══════════════════════════════════════════════════════════════════
+// INSTALAR como app (PWA) — FAB consciente de plataforma · Android/escritorio:
+// ═══════════════════════════════════════════════════════════════════
 (function wireInstall() {
     const fab = document.getElementById("installBtn");
     if (!fab) return;
@@ -1783,11 +2144,12 @@ function setLite(on, persist) {
 
     const standalone = window.matchMedia("(display-mode: standalone)").matches
         || window.navigator.standalone === true;
-    if (standalone) return; 
+    if (standalone) return; // ya vive como app → nunca mostrar el FAB
 
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
     let deferred = null;
 
+    // Revela el FAB, pero NO encima del intro de bienvenida (espera a que se vaya).
     function reveal() {
         const intro = document.getElementById("welcomeIntro");
         if (intro && intro.offsetParent !== null &&
@@ -1798,11 +2160,13 @@ function setLite(on, persist) {
         fab.hidden = false;
     }
 
+    // Android/escritorio: el navegador avisa cuándo es instalable.
     window.addEventListener("beforeinstallprompt", (e) => {
         e.preventDefault();
         deferred = e;
         reveal();
     });
+    // iOS no dispara el evento → lo mostramos igual (tras el intro).
     if (isIOS) setTimeout(reveal, 3800);
 
     const openIos = () => {
@@ -1827,6 +2191,7 @@ function setLite(on, persist) {
             return;
         }
         if (isIOS) { openIos(); return; }
+        // Fallback (navegador sin prompt y no-iOS): también mostramos los pasos.
         openIos();
     });
 
@@ -1834,6 +2199,7 @@ function setLite(on, persist) {
         ?.addEventListener("click", (e) => { e.stopPropagation(); closeIos(); });
     iosModal?.addEventListener("click", (e) => { if (e.target === iosModal) closeIos(); });
 
+    // Si se instala, ocúltalo y descarta el prompt guardado.
     window.addEventListener("appinstalled", () => { fab.hidden = true; deferred = null; });
 })();
 
@@ -1846,6 +2212,9 @@ document.addEventListener("keydown", (e) => {
     else if (e.key === "Escape") closeSearch();
 });
 
+// ═══════════════════════════════════════════════════════════════════
+// Búsqueda — corpus construido desde JSON, no desde el
+// ═══════════════════════════════════════════════════════════════════
 
 const searchBtn     = document.querySelector("#searchBtn");
 const searchOverlay = document.querySelector("#searchOverlay");
@@ -1854,6 +2223,7 @@ const searchClear   = document.querySelector("#searchClear");
 const searchResults = document.querySelector("#searchResults");
 
 
+// Sección por KEY (para cantos cuyo id no es numérico, p.
 const SECTION_BY_KEY = new Map(
     DATA.sections.map(sec => [sec.key, {
         label: sec.label,
@@ -1863,6 +2233,7 @@ const SECTION_BY_KEY = new Map(
     }])
 );
 
+// sectionKey (opcional) tiene prioridad: resuelve cualquier id, numérico o no.
 function getSectionForSong(songNum, sectionKey) {
     if (sectionKey && SECTION_BY_KEY.has(sectionKey)) return SECTION_BY_KEY.get(sectionKey);
     const n = parseInt(songNum, 10);
@@ -1886,45 +2257,55 @@ function levenshtein(a, b) {
     return dp[m][n];
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// TOLERANCIA ORTOGRÁFICA (español) Clave FONÉTICA:
+// ═══════════════════════════════════════════════════════════════════
 function phon(s) {
     let t = norm(s);
     if (!t) return "";
     t = t
         .replace(/ph/g, "f")
-        .replace(/qu/g, "k")           
-        .replace(/gu([ei])/g, "g$1")   
-        .replace(/g([ei])/g, "j$1")    
-        .replace(/c([ei])/g, "s$1")    
-        .replace(/[cqk]/g, "k")        
-        .replace(/z/g, "s")            
-        .replace(/v/g, "b")            
+        .replace(/qu/g, "k")           // quiere → kiere
+        .replace(/gu([ei])/g, "g$1")   // guerra → gerra (la u es muda)
+        .replace(/g([ei])/g, "j$1")    // gente → jente, virgen → virjen
+        .replace(/c([ei])/g, "s$1")    // cielo → sielo
+        .replace(/[cqk]/g, "k")        // casa → kasa
+        .replace(/z/g, "s")            // corazon → korason
+        .replace(/v/g, "b")            // vendito → bendito
         .replace(/w/g, "b")
-        .replace(/ll/g, "y")           
-        .replace(/h/g, "")             
+        .replace(/ll/g, "y")           // llamado → yamado
+        .replace(/h/g, "")             // haleluya → aleluya
         .replace(/x/g, "s")
-        .replace(/(.)\1+/g, "$1")      
-        .replace(/s\b/g, "");          
+        .replace(/(.)\1+/g, "$1")      // dobles: rr→r, ss→s, nn→n
+        .replace(/s\b/g, "");          // plural final: cantos → kanto
     return t.trim();
 }
 
+// Igualdad tolerante entre DOS PALABRAS.
 function fuzzyMatch(a, b) {
     a = norm(a); b = norm(b);
     if (!a || !b) return false;
     if (a === b) return true;
+    // Prefijo: sólo si la parte escrita ya es significativa (≥3), para que
+    // "os" no coincida con medio cantoral.
     const shortest = Math.min(a.length, b.length);
     if (shortest >= 3 && (b.startsWith(a) || a.startsWith(b))) return true;
     if (shortest >= 4 && (b.includes(a) || a.includes(b))) return true;
 
     const pa = phon(a), pb = phon(b);
-    if (pa && pa === pb) return true;                       
+    if (pa && pa === pb) return true;                       // suenan igual
 
+    // Umbral por la palabra MÁS LARGA: palabras largas admiten más erratas.
     const longest = Math.max(a.length, b.length);
     const threshold = longest <= 4 ? 1 : longest <= 7 ? 2 : longest <= 11 ? 3 : 4;
     if (levenshtein(a, b) <= threshold) return true;
+    // Erratas + confusión fonética a la vez (p. ej. "alelluia" vs "aleluya").
     if (pa && pb && levenshtein(pa, pb) <= threshold) return true;
     return false;
 }
 
+// Igualdad tolerante para FRASES completas (varias palabras): compara la
+// forma fonética de toda la cadena, permitiendo más erratas por ser larga.
 function fuzzyPhrase(a, b) {
     const pa = phon(a), pb = phon(b);
     if (!pa || !pb) return false;
@@ -1933,6 +2314,7 @@ function fuzzyPhrase(a, b) {
     return levenshtein(pa, pb) <= Math.min(5, Math.max(2, Math.floor(longest * 0.25)));
 }
 
+// Puntúa un canto contra la consulta.
 function scoreEntry(entry, qNorm, qWords, qPhon, qWordsPhon) {
     let score = 0;
     const { titleN, lyricsN, titleP, lyricsP, titleWords, lyricWords, titleWordsP, lyricWordsP } = entry;
@@ -1940,14 +2322,16 @@ function scoreEntry(entry, qNorm, qWords, qPhon, qWordsPhon) {
     const sectionN = section ? norm(section.label) : "";
     const sectionAliases = section ? section.aliases : [];
 
+    // ── Frase completa ──
     if (sectionN && qNorm.includes(sectionN)) score += 20;
     for (const alias of sectionAliases) { if (qNorm.includes(alias)) { score += 18; break; } }
     if (titleN.includes(qNorm))  score += 12;
-    else if (qPhon && titleP.includes(qPhon)) score += 9;      
+    else if (qPhon && titleP.includes(qPhon)) score += 9;      // título "mal escrito"
     else if (qWords.length > 1 && fuzzyPhrase(qNorm, titleN)) score += 8;
     if (lyricsN.includes(qNorm)) score += 8;
-    else if (qPhon && lyricsP.includes(qPhon)) score += 6;     
+    else if (qPhon && lyricsP.includes(qPhon)) score += 6;     // verso "mal escrito"
 
+    // ── Palabra por palabra ──
     for (let i = 0; i < qWords.length; i++) {
         const word = qWords[i];
         if (word.length < 3) continue;
@@ -1958,8 +2342,8 @@ function scoreEntry(entry, qNorm, qWords, qPhon, qWordsPhon) {
         for (const alias of sectionAliases) { if (fuzzyMatch(word, alias)) { score += 4; break; } }
 
         if (titleN.includes(word)) score += 4;
-        else if (wp && titleWordsP.some(tw => tw === wp)) score += 3;          
-        else if (titleWords.some(tw => fuzzyMatch(word, tw))) score += 3;      
+        else if (wp && titleWordsP.some(tw => tw === wp)) score += 3;          // suena igual
+        else if (titleWords.some(tw => fuzzyMatch(word, tw))) score += 3;      // errata
 
         if (lyricsN.includes(word)) score += 2;
         else if (wp && lyricWordsP.some(lw => lw === wp)) score += 1.5;
@@ -1968,12 +2352,16 @@ function scoreEntry(entry, qNorm, qWords, qPhon, qWordsPhon) {
     return score;
 }
 
+// Corpus construido desde JSON en vez de recorrer el DOM
 function buildCorpus() {
     const corpus = [];
     for (const c of DATA.cantos) {
         if (c.layout === "continuation") continue;
         const songNum = c.id;
-        const titleText = c.title;
+        // Título SIN el selector "(A/B)" de versiones (redundante con la Transposición):
+        // así las sugerencias de búsqueda muestran el nombre limpio, igual que en la hoja.
+        let titleText = c.title;
+        if (c.variants && titleText) titleText = titleText.replace(/\s*\(.*$/, "").trim();
         const lyricsArr = [];
         function extractLyrics(items) {
             for (const it of items) {
@@ -1984,8 +2372,10 @@ function buildCorpus() {
             }
         }
         extractLyrics(c.content);
+        // c.section resuelve también los ids NO numéricos (p. ej. "cred1" de CRÉDITOS).
         const section = getSectionForSong(songNum, c.section);
         const lyrics = lyricsArr.join(" ");
+        // Formas normalizada y FONÉTICA precalculadas UNA vez por canto.
         const titleN  = norm(titleText);
         const lyricsN = norm(lyrics);
         corpus.push({
@@ -2002,10 +2392,13 @@ function buildCorpus() {
     return corpus;
 }
 
+// OPT arranque: el corpus de búsqueda NO se arma al cargar (era CPU en el arranque).
+// Se construye en idle o a la primera búsqueda (ensureCorpus), lo que ocurra antes.
 let CORPUS = null;
 function ensureCorpus() { if (!CORPUS) CORPUS = buildCorpus(); return CORPUS; }
 (window.requestIdleCallback || (cb => setTimeout(cb, 1)))(ensureCorpus, { timeout: 3000 });
 
+// Detecta consultas numéricas.
 function parseNumberQuery(qNorm) {
     const numMatch = qNorm.match(/\d+[a-z]?/);
     if (!numMatch) return null;
@@ -2025,6 +2418,7 @@ function localSearch(q) {
     const numQ = parseNumberQuery(qNorm);
     if (numQ) {
         const { num, explicitPage } = numQ;
+        // Si el usuario escribió "página N" solo buscamos por página.
         const sn = e => String(e.songNum);
         const pg = e => String(e.pageNum);
         const buckets = explicitPage
@@ -2119,7 +2513,12 @@ function renderResults(hits, fromAI) {
 
 function openSearch()  { searchOverlay.classList.add("active"); document.body.classList.add("searching"); searchInput.focus(); }
 function closeSearch() { searchOverlay.classList.remove("active"); document.body.classList.remove("searching"); searchInput.value = ""; searchResults.innerHTML = ""; searchInput.blur(); }
+// Expuesto para módulos en otro scope (el easter egg lo usa para ocultar el
+// buscador + la frase secreta y dejar la plumeria de fondo al revelar).
+try { window.__closeSearch = closeSearch; } catch (e) {}
 
+// La barra de búsqueda permanece ABIERTA hasta que el usuario toque FUERA de ella (cualquier
+// parte de la pantalla) o el botón (×).
 document.addEventListener("pointerdown", (e) => {
     if (!searchOverlay.classList.contains("active")) return;
     if (!e.target.closest) return;
@@ -2138,14 +2537,19 @@ searchInput.addEventListener("input", () => {
     clearTimeout(searchTimeout);
     const q = searchInput.value.trim();
     if (!q) { searchResults.innerHTML = ""; return; }
-    ensureCorpus();                          
+    ensureCorpus();                          // OPT: arma el corpus a la primera búsqueda si idle no lo hizo
     renderResults(localSearch(q), false);
     searchTimeout = window.setTimeout(() => aiSearch(q), 600);
 });
 
+// ═══════════════════════════════════════════════════════════════════
+// Navegación a páginas
+// ═══════════════════════════════════════════════════════════════════
 
+// Dinámico: la posición del índice se corre si se añaden páginas al frente
+// (p. ej. la dedicatoria). Apunta al separador ÍNDICE, o a la 1ª página de índice.
 function indexLocation() {
-    ensureIndexBuilt();   
+    ensureIndexBuilt();   // OPT: arma+colapsa el índice antes de calcular su posición
     return locOfPaperWith(".decor-section-page") ||
            locOfPaperWith(".index-page") || 5;
 }
@@ -2186,7 +2590,7 @@ function silentJumpTo(loc) {
 }
 
 function goToPage(target) {
-    if (document.body.classList.contains("tour-on")) return;   
+    if (document.body.classList.contains("tour-on")) return;   // durante el tour no se navega
     if (isAnimating) return;
     target = Math.max(1, Math.min(maxLocation, target));
     if (target === currentLocation) return;
@@ -2223,13 +2627,25 @@ if (indexBtn) indexBtn.addEventListener("click", () => goToPage(indexLocation())
 const dictBtn = document.querySelector("#dictBtn");
 if (dictBtn) dictBtn.addEventListener("click", () => goToSection("diccionario"));
 
+// Contraportada: la correa "Volver al inicio" cierra el viaje → regresa a la portada inicial
+// (loc 1, libro cerrado).
 const backToStart = document.getElementById("backToStart");
 if (backToStart) backToStart.addEventListener("click", (e) => {
     e.stopPropagation();
-    cancelBookCloseFx();   
+    cancelBookCloseFx();   // salir del estado cerrado limpio antes del viaje al inicio
     goToPage(1);
 });
 
+// Contraportada: botón "Ant" (pegado al lomo) REABRE el libro a la página anterior (los
+// créditos).
+const backToPrev = document.getElementById("backToPrev");
+if (backToPrev) backToPrev.addEventListener("click", (e) => {
+    e.stopPropagation();
+    cancelBookCloseFx();
+    goToPage(currentLocation - 1);
+});
+
+// Botón "Guía de Acordes" (ícono guitarra, en el pie de cada canto y en el diccionario).
 document.addEventListener("click", (e) => {
     const b = e.target.closest && e.target.closest(".guide-btn");
     if (!b) return;
@@ -2237,11 +2653,17 @@ document.addEventListener("click", (e) => {
     if (window.__openGuide) window.__openGuide(b);
 });
 
+// Overlay de la lámina "Guía Para Acordes".
 (function wireGuide() {
     const m = document.getElementById("guideModal");
     if (!m) return;
     const pop = m.querySelector(".guide-pop");
     const close = () => { m.classList.remove("show"); m.setAttribute("aria-hidden", "true"); };
+    // Colapsar la guía desde fuera (al cambiar de página con swipe/teclado/salto),
+    // igual que los listones (window.__closeRibbons).
+    window.__closeGuide = () => { if (m.classList.contains("show")) close(); };
+    // ── Toggle diestro/zurdo de la lámina. El zurdo trastea con la DERECHA, así que
+    //    su guía muestra la mano derecha. La preferencia se recuerda. ──
     const sheet = m.querySelector(".guide-sheet");
     const flip = document.getElementById("guideFlip");
     const HAND_KEY = "cantoral-guia-mano";
@@ -2261,21 +2683,35 @@ document.addEventListener("click", (e) => {
         }
     };
     if (flip) flip.addEventListener("click", (e) => {
-        e.stopPropagation();                              
+        e.stopPropagation();                              // no cerrar el modal
         const h = getHand() === "zurdo" ? "diestro" : "zurdo";
         try { localStorage.setItem(HAND_KEY, h); } catch (er) {}
         applyHand(h);
     });
     applyHand(getHand());
     window.__openGuide = (btn) => {
+        // Coloca la esquina inferior-derecha del popup JUSTO sobre el ícono real (que está dentro del
+        // papel, NO en el borde de la pantalla), y crece desde ahí
         if (pop && btn && btn.getBoundingClientRect) {
             const r = btn.getBoundingClientRect();
+            // Esquina derecha del popup = borde IZQUIERDO del ícono (donde INICIA
+            // la guitarra) → queda un poco más a la izquierda, sin pegarse al borde.
             pop.style.right = Math.max(4, Math.round(window.innerWidth - r.left)) + "px";
-            pop.style.bottom = Math.max(4, Math.round(window.innerHeight - r.top + 4)) + "px";
+            // Si el ícono está cerca del BORDE SUPERIOR (p.
+            const openDown = r.top < window.innerHeight * 0.35;
+            m.classList.toggle("down", openDown);
+            if (openDown) {
+                pop.style.top = Math.max(4, Math.round(r.bottom + 4)) + "px";
+                pop.style.bottom = "auto";
+            } else {
+                pop.style.bottom = Math.max(4, Math.round(window.innerHeight - r.top + 4)) + "px";
+                pop.style.top = "auto";
+            }
         }
         m.classList.add("show");
         m.setAttribute("aria-hidden", "false");
     };
+    // Sin botón ✕: cierra tocando CUALQUIER parte (backdrop o la propia lámina).
     m.addEventListener("click", close);
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && m.classList.contains("show")) close(); });
 })();
@@ -2290,11 +2726,14 @@ function locationOfFace(face) {
 }
 
 function locationOfSong(songNumber) {
+    // POC ventana: resolver por la CÁSCARA (siempre en el DOM), no por el contenido
+    // (que puede estar desmontado). El canto vive en el FRONT de su paperId.
     const pid = SONG_TO_PAPER[songNumber];
     if (pid) {
         const p = document.getElementById(pid);
         if (p) { const i = papers.indexOf(p); if (i >= 0) return i + 1; }
     }
+    // Fallback (páginas no virtualizadas o por si acaso): buscar el título montado.
     const title = document.querySelector(`.song-title[data-song="${songNumber}"]`);
     if (!title) return null;
     const face = title.closest(".front, .back");
@@ -2345,11 +2784,20 @@ function buildIndex() {
         indexPapers.forEach((p, i) => { if (p) p.style.display = savedDisplay[i]; });
         return;
     }
+    // ── Sin layout thrashing:
+    const savedScale = document.documentElement.style.getPropertyValue("--font-scale");
+    document.documentElement.style.setProperty("--font-scale", "1");
     const measure = targets[0];
     { const frag = document.createDocumentFragment(); for (const it of items) frag.appendChild(it); measure.appendChild(frag); }
-    const availH = measure.clientHeight;   
+    // clientHeight incluye el padding-bottom (reserva del botón "Aa"); los items sólo ocupan el
+    // área SIN ese padding → se resta para que a escala 1 quepan
+    const padB = parseFloat(getComputedStyle(measure).paddingBottom) || 0;
+    const availH = measure.clientHeight - padB;   // mismo instante que las lecturas de offsetTop
     const advance = items.map((it, i) =>
         ((i + 1 < items.length) ? items[i + 1].offsetTop : measure.scrollHeight) - it.offsetTop);
+    // Restaura el zoom del usuario (las entradas ya repartidas escalarán con él).
+    if (savedScale) document.documentElement.style.setProperty("--font-scale", savedScale);
+    else document.documentElement.style.removeProperty("--font-scale");
 
     let pageIdx = 0, current = targets[0], used = 0;
     for (let i = 0; i < items.length; i++) {
@@ -2362,19 +2810,22 @@ function buildIndex() {
             const last = prev.lastElementChild;
             if (last && last.classList.contains("index-section-label")
                 && item.classList && item.classList.contains("index-entry")) {
+                // Rótulo huérfano al pie de la hoja previa → bájalo a ésta (será el 1º).
                 prev.removeChild(last);
                 current.appendChild(last);
-                used = last.offsetHeight + 8;   
+                used = last.offsetHeight + 8;   // conservador (alto + márgenes ~) → no recorta
             } else {
                 used = 0;
             }
         }
-        current.appendChild(item);   
+        current.appendChild(item);   // mueve el item de `measure` a la hoja destino
         used += adv;
     }
     indexPapers.forEach((p, i) => { if (p) p.style.display = savedDisplay[i]; });
 }
 
+// (buildIndex ya NO se llama aquí de inmediato — ver ensureIndexBuilt.) El nº de hojas de
+// índice necesarias depende de la altura de pantalla
 function collapseEmptyIndexPages() {
     const emptyPapers = Array.from(document.querySelectorAll(".index-page .index-content"))
         .filter(c => c.childElementCount === 0)
@@ -2387,14 +2838,19 @@ function collapseEmptyIndexPages() {
         papers.splice(idx, 1);
         paper.style.display = "none";
         paper.classList.remove("near");
+        // Si la hoja retirada estaba ANTES de la posición actual, currentLocation
+        // debe bajar 1 para seguir apuntando a la misma página (location es 1-based).
         if (idx < currentLocation - 1) currentLocation--;
     }
-    maxLocation = papers.length;   
+    maxLocation = papers.length;   // contraportada = parada terminal (ver arriba)
+    // Reasignar zIndex y refrescar visibilidad con el array ya compactado.
     papers.forEach((p, i) => { p.style.zIndex = papers.length - i; });
     setPagesState();
     updatePaperVisibility();
     refitVisible();
 }
+// OPT arranque: arma el índice (plantilla + distribución + colapso de vacías) UNA vez, en idle
+// o a demanda (al abrir el índice / resolver un hash de
 function ensureIndexBuilt() {
     if (indexBuilt) return;
     indexBuilt = true;
@@ -2407,6 +2863,8 @@ function ensureIndexBuilt() {
 window.__TEST_collapse = collapseEmptyIndexPages;
 window.__TEST_nav = () => ({ papersLen: papers.length, maxLocation, currentLocation });
 
+// Tap vs scroll: un touchend tras un deslizamiento NO cuenta como toque (para el
+// fix por coordenadas de los acordes en iOS con zoom).
 let __tapMoved = false, __tapX = 0, __tapY = 0;
 document.addEventListener("touchstart", (e) => {
     const t = e.touches && e.touches[0];
@@ -2417,6 +2875,7 @@ document.addEventListener("touchmove", (e) => {
     if (t && (Math.abs(t.clientX - __tapX) > 10 || Math.abs(t.clientY - __tapY) > 10)) __tapMoved = true;
 }, { passive: true });
 
+// === Botones de variante ===
 function applyVariant(page, variant) {
     if (!page || !variant) return;
     page.dataset.activeVariant = variant;
@@ -2424,12 +2883,16 @@ function applyVariant(page, variant) {
         b.classList.toggle("active", b.dataset.variant === variant);
     });
 }
+// Escritorio (mouse): click normal. `[data-active-variant]` (no `.song-page`) para
+// cubrir cualquier layout con variante (lyrics/short-grid/song-two/shared).
 document.addEventListener("click", (e) => {
     const btn = e.target.closest && e.target.closest(".variant-btn");
     if (!btn) return;
     e.preventDefault();
     applyVariant(btn.closest("[data-active-variant]"), btn.dataset.variant);
 });
+// FIX iOS + ZOOM: con zoom, fitPaper aplica transform:scale al contenido; en iOS Safari el
+// hit-test de click/closest() sobre contenido transformado
 document.addEventListener("touchend", (e) => {
     if (!e.changedTouches || !e.changedTouches.length) return;
     const btns = document.querySelectorAll("[data-active-variant] .variant-btn");
@@ -2438,17 +2901,18 @@ document.addEventListener("touchend", (e) => {
     let best = null, bestD = Infinity;
     btns.forEach((b) => {
         const r = b.getBoundingClientRect();
-        if (r.width < 2) return;                        
+        if (r.width < 2) return;                        // hoja fuera de vista (buffer)
         const dx = Math.max(r.left - x, 0, x - r.right);
         const dy = Math.max(r.top - y, 0, y - r.bottom);
         const d = Math.hypot(dx, dy);
         if (d < bestD) { bestD = d; best = b; }
     });
-    if (!best || bestD > 14) return;                    
+    if (!best || bestD > 14) return;                    // el toque no fue en un selector
     e.preventDefault();
     applyVariant(best.closest("[data-active-variant]"), best.dataset.variant);
 }, { passive: false });
 
+// === Menú ===
 const topControls = document.querySelector("#topControls");
 const menuBtn = document.querySelector("#menuBtn");
 let menuCloseTimer = null;
@@ -2459,12 +2923,14 @@ function scheduleMenuClose(delay = 3000) {
 function openMenu() {
     topControls.classList.add("menu-open");
     menuBtn.setAttribute("aria-expanded", "true");
+    // Sin auto-cierre: el menú PERSISTE hasta que el usuario toque cualquier
+    // otra parte de la pantalla (listener document pointerdown de abajo) o una acción.
 }
 function closeMenu() {
     clearTimeout(menuCloseTimer);
     topControls.classList.remove("menu-open");
     menuBtn.setAttribute("aria-expanded", "false");
-    closeShareCloud();          
+    closeShareCloud();          // al cerrar el menú, colapsa también la nube Compartir
 }
 function toggleMenu() {
     if (topControls.classList.contains("menu-open")) closeMenu();
@@ -2473,6 +2939,8 @@ function toggleMenu() {
 if (menuBtn && topControls) {
     menuBtn.addEventListener("click", (e) => { e.stopPropagation(); toggleMenu(); });
     document.addEventListener("pointerdown", (e) => {
+        // Durante el TOUR el menú lo controla el tour (lo abre para señalar perlas);
+        // no dejar que un toque en el cartel/catch lo cierre y colapse las perlas.
         if (document.body.classList.contains("tour-on")) return;
         if (topControls.classList.contains("menu-open") && !topControls.contains(e.target)) closeMenu();
     });
@@ -2481,6 +2949,7 @@ if (menuBtn && topControls) {
     document.querySelector("#searchBtn")?.addEventListener("click", () => closeMenu());
 }
 
+// === Compartir (nube que sale de la perla) ===
 const SHARE_URL = "https://cantoralmayo.com";
 const SHARE_TEXT = "Cantoral Mayo 🎶 " + SHARE_URL;
 const shareWidget = document.querySelector("#shareWidget");
@@ -2496,6 +2965,7 @@ function shareToast(msg) {
     clearTimeout(shareToastTimer);
     shareToastTimer = window.setTimeout(() => shareToastEl.classList.remove("show"), 2000);
 }
+// hoisted: closeMenu() la llama al colapsar el menú
 function closeShareCloud() {
     if (shareWidget) shareWidget.classList.remove("open");
     if (shareBtn) shareBtn.setAttribute("aria-expanded", "false");
@@ -2517,6 +2987,7 @@ if (shareWidget && shareBtn) {
         const open = shareWidget.classList.toggle("open");
         shareBtn.setAttribute("aria-expanded", open ? "true" : "false");
     });
+    // Acciones de la nube (delegadas)
     shareWidget.querySelector("#shareCloud")?.addEventListener("click", (e) => {
         const dot = e.target.closest(".share-dot");
         if (!dot) return;
@@ -2527,6 +2998,7 @@ if (shareWidget && shareBtn) {
         } else if (net === "fb") {
             window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(SHARE_URL), "_blank", "noopener");
         } else if (net === "ig") {
+            // Instagram no tiene intent web de enlace: usa Web Share nativa o copia.
             if (navigator.share) {
                 navigator.share({ title: "Cantoral Mayo", text: "Cantoral Mayo 🎶", url: SHARE_URL }).catch(() => {});
             } else {
@@ -2540,10 +3012,12 @@ if (shareWidget && shareBtn) {
         }
     });
 }
+// Cierre del modal QR (botón, fondo, Escape)
 document.querySelector("#qrClose")?.addEventListener("click", closeQR);
 qrModal?.addEventListener("click", (e) => { if (e.target === qrModal) closeQR(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?.classList.contains("show")) closeQR(); });
 
+// === Swipe ===
 (function setupSwipe() {
     const SWIPE_MIN_X = 60;
     const SWIPE_MAX_Y = 45;
@@ -2552,6 +3026,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     let startX = 0, startY = 0, startT = 0, tracking = false, cancelled = false;
     document.addEventListener("touchstart", (e) => {
         if (e.touches.length !== 1) { tracking = false; return; }
+        // Con el slider de zoom abierto no se cambia de página; el toque solo lo colapsa.
         if (document.body.classList.contains("font-slider-open")) { tracking = false; return; }
         if (e.target.closest && e.target.closest("#topControls, #searchOverlay, #fontControls")) {
             tracking = false; return;
@@ -2582,6 +3057,45 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     }, { passive: true });
 })();
 
+// FIX: el scroll de las SUGERENCIAS de búsqueda arrastraba el libro/documento en iOS (scroll
+// chaining).
+(function lockSearchResultsScroll() {
+    if (!searchResults) return;
+    const el = searchResults;
+    let lastY = 0;
+    el.addEventListener("touchstart", (e) => {
+        lastY = (e.touches[0] || {}).clientY || 0;
+        // NUDGE de 1px LEJOS del borde exacto:
+        if (el.scrollHeight > el.clientHeight + 1) {
+            if (el.scrollTop <= 0) el.scrollTop = 1;
+            else if (el.scrollTop + el.clientHeight >= el.scrollHeight) el.scrollTop = el.scrollHeight - el.clientHeight - 1;
+        }
+    }, { passive: true });
+    el.addEventListener("touchmove", (e) => {
+        const y = (e.touches[0] || {}).clientY || 0;
+        const dy = y - lastY;          // delta por-frame: >0 hacia abajo (ver arriba), <0 hacia arriba (ver abajo)
+        lastY = y;
+        const canScroll = el.scrollHeight > el.clientHeight + 1;
+        // Tolerancia (1-2px): cubre el nudge de 1px y los sub-píxeles de iOS, para que
+        // el bloqueo SÍ dispare justo en el borde (si no, arrastraba el libro al fondo).
+        const atTop = el.scrollTop <= 1;
+        const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
+        // Sin scroll posible, o intentando pasar del borde → no dejar que arrastre el fondo.
+        if (!canScroll || (atTop && dy > 0) || (atBottom && dy < 0)) e.preventDefault();
+        e.stopPropagation();
+    }, { passive: false });
+
+    // ★TECLADO ABIERTO: con el buscador activo (foco en el input) iOS vuelve el DOCUMENTO
+    // scrollable para "revelar" el campo, y el overscroll de la lista
+    document.addEventListener("touchmove", (e) => {
+        if (!document.body.classList.contains("searching")) return;
+        if (e.target && e.target.closest && e.target.closest("#searchResults")) return;
+        e.preventDefault();
+    }, { passive: false });
+})();
+
+// === Cielo nocturno (CSS/compositor, SOLO en las bandas visibles) === Antes era un <canvas>
+// con requestAnimationFrame que repintaba TODA la pantalla
 (function setupStarfield() {
     const root = document.getElementById("starfield");
     if (!root) return;
@@ -2591,14 +3105,16 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let active = false, shootTimer = null, built = false, rsTimer = null;
 
+    // Lista de box-shadow: cada estrella con TAMAÑO (spread) y BRILLO variados, y ~10% con halo
+    // (blur) como las del canvas → menos "artificial".
     function shadows(n, w, P, near) {
         const out = [];
         for (let i = 0; i < n; i++) {
             const x = Math.round(Math.random() * w);
             const y = Math.round(Math.random() * P);
-            const z = Math.random();                                     
-            const spread = (near ? 0.3 + z * 0.9 : z * 0.6).toFixed(2);  
-            const glow = near && Math.random() < 0.10;                   
+            const z = Math.random();                                     // profundidad
+            const spread = (near ? 0.3 + z * 0.9 : z * 0.6).toFixed(2);  // tamaño variable
+            const glow = near && Math.random() < 0.10;                   // halo ocasional
             const blur = glow ? (2 + Math.random() * 2.5).toFixed(1) : "0";
             const a = (near ? 0.6 + z * 0.4 : 0.32 + z * 0.42).toFixed(2);
             const col = glow ? "rgba(200,222,255," + a + ")" : "rgba(255,255,255," + a + ")";
@@ -2608,14 +3124,17 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         return out.join(",");
     }
 
+    // 2 capas por banda (parallax): lejana (tenue) + cercana (brillante, algún halo).
+    // Deriva MUY lenta: en una banda fina, una deriva marcada se leía como "caída".
     function buildBand(el) {
         const B = Math.max(el.clientHeight, 1);
+        // Si el alto no cambió, NO regeneramos (evita re-barajar en relayouts).
         if (el._sfH === B && el.querySelector(".sf-layer")) return;
         el._sfH = B;
         el.querySelectorAll(".sf-layer").forEach(n => n.remove());
         const w = Math.max(el.clientWidth, window.innerWidth);
-        if (B < 8) return;                 
-        const P = Math.max(B, 240);        
+        if (B < 8) return;                 // banda demasiado fina: sin estrellas
+        const P = Math.max(B, 240);        // periodo de scroll (desacoplado del alto)
         const nFar = Math.min(210, Math.max(12, Math.round(w * P * 0.00028)));
         const nNear = Math.min(120, Math.max(6, Math.round(w * P * 0.00016)));
 
@@ -2623,7 +3142,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         far.className = "sf-layer";
         far.style.setProperty("--tile", P + "px");
         far.style.boxShadow = shadows(nFar, w, P, false);
-        far.style.animationDuration = (reduce ? "0s" : "170s") + ",4s";  
+        far.style.animationDuration = (reduce ? "0s" : "170s") + ",4s";  // deriva casi imperceptible
 
         const near = document.createElement("div");
         near.className = "sf-layer sf-near";
@@ -2636,10 +3155,11 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         el.appendChild(near);
     }
 
+    // Coloca las bandas por encima/por debajo del rectángulo REAL del libro.
     function layout() {
         const bookEl = document.getElementById("book");
         const vh = window.innerHeight;
-        let topH = Math.round(vh * 0.15), botStart = Math.round(vh * 0.83); 
+        let topH = Math.round(vh * 0.15), botStart = Math.round(vh * 0.83); // respaldo
         if (bookEl) {
             const r = bookEl.getBoundingClientRect();
             if (r.height > 40 && r.width > 40) {
@@ -2656,14 +3176,16 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         built = true;
     }
 
+    // Estrella fugaz: <div> con WAAPI (transform/opacity → compositor), dirección ALEATORIA (izq o
+    // der) y cola alineada por la rotación del propio elemento
     function spawnShoot(band) {
         const bw = band.clientWidth, bh = band.clientHeight;
         if (bh < 14) return;
-        const dir = Math.random() < 0.5 ? 1 : -1;                  
-        const dist = 220 + Math.random() * 170;                   
-        const angle = (6 + Math.random() * 11) * Math.PI / 180;   
-        const dx = dir * dist, dy = dist * Math.tan(angle);       
-        const deg = Math.atan2(dy, dx) * 180 / Math.PI;           
+        const dir = Math.random() < 0.5 ? 1 : -1;                  // izq o der
+        const dist = 220 + Math.random() * 170;                   // trazo largo
+        const angle = (6 + Math.random() * 11) * Math.PI / 180;   // 6–17° = casi horizontal
+        const dx = dir * dist, dy = dist * Math.tan(angle);       // poca caída
+        const deg = Math.atan2(dy, dx) * 180 / Math.PI;           // ángulo real del trazo
         const startX = dir > 0 ? Math.random() * bw * 0.35 : bw * 0.65 + Math.random() * bw * 0.35;
         const startY = 3 + Math.random() * Math.max(2, bh * 0.35);
         const s = document.createElement("div");
@@ -2671,13 +3193,13 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         s.style.left = startX + "px";
         s.style.top = startY + "px";
         band.appendChild(s);
-        const dur = 680 + Math.random() * 380;                    
+        const dur = 680 + Math.random() * 380;                    // rápida
         s.animate([
             { transform: "translate(0,0) rotate(" + deg + "deg)", opacity: 0, offset: 0 },
             { opacity: 1, offset: 0.1 },
             { opacity: 1, offset: 0.8 },
             { transform: "translate(" + dx + "px," + dy + "px) rotate(" + deg + "deg)", opacity: 0, offset: 1 }
-        ], { duration: dur, easing: "linear" }).onfinish = () => s.remove();   
+        ], { duration: dur, easing: "linear" }).onfinish = () => s.remove();   // velocidad constante (sin desacelerar)
     }
     function scheduleShoot() {
         clearTimeout(shootTimer);
@@ -2685,6 +3207,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         const gap = 3200 + Math.random() * 5800;
         shootTimer = setTimeout(() => {
             if (!active || document.hidden) return;
+            // Nace en la banda de arriba (más visible) o en la de abajo.
             const useBottom = bandBottom.clientHeight >= 20 && Math.random() < 0.4;
             spawnShoot(useBottom ? bandBottom : bandTop);
             scheduleShoot();
@@ -2695,14 +3218,15 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         active = true;
         root.style.opacity = "1";
         if (!built) layout();
-        root.classList.add("sf-run");   
+        root.classList.add("sf-run");   // reanuda drift/twinkle
         scheduleShoot();
+        // Recolocar cuando la geometría del libro ya está asentada (escala/fuentes).
         setTimeout(() => { if (active) layout(); }, 400);
     }
     function stop() {
         active = false;
         root.style.opacity = "0";
-        root.classList.remove("sf-run");  
+        root.classList.remove("sf-run");  // pausa las animaciones CSS
         clearTimeout(shootTimer); shootTimer = null;
     }
 
@@ -2714,6 +3238,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         else scheduleShoot();
     });
 
+    // La app puede pedir recolocar las bandas si cambia la geometría del libro.
     window.__starfield = {
         update(isDark) {
             if (isDark && !document.body.classList.contains("gestures-on")) start();
@@ -2724,6 +3249,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     if (document.body.classList.contains("dark-mode")) start();
 })();
 
+// === Acordes interactivos ===
 (function setupChords() {
     const CHORD_LIBRARY = new Map([
         ["A","assets/chords/A.svg"],["A7","assets/chords/A7.svg"],["A9","assets/chords/A9.svg"],
@@ -2735,6 +3261,59 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         ["F","assets/chords/F.svg"],["F#","assets/chords/F#.svg"],["F#7","assets/chords/F#7.svg"],["F#m","assets/chords/F#m.svg"],["F#m7","assets/chords/F#m7.svg"],["Fm","assets/chords/Fm.svg"],["Fm7","assets/chords/Fm7.svg"],
         ["G","assets/chords/G.svg"],["G7","assets/chords/G7.svg"],["G#","assets/chords/G#.svg"],["G#7","assets/chords/G#7.svg"],["G#m","assets/chords/G#m.svg"],["Gm","assets/chords/Gm.svg"],["Gsus4","assets/chords/Gsus4.svg"],
         ["E♭","assets/chords/Eb.svg"],["A♭","assets/chords/Ab.svg"],["D♭","assets/chords/Db.svg"],
+        // ── Enarmónicos faltantes de acordes PREEXISTENTES (mismo SVG, otra grafía):
+        ["C#","assets/chords/Db.svg"],["Db7","assets/chords/C#7.svg"],["Dbm","assets/chords/C#m.svg"],
+        ["D#","assets/chords/Eb.svg"],
+        ["Gb","assets/chords/F#.svg"],["Gbm","assets/chords/F#m.svg"],["Gb7","assets/chords/F#7.svg"],["Gbm7","assets/chords/F#m7.svg"],
+        ["Abm","assets/chords/G#m.svg"],["Ab7","assets/chords/G#7.svg"],
+        ["A#","assets/chords/B♭.svg"],
+        // ── Acordes para TRANSPOSICIÓN (generados; cubren maj/m/7/m7/sus/9 en todas
+        //    las tonalidades). Cada negra registra su alias sostenido y bemol. ──
+        ["Cm7","assets/chords/Cm7.svg"],
+        ["Csus4","assets/chords/Csus4.svg"],
+        ["Csus","assets/chords/Csus.svg"],
+        ["C9","assets/chords/C9.svg"],
+        ["Dbm7","assets/chords/Dbm7.svg"],["C#m7","assets/chords/Dbm7.svg"],
+        ["Dbsus4","assets/chords/Dbsus4.svg"],["C#sus4","assets/chords/Dbsus4.svg"],
+        ["Dbsus","assets/chords/Dbsus.svg"],["C#sus","assets/chords/Dbsus.svg"],
+        ["Db9","assets/chords/Db9.svg"],["C#9","assets/chords/Db9.svg"],
+        ["Dsus4","assets/chords/Dsus4.svg"],
+        ["Dsus","assets/chords/Dsus.svg"],
+        ["Ebm","assets/chords/Ebm.svg"],["D#m","assets/chords/Ebm.svg"],
+        ["Eb7","assets/chords/Eb7.svg"],["D#7","assets/chords/Eb7.svg"],
+        ["Ebm7","assets/chords/Ebm7.svg"],["D#m7","assets/chords/Ebm7.svg"],
+        ["Ebsus4","assets/chords/Ebsus4.svg"],["D#sus4","assets/chords/Ebsus4.svg"],
+        ["Ebsus","assets/chords/Ebsus.svg"],["D#sus","assets/chords/Ebsus.svg"],
+        ["Eb9","assets/chords/Eb9.svg"],["D#9","assets/chords/Eb9.svg"],
+        ["Esus4","assets/chords/Esus4.svg"],
+        ["Esus","assets/chords/Esus.svg"],
+        ["E9","assets/chords/E9.svg"],
+        ["F7","assets/chords/F7.svg"],
+        ["Fsus4","assets/chords/Fsus4.svg"],
+        ["Fsus","assets/chords/Fsus.svg"],
+        ["F9","assets/chords/F9.svg"],
+        ["Gbsus4","assets/chords/Gbsus4.svg"],["F#sus4","assets/chords/Gbsus4.svg"],
+        ["Gbsus","assets/chords/Gbsus.svg"],["F#sus","assets/chords/Gbsus.svg"],
+        ["Gb9","assets/chords/Gb9.svg"],["F#9","assets/chords/Gb9.svg"],
+        ["Gm7","assets/chords/Gm7.svg"],
+        ["Gsus","assets/chords/Gsus.svg"],
+        ["G9","assets/chords/G9.svg"],
+        ["Abm7","assets/chords/Abm7.svg"],["G#m7","assets/chords/Abm7.svg"],
+        ["Absus4","assets/chords/Absus4.svg"],["G#sus4","assets/chords/Absus4.svg"],
+        ["Absus","assets/chords/Absus.svg"],["G#sus","assets/chords/Absus.svg"],
+        ["Ab9","assets/chords/Ab9.svg"],["G#9","assets/chords/Ab9.svg"],
+        ["Am7","assets/chords/Am7.svg"],
+        ["Asus4","assets/chords/Asus4.svg"],
+        ["Bbm","assets/chords/Bbm.svg"],["A#m","assets/chords/Bbm.svg"],
+        ["Bb7","assets/chords/Bb7.svg"],["A#7","assets/chords/Bb7.svg"],
+        ["Bbm7","assets/chords/Bbm7.svg"],["A#m7","assets/chords/Bbm7.svg"],
+        ["Bbsus4","assets/chords/Bbsus4.svg"],["A#sus4","assets/chords/Bbsus4.svg"],
+        ["Bbsus","assets/chords/Bbsus.svg"],["A#sus","assets/chords/Bbsus.svg"],
+        ["Bb9","assets/chords/Bb9.svg"],["A#9","assets/chords/Bb9.svg"],
+        ["Bm7","assets/chords/Bm7.svg"],
+        ["Bsus4","assets/chords/Bsus4.svg"],
+        ["Bsus","assets/chords/Bsus.svg"],
+        ["B9","assets/chords/B9.svg"],
     ]);
     const CHORD_RE = /^[A-G][#b♭♯]?(?:maj7|maj|min|sus2|sus4|sus|dim7|dim|aug|add\d+|m)?\d*(?:\/[A-G][#b♭♯]?)?/;
     const WORD_BLACKLIST = new Set(["DE"]);
@@ -2782,6 +3361,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     function enhanceSpan(span) {
         if (span.dataset.ix) return;
         const name = span.textContent.trim();
+        // Un .cchord anclado puede traer acordes PEGADOS (ej.
         const parsed = parseToken(name);
         if (parsed !== null) {
             span.innerHTML = parsed;
@@ -2797,6 +3377,90 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         root.querySelectorAll(".note.chord-color:not([data-ix])").forEach(enhanceRow);
         root.querySelectorAll("span.chord:not([data-ix])").forEach(enhanceSpan);
     }
+
+    // ── TRANSPOSICIÓN DE ACORDES (por canto, spelling inteligente) ───────────── Opera IN-PLACE
+    // sobre los `.chord-ix` ya creados:
+    const T_SHARP = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+    const T_FLAT  = ["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
+    const T_PC = {C:0,"C#":1,"Db":1,D:2,"D#":3,"Eb":3,E:4,"Fb":4,F:5,"E#":5,"F#":6,"Gb":6,G:7,"G#":8,"Ab":8,A:9,"A#":10,"Bb":10,B:11,"Cb":11,"B#":0};
+    const T_USE_FLAT = [false,true,false,true,false,true,false,false,true,false,true,false]; // C Db D Eb E F F# G Ab A Bb B
+    const tNorm = s => String(s).replace(/♭/g,"b").replace(/♯/g,"#");
+    const T_RE = /^([A-G][#b]?)([^/]*)(?:\/([A-G][#b]?))?$/;
+    const tPc = r => T_PC[tNorm(r)];
+    const tMod = x => ((x % 12) + 12) % 12;
+    function transposeName(name, semis, useFlat) {
+        const m = T_RE.exec(tNorm(name));
+        if (!m || tPc(m[1]) == null) return name;
+        const tab = useFlat ? T_FLAT : T_SHARP;
+        let out = tab[tMod(tPc(m[1]) + semis)] + (m[2] || "");
+        if (m[3] != null && tPc(m[3]) != null) out += "/" + tab[tMod(tPc(m[3]) + semis)];
+        return out;
+    }
+    const T_KEY = "cantoral-transpose";
+    const tLoad = () => { try { return JSON.parse(localStorage.getItem(T_KEY) || "{}"); } catch (e) { return {}; } };
+    const tSave = m => { try { localStorage.setItem(T_KEY, JSON.stringify(m)); } catch (e) {} };
+    const tSongId = page => { const t = page && page.querySelector && page.querySelector(".song-title[data-song]"); return t ? t.dataset.song : null; };
+    const tGet = id => { const m = tLoad(); return (id && m[id]) ? (+m[id] || 0) : 0; };
+    const tSet = (id, semis) => { const m = tLoad(); if (semis) m[id] = semis; else delete m[id]; tSave(m); };
+
+    function applyTranspose(page) {
+        if (!page || !page.querySelector) return;
+        const btn = page.querySelector(".footer .transpose-btn");
+        const spans = page.querySelectorAll(".chord-ix");
+        if (!spans.length) { if (btn) btn.style.display = "none"; return; }
+        if (btn) btn.style.display = "";
+        spans.forEach(s => { if (s.dataset.orig == null) s.dataset.orig = (s.dataset.chord || s.textContent || "").trim(); });
+        const id = tSongId(page), semis = tGet(id);
+        const firstRoot = (T_RE.exec(tNorm(spans[0].dataset.orig)) || [])[1] || "C";
+        const useFlat = T_USE_FLAT[tMod(tPc(firstRoot) + semis)];
+        spans.forEach(s => {
+            const nn = semis ? transposeName(s.dataset.orig, semis, useFlat) : s.dataset.orig;
+            if (s.textContent !== nn) s.textContent = nn;
+            s.dataset.chord = nn;
+            s.classList.toggle("has-diagram", CHORD_LIBRARY.has(nn));
+        });
+        if (btn) {
+            btn.classList.toggle("active", !!semis);
+            const num = btn.querySelector(".t-num");
+            if (num) { num.textContent = semis > 0 ? ("+" + semis) : ("" + semis); num.style.display = semis ? "" : "none"; }
+        }
+    }
+    window.__applyTranspose = applyTranspose;
+
+    // Popover del botón T: − [valor] +  y  reset.
+    let tPop = null;
+    function closeTPop() { if (tPop) { tPop.remove(); tPop = null; } }
+    function refit(page) { const p = page.closest ? page.closest(".paper") : page; if (p && typeof fitPaper === "function") { try { fitPaper(p); } catch (e) {} } }
+    function openTPop(btn) {
+        closeTPop();
+        const page = btn.closest(".paper") || btn.closest(".song-page") || document.body;
+        const id = tSongId(page);
+        tPop = document.createElement("div");
+        tPop.className = "transpose-pop";
+        tPop.innerHTML = '<button class="tp-step" data-d="-1" aria-label="Bajar medio tono">−</button>'
+            + '<span class="tp-val"></span>'
+            + '<button class="tp-step" data-d="1" aria-label="Subir medio tono">+</button>'
+            + '<button class="tp-reset" aria-label="Restablecer al original">0</button>';
+        document.body.appendChild(tPop);
+        const r = btn.getBoundingClientRect();
+        tPop.style.left = Math.max(8, Math.min(window.innerWidth - tPop.offsetWidth - 8, r.left + r.width / 2 - tPop.offsetWidth / 2)) + "px";
+        tPop.style.top = Math.max(8, r.top - tPop.offsetHeight - 10) + "px";
+        const refresh = () => { const v = tGet(id); tPop.querySelector(".tp-val").textContent = (v > 0 ? "+" : "") + v; };
+        refresh();
+        tPop.addEventListener("click", (e) => {
+            const st = e.target.closest(".tp-step"), rs = e.target.closest(".tp-reset");
+            if (st) { let v = tGet(id) + (+st.dataset.d); v = Math.max(-12, Math.min(12, v)); tSet(id, v); applyTranspose(page); refit(page); refresh(); }
+            else if (rs) { tSet(id, 0); applyTranspose(page); refit(page); refresh(); }
+        });
+    }
+    document.addEventListener("click", (e) => {
+        const b = e.target.closest && e.target.closest(".transpose-btn");
+        if (b) { e.stopPropagation(); if (tPop) closeTPop(); else openTPop(b); return; }
+        if (tPop && !(e.target.closest && e.target.closest(".transpose-pop"))) closeTPop();
+    });
+    window.addEventListener("scroll", closeTPop, true);
+    window.addEventListener("resize", closeTPop);
+
     const pop = document.createElement("div");
     pop.id = "chordPop"; pop.className = "chord-pop"; pop.hidden = true;
     document.body.appendChild(pop);
@@ -2820,6 +3484,9 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
             pop.innerHTML = svgText;
             const svg = pop.querySelector("svg");
             if (svg) { svg.removeAttribute("width"); svg.removeAttribute("height"); svg.classList.add("chord-font"); }
+            // El diagrama es un SVG compartido entre grafías enarmónicas (Gb reusa F#, A# reusa B♭…).
+            const ttl = pop.querySelector("svg text");
+            if (ttl) ttl.textContent = name;
             positionPop(el);
         }).catch(() => {
             if (token !== showToken) return;
@@ -2846,17 +3513,39 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
         if (chord) { e.preventDefault(); e.stopPropagation(); showChordPop(chord); return; }
         if (!pop.hidden && !(e.target.closest && e.target.closest("#chordPop"))) hideChordPop();
     }, true);
+    // FIX iOS + ZOOM: con zoom, fitPaper aplica transform:scale al contenido y el hit-test del
+    // toque en iOS se DESVÍA (más a la orilla, más error) → los
     const __bookEl = document.getElementById("book");
     document.addEventListener("touchend", (e) => {
         if (__tapMoved) return;
         const stage = document.querySelector(".paper.onstage .page-content-wrap");
         if (!stage) return;
+        // Activa si HAY transform que desvíe el hit-test de iOS:
         const wrapT = getComputedStyle(stage).transform !== "none";
         const bookT = __bookEl && getComputedStyle(__bookEl).transform !== "none";
         if (!wrapT && !bookT) return;
         const tp = e.changedTouches && e.changedTouches[0];
         if (!tp) return;
         const x = tp.clientX, y = tp.clientY;
+        // GUARD: no secuestrar el toque si cae sobre un control (overlay abierto o boton del pie).
+        const fcOpen = document.getElementById("fontControls");
+        const paperEl = stage.closest(".paper");
+        const guardEls = [
+            document.getElementById("chordPop"),
+            document.getElementById("topControls"),
+            document.getElementById("searchOverlay"),
+            document.getElementById("ribbonLayer"),
+            (fcOpen && fcOpen.classList.contains("open")) ? fcOpen : null,
+            document.querySelector(".install-fab"),
+            ...(paperEl ? paperEl.querySelectorAll(".footer .zoom-toggle, .footer .transpose-btn, .footer .guide-btn") : [])
+        ];
+        for (const g of guardEls) {
+            if (!g) continue;
+            const cs = getComputedStyle(g);
+            if (cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity) === 0) continue;
+            const gr = g.getBoundingClientRect();
+            if (gr.width > 0 && gr.height > 0 && x >= gr.left && x <= gr.right && y >= gr.top && y <= gr.bottom) return;
+        }
         let target = null;
         const chords = stage.querySelectorAll(".chord-ix.has-diagram");
         for (let i = 0; i < chords.length; i++) {
@@ -2865,7 +3554,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
             const fs = parseFloat(getComputedStyle(c).fontSize) || 14;
             if (x >= r.left && x <= r.right && y >= r.top - 0.55 * fs && y <= r.bottom + 0.3 * fs) { target = c; break; }
         }
-        if (!target) return;                          
+        if (!target) return;                          // no fue un acorde: no abrir/cerrar nada
         e.preventDefault(); e.stopPropagation();
         showChordPop(target);
     }, { passive: false, capture: true });
@@ -2875,12 +3564,15 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     const bookEl = document.getElementById("book") || document.body;
     const obs = new MutationObserver((muts) => {
         let changed = false;
-        for (const m of muts) { m.addedNodes.forEach((n) => { if (n.nodeType === 1) { enhance(n); changed = true; } }); if (m.removedNodes.length) changed = true; }
+        for (const m of muts) { m.addedNodes.forEach((n) => { if (n.nodeType === 1) { enhance(n); const p = (n.matches && n.matches(".paper")) ? n : (n.closest && n.closest(".paper")); if (p) applyTranspose(p); changed = true; } }); if (m.removedNodes.length) changed = true; }
         if (changed) hideChordPop();
     });
     obs.observe(bookEl, { childList: true, subtree: true });
-    enhance(document.body);
+    enhance(document.body);///Faltaba.body///
+    document.querySelectorAll(".paper").forEach(applyTranspose);
 
+    // Precalienta la caché en memoria de los diagramas durante el tiempo muerto, para que el
+    // PRIMER toque de cualquier acorde abra el popup al instante
     function preloadDiagrams() {
         CHORD_LIBRARY.forEach((url) => {
             loadSvg(encodeURI(url).replace(/#/g, "%23")).catch(() => {});
@@ -2890,16 +3582,31 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     else setTimeout(preloadDiagrams, 2500);
 })();
 
+// === Diccionario de Acordes ===
 (function setupChordDictionary() {
     const DICT = [
-        { rep: "A", es: "La Mayor" },{ rep: "A7", es: "La séptima" },{ rep: "A9", es: "La novena" },
-        { rep: "Ab", es: "La bemol Mayor" },{ rep: "Am", es: "La menor" },{ rep: "Asus", es: "La suspendida" },
-        { rep: "B", es: "Si Mayor" },{ rep: "B7", es: "Si séptima" },{ rep: "B♭", es: "Si bemol Mayor" },{ rep: "Bm", es: "Si menor" },
-        { rep: "C", es: "Do Mayor" },{ rep: "C7", es: "Do séptima" },{ rep: "C#7", es: "Do sostenido séptima" },{ rep: "C#m", es: "Do sostenido menor" },{ rep: "Cm", es: "Do menor" },
-        { rep: "D", es: "Re Mayor" },{ rep: "D7", es: "Re séptima" },{ rep: "Db", es: "Re bemol Mayor" },{ rep: "Dm", es: "Re menor" },{ rep: "Dm7", es: "Re menor séptima" },
-        { rep: "E", es: "Mi Mayor" },{ rep: "E7", es: "Mi séptima" },{ rep: "Eb", es: "Mi bemol Mayor" },{ rep: "Em", es: "Mi menor" },{ rep: "Em7", es: "Mi menor séptima" },
-        { rep: "F", es: "Fa Mayor" },{ rep: "F#", es: "Fa sostenido Mayor" },{ rep: "F#7", es: "Fa sostenido séptima" },{ rep: "F#m", es: "Fa sostenido menor" },{ rep: "F#m7", es: "Fa sostenido menor séptima" },{ rep: "Fm", es: "Fa menor" },{ rep: "Fm7", es: "Fa menor séptima" },
-        { rep: "G", es: "Sol Mayor" },{ rep: "G7", es: "Sol séptima" },{ rep: "G#", es: "Sol sostenido Mayor" },{ rep: "G#7", es: "Sol sostenido séptima" },{ rep: "G#m", es: "Sol sostenido menor" },{ rep: "Gm", es: "Sol menor" },{ rep: "Gsus4", es: "Sol suspendida cuarta" },
+        // La
+        { rep: "A", es: "La Mayor" },{ rep: "A7", es: "La séptima" },{ rep: "A9", es: "La novena" },{ rep: "Asus", es: "La suspendida" },{ rep: "Asus4", es: "La suspendida cuarta" },{ rep: "Am", es: "La menor" },{ rep: "Am7", es: "La menor séptima" },
+        { rep: "Ab", es: "La bemol Mayor" },{ rep: "Ab9", es: "La bemol novena" },{ rep: "Absus", es: "La bemol suspendida" },{ rep: "Absus4", es: "La bemol suspendida cuarta" },{ rep: "Abm7", es: "La bemol menor séptima" },
+        // Si
+        { rep: "B", es: "Si Mayor" },{ rep: "B7", es: "Si séptima" },{ rep: "B9", es: "Si novena" },{ rep: "Bsus", es: "Si suspendida" },{ rep: "Bsus4", es: "Si suspendida cuarta" },{ rep: "Bm", es: "Si menor" },{ rep: "Bm7", es: "Si menor séptima" },
+        { rep: "Bb", es: "Si bemol Mayor" },{ rep: "Bb7", es: "Si bemol séptima" },{ rep: "Bb9", es: "Si bemol novena" },{ rep: "Bbm", es: "Si bemol menor" },{ rep: "Bbm7", es: "Si bemol menor séptima" },{ rep: "Bbsus", es: "Si bemol suspendida" },{ rep: "Bbsus4", es: "Si bemol suspendida cuarta" },
+        // Do
+        { rep: "C", es: "Do Mayor" },{ rep: "C7", es: "Do séptima" },{ rep: "C9", es: "Do novena" },{ rep: "Csus", es: "Do suspendida" },{ rep: "Csus4", es: "Do suspendida cuarta" },{ rep: "Cm", es: "Do menor" },{ rep: "Cm7", es: "Do menor séptima" },
+        { rep: "C#7", es: "Do sostenido séptima" },{ rep: "C#m", es: "Do sostenido menor" },
+        // Re
+        { rep: "D", es: "Re Mayor" },{ rep: "D7", es: "Re séptima" },{ rep: "D9", es: "Re novena" },{ rep: "Dsus", es: "Re suspendida" },{ rep: "Dsus4", es: "Re suspendida cuarta" },{ rep: "Dm", es: "Re menor" },{ rep: "Dm7", es: "Re menor séptima" },
+        { rep: "Db", es: "Re bemol Mayor" },{ rep: "Db9", es: "Re bemol novena" },{ rep: "Dbm7", es: "Re bemol menor séptima" },{ rep: "Dbsus", es: "Re bemol suspendida" },{ rep: "Dbsus4", es: "Re bemol suspendida cuarta" },
+        // Mi
+        { rep: "E", es: "Mi Mayor" },{ rep: "E7", es: "Mi séptima" },{ rep: "E9", es: "Mi novena" },{ rep: "Esus", es: "Mi suspendida" },{ rep: "Esus4", es: "Mi suspendida cuarta" },{ rep: "Em", es: "Mi menor" },{ rep: "Em7", es: "Mi menor séptima" },
+        { rep: "Eb", es: "Mi bemol Mayor" },{ rep: "Eb7", es: "Mi bemol séptima" },{ rep: "Eb9", es: "Mi bemol novena" },{ rep: "Ebm", es: "Mi bemol menor" },{ rep: "Ebm7", es: "Mi bemol menor séptima" },{ rep: "Ebsus", es: "Mi bemol suspendida" },{ rep: "Ebsus4", es: "Mi bemol suspendida cuarta" },
+        // Fa
+        { rep: "F", es: "Fa Mayor" },{ rep: "F7", es: "Fa séptima" },{ rep: "F9", es: "Fa novena" },{ rep: "Fsus", es: "Fa suspendida" },{ rep: "Fsus4", es: "Fa suspendida cuarta" },{ rep: "Fm", es: "Fa menor" },{ rep: "Fm7", es: "Fa menor séptima" },
+        { rep: "F#", es: "Fa sostenido Mayor" },{ rep: "F#7", es: "Fa sostenido séptima" },{ rep: "F#m", es: "Fa sostenido menor" },{ rep: "F#m7", es: "Fa sostenido menor séptima" },
+        // Sol
+        { rep: "G", es: "Sol Mayor" },{ rep: "G7", es: "Sol séptima" },{ rep: "G9", es: "Sol novena" },{ rep: "Gsus", es: "Sol suspendida" },{ rep: "Gsus4", es: "Sol suspendida cuarta" },{ rep: "Gm", es: "Sol menor" },{ rep: "Gm7", es: "Sol menor séptima" },
+        { rep: "G#", es: "Sol sostenido Mayor" },{ rep: "G#7", es: "Sol sostenido séptima" },{ rep: "G#m", es: "Sol sostenido menor" },
+        { rep: "Gb9", es: "Sol bemol novena" },{ rep: "Gbsus", es: "Sol bemol suspendida" },{ rep: "Gbsus4", es: "Sol bemol suspendida cuarta" },
     ];
     function escD(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
     function buildDictionary() {
@@ -2923,44 +3630,56 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && qrModal?
     buildDictionary();
 })();
 
+// === Plumeria (escenas: main paper, orientation overlay, desktop gate) ===
 (function setupPlumeriaScenes(){
+    // ── Estado compartido:
     const SUNSETS = [
-        "linear-gradient(180deg, #5b6aa8 0%, #c98aad 34%, #ff9d7a 60%, #ffb057 82%, #ffcf7a 100%)", 
-        "linear-gradient(180deg, #6d6fae 0%, #d68f9e 34%, #ff9b6a 60%, #ff9f52 82%, #ffc266 100%)", 
-        "linear-gradient(180deg, #7a5f9c 0%, #e0899f 34%, #ff8f72 60%, #ff9a4f 82%, #ffbe6b 100%)", 
-        "linear-gradient(180deg, #4f6bb0 0%, #b98bb6 34%, #f79a86 60%, #ffab5e 82%, #ffd089 100%)", 
-        "linear-gradient(180deg, #8a6bab 0%, #e79aa0 34%, #ffa878 60%, #ffbc63 82%, #ffdc8e 100%)", 
-        "linear-gradient(180deg, #63709f 0%, #cf95a4 34%, #ff9a72 60%, #ff8f45 82%, #ffb35c 100%)", 
-        "linear-gradient(180deg, #7e6aa2 0%, #d98fae 34%, #ff9e88 60%, #ffab5a 82%, #ffc978 100%)", 
-        "linear-gradient(180deg, #93739e 0%, #e6a08c 34%, #ffab6f 60%, #ffb85c 82%, #ffd583 100%)", 
-        "linear-gradient(180deg, #586bad 0%, #c58ea8 34%, #ff9f7c 60%, #ffae5c 82%, #ffcf82 100%)", 
-        "linear-gradient(180deg, #6f5f9e 0%, #d287a1 34%, #f89a84 60%, #ff9d55 82%, #ffc06f 100%)", 
-        "linear-gradient(180deg, #8f6db4 0%, #eb9fab 34%, #ffaa82 60%, #ffbe70 82%, #ffd98a 100%)", 
-        "linear-gradient(180deg, #4a6ea8 0%, #b58aa8 34%, #f2977f 60%, #ff9a52 82%, #ffbf6d 100%)", 
-        "linear-gradient(180deg, #7a2f5e 0%, #c0335a 34%, #ff5a3c 60%, #ff7e2e 82%, #ffb347 100%)", 
-        "linear-gradient(180deg, #2b2a5e 0%, #4a3a7a 34%, #7d4a86 60%, #b5567a 82%, #e8825e 100%)", 
-        "linear-gradient(180deg, #8ea6d8 0%, #d9a7cf 34%, #ffc3c0 60%, #ffd9b0 82%, #fff0cf 100%)", 
-        "linear-gradient(180deg, #3f6d7a 0%, #5f9a8c 34%, #9fbf7e 60%, #e8c56b 82%, #ffd98a 100%)"  
+        "linear-gradient(180deg, #5b6aa8 0%, #c98aad 34%, #ff9d7a 60%, #ffb057 82%, #ffcf7a 100%)", // coral-oro
+        "linear-gradient(180deg, #6d6fae 0%, #d68f9e 34%, #ff9b6a 60%, #ff9f52 82%, #ffc266 100%)", // rosa-ámbar
+        "linear-gradient(180deg, #7a5f9c 0%, #e0899f 34%, #ff8f72 60%, #ff9a4f 82%, #ffbe6b 100%)", // magenta-fuego
+        "linear-gradient(180deg, #4f6bb0 0%, #b98bb6 34%, #f79a86 60%, #ffab5e 82%, #ffd089 100%)", // violeta-durazno
+        "linear-gradient(180deg, #8a6bab 0%, #e79aa0 34%, #ffa878 60%, #ffbc63 82%, #ffdc8e 100%)", // lavanda-melocotón
+        "linear-gradient(180deg, #63709f 0%, #cf95a4 34%, #ff9a72 60%, #ff8f45 82%, #ffb35c 100%)", // azul-naranja
+        "linear-gradient(180deg, #7e6aa2 0%, #d98fae 34%, #ff9e88 60%, #ffab5a 82%, #ffc978 100%)", // ciruela-coral
+        "linear-gradient(180deg, #93739e 0%, #e6a08c 34%, #ffab6f 60%, #ffb85c 82%, #ffd583 100%)", // hora dorada
+        "linear-gradient(180deg, #586bad 0%, #c58ea8 34%, #ff9f7c 60%, #ffae5c 82%, #ffcf82 100%)", // índigo-rosa cálido
+        "linear-gradient(180deg, #6f5f9e 0%, #d287a1 34%, #f89a84 60%, #ff9d55 82%, #ffc06f 100%)", // púrpura-brasa
+        "linear-gradient(180deg, #8f6db4 0%, #eb9fab 34%, #ffaa82 60%, #ffbe70 82%, #ffd98a 100%)", // orquídea-ámbar
+        "linear-gradient(180deg, #4a6ea8 0%, #b58aa8 34%, #f2977f 60%, #ff9a52 82%, #ffbf6d 100%)", // crepúsculo azul
+        // ── Atardeceres con MÁS carácter (2026-07-20): mismos que se agregaron al
+        //    intro (welcomeIntro), para que ambas escenas sigan idénticas. ──
+        "linear-gradient(180deg, #7a2f5e 0%, #c0335a 34%, #ff5a3c 60%, #ff7e2e 82%, #ffb347 100%)", // 🔥 fuego
+        "linear-gradient(180deg, #2b2a5e 0%, #4a3a7a 34%, #7d4a86 60%, #b5567a 82%, #e8825e 100%)", // 🌌 crepúsculo profundo
+        "linear-gradient(180deg, #8ea6d8 0%, #d9a7cf 34%, #ffc3c0 60%, #ffd9b0 82%, #fff0cf 100%)", // 🌸 pastel rosado
+        "linear-gradient(180deg, #3f6d7a 0%, #5f9a8c 34%, #9fbf7e 60%, #e8c56b 82%, #ffd98a 100%)"  // 🟢 verde-teal
     ];
+    // Sorteo NUEVO en cada carga (antes se persistía en sessionStorage, pero Safari iOS restaura
+    // la sesión al reabrir el navegador y el atardecer se
     const isRainyDay = Math.random() < 0.10;
     const sunsetBg = SUNSETS[Math.floor(Math.random() * SUNSETS.length)];
-    try { 
+    // Expuesto para el easter egg: usa el MISMO atardecer de esta carga como fondo
+    // a sangre completa de la hoja de la dedicatoria (continuidad con la plumeria).
+    try { window.__sunsetBg = sunsetBg; } catch (e) {}
+    try { // limpiar llaves viejas para que no confundan en el futuro
         sessionStorage.removeItem("plumeria-rainy");
         sessionStorage.removeItem("plumeria-sunset-idx");
     } catch(e) {}
 
+// === setupPlumeria (un target = un stage/sky/page) ===
 function setupPlumeria(cfg){
     const stage = cfg.stage;
     const sky   = cfg.sky;
     const page  = cfg.page;
     const paper = cfg.paper || null;
-    const overlay = cfg.overlay || null; 
-    const SID   = cfg.id || "";     
+    const overlay = cfg.overlay || null; // overlay (orientación/gate): escena visible sólo con .show
+    const SID   = cfg.id || "";     // sufijo único por escena (evita colisión de IDs)
     if (!stage) return;
+    // Visibilidad real de la escena: overlay mostrado, o hoja del libro
+    // en pantalla y cercana a la vista (.near la pone updatePaperVisibility).
     const sceneVisible = () => overlay
         ? overlay.classList.contains("show")
         : (!paper || (paper.style.display !== "none" && paper.classList.contains("near")));
-    let resumeFireflies = () => {}; 
+    let resumeFireflies = () => {}; // la define buildCritters (si hay luciérnagas)
 
     if (page) {
         if (isRainyDay) {
@@ -2985,9 +3704,13 @@ function setupPlumeria(cfg){
     function miniFlower(x,y,s,color){let p="";for(let i=0;i<5;i++){const a=i*72*Math.PI/180;p+=`<circle cx="${(Math.cos(a)*2.3*s).toFixed(1)}" cy="${(Math.sin(a)*2.3*s).toFixed(1)}" r="${(1.8*s).toFixed(1)}" fill="${color}"/>`;}return`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})">${p}<circle r="${(1.2*s).toFixed(1)}" fill="#ffe27a"/></g>`;}
     function bush(cx,baseY,w,h,flowering){let s=`<g class="bushg" transform="translate(${cx.toFixed(1)} ${baseY.toFixed(1)})"><g class="bush" style="animation-delay:${r(0,.9).toFixed(2)}s,${r(0,3).toFixed(2)}s;animation-duration:.8s,${r(3.5,5.5).toFixed(1)}s">`;s+=`<ellipse cx="0" cy="0" rx="${(w*0.95).toFixed(1)}" ry="${(h*0.5).toFixed(1)}" fill="url(#gBush)"/>`;const lobes=ri(3,5);for(let i=0;i<lobes;i++){const ex=r(-w*0.45,w*0.45),ew=r(w*0.42,w*0.66),eh=r(h*0.6,h);s+=`<ellipse cx="${ex.toFixed(1)}" cy="${(-eh*0.5).toFixed(1)}" rx="${ew.toFixed(1)}" ry="${eh.toFixed(1)}" fill="url(#gBush)"/>`;}s+=`<ellipse cx="${(-w*0.15).toFixed(1)}" cy="${(-h*0.55).toFixed(1)}" rx="${(w*0.5).toFixed(1)}" ry="${(h*0.4).toFixed(1)}" fill="url(#gBushHi)" opacity=".55"/>`;if(flowering){const bcols=["#ff6fae","#ffd23f","#ffffff","#ff5a4d","#ff9e3c","#b277e0","#5ab0ff"];const nf=ri(7,13);for(let k=0;k<nf;k++)s+=miniFlower(r(-w*0.78,w*0.78),-r(h*0.1,h*1.05),r(0.8,1.35),pick(bcols));}s+="</g></g>";return s;}
     function buildGround(baseX,baseY){const top=1196;let d=`M -1100 1305 L -1100 ${top}`;const segs=12;for(let i=0;i<=segs;i++){const x=Math.round(-30+(1060/segs)*i),y=Math.round(top+Math.sin(i*1.7)*6-r(0,7));d+=` L ${x} ${y}`;}d+=` L 2100 ${top} L 2100 1305 Z`;groundBack.push(`<path d="${d}" fill="url(#gGrass)"/>`);
+    // Los laterales fuera del viewBox (x<-12 y x>1015) SOLO se ven en los overlays anchos
+    // (orientación en landscape / gate escritorio).
     if(overlay)for(let x=-1050;x<-12;x+=r(30,48))groundBack.push(grassBlade(x,top+r(-4,9),r(20,46),r(-11,11),Math.random()<0.5?"gBlade":"gBlade2"));
     for(let x=-12;x<1015;x+=r(14,24))groundBack.push(grassBlade(x,top+r(-4,9),r(20,46),r(-11,11),Math.random()<0.5?"gBlade":"gBlade2"));
     if(overlay)for(let x=1015;x<2050;x+=r(30,48))groundBack.push(grassBlade(x,top+r(-4,9),r(20,46),r(-11,11),Math.random()<0.5?"gBlade":"gBlade2"));
+    // Arbustos: en el libro solo dentro del viewBox y en la cantidad que en
+    // promedio caía visible antes (~40% de 7-12), para conservar el aspecto.
     const nB=overlay?ri(7,12):ri(3,5);for(let i=0;i<nB;i++){const bx=overlay?r(-900,1900):r(-60,1060);if(Math.abs(bx-baseX)<70)continue;groundBack.push(bush(bx,top+r(2,20),r(55,112),r(40,82),Math.random()<0.58));}for(let i=0;i<14;i++){const x=baseX+r(-95,95);groundFront.push(grassBlade(x,baseY+r(-8,8),r(24,58),r(-12,12),Math.random()<0.5?"gBlade":"gBlade2"));}}
     let svgMarkup="";
     function build(){const baseX=500,baseY=1255,forkX=500,forkY=940;buildGround(baseX,baseY);drawBranch(baseX,baseY,baseX+r(-12,12),(baseY+forkY)/2,forkX,forkY,96,70);const limbs=Math.random()<0.5?2:3,angs=limbs===2?[-26,24]:[-32,-2,28];angs.forEach(a=>grow(forkX,forkY,a+r(-4,4),r(235,290),r(46,56),4));grow(forkX-10,forkY+40,-58,r(150,190),34,3);grow(forkX+10,forkY+40,56,r(150,190),34,3);const cx=500,cy=560,rx=415,ry=350,greensBack=["gLeafB","gLeafM"],greensFront=["gLeafF","gLeafM"];for(let i=0;i<60;i++){const p=ellipsePt(cx,cy,rx,ry),out=Math.atan2(p.y-cy,p.x-cx)*180/Math.PI+90+r(-32,32);backLeaves.push(leafStr(p.x,p.y,out,r(72,118),pick(greensBack),(1.2+r(0,1.3)).toFixed(2),r(4.5,7).toFixed(1),r(0,4).toFixed(1),0.95));}for(let i=0;i<30;i++){const a=r(0,Math.PI*2),rad=r(0.82,1.04),px=cx+Math.cos(a)*rx*rad,py=cy+Math.sin(a)*ry*rad,out=a*180/Math.PI+90+r(-28,28);backLeaves.push(leafStr(px,py,out,r(70,108),pick(greensBack),(1.2+r(0,1.3)).toFixed(2),r(4.5,7).toFixed(1),r(0,4).toFixed(1),0.95));}
@@ -2998,7 +3721,10 @@ function setupPlumeria(cfg){
     if(nestCands.length){const nt=pick(nestCands),nx=nt.x.toFixed(1),ny=nt.y.toFixed(1);
     nestMarkup=`<g class="plumeria-nest" transform="translate(${nx} ${ny}) scale(1.45)"><path d="M-22 2 Q-24 -5 -16 -9 Q-8 -13 0 -14 Q8 -13 16 -9 Q24 -5 22 2 Q14 6 0 7 Q-14 6 -22 2Z" fill="#8B6914" stroke="#5a3e0a" stroke-width=".8"/><path d="M-24 0 Q-16 -13 -6 -10" fill="none" stroke="#6b4d1a" stroke-width="1.8" stroke-linecap="round"/><path d="M-12 -11 Q2 -17 16 -10" fill="none" stroke="#7a5c2a" stroke-width="1.4" stroke-linecap="round"/><path d="M8 -12 Q22 -15 26 -1" fill="none" stroke="#6b4d1a" stroke-width="1.6" stroke-linecap="round"/><path d="M-18 -2 Q-10 -7 4 -11" fill="none" stroke="#8a6c2a" stroke-width="1" stroke-linecap="round"/><ellipse cx="0" cy="-1" rx="13" ry="7" fill="#5a3e0a" opacity=".35"/><g class="nest-birds"><g transform="translate(-8 -16)"><ellipse cx="0" cy="0" rx="7" ry="5" fill="#5a4030"/><circle cx="5.5" cy="-3.5" r="3.6" fill="#5a4030"/><path d="M8.5 -3.5 L12 -2.5" fill="none" stroke="#e89520" stroke-width="1.4" stroke-linecap="round"/><circle cx="6.5" cy="-4.5" r="1" fill="#222"/><path d="M-2 -1 Q0 -4.5 4.5 -2" fill="none" stroke="#4a3020" stroke-width=".7"/></g><g transform="translate(8 -15) scale(-1,1)"><ellipse cx="0" cy="0" rx="6.5" ry="4.5" fill="#6a5040"/><circle cx="5" cy="-3" r="3.2" fill="#6a5040"/><path d="M7.5 -3 L11 -2" fill="none" stroke="#e89520" stroke-width="1.3" stroke-linecap="round"/><circle cx="6" cy="-4" r=".9" fill="#222"/><path d="M-1.5 -.5 Q.5 -4 4 -1.5" fill="none" stroke="#5a4030" stroke-width=".6"/></g></g></g>`;var _bm=nestMarkup.match(/<g class="nest-birds">([\s\S]*)<\/g><\/g>$/);nestBirdsOverlay=_bm?('<svg class="nest-birds-live" viewBox="0 0 1000 1300" preserveAspectRatio="xMidYMax meet"><g transform="translate('+nx+' '+ny+') scale(1.45)">'+_bm[1]+'</g></svg>'):"";}
     const defs=`<defs><linearGradient id="bark" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#37261a"/><stop offset=".5" stop-color="#6b4d31"/><stop offset="1" stop-color="#2c1d12"/></linearGradient><linearGradient id="gLeafB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#0b3414"/><stop offset="1" stop-color="#1b6224"/></linearGradient><linearGradient id="gLeafM" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#114d1c"/><stop offset="1" stop-color="#2a8a36"/></linearGradient><linearGradient id="gLeafF" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#176c23"/><stop offset="1" stop-color="#3cab48"/></linearGradient><linearGradient id="gW" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffcf3f"/><stop offset=".2" stop-color="#fff0b0"/><stop offset=".55" stop-color="#fffdf3"/><stop offset="1" stop-color="#ffffff"/></linearGradient><linearGradient id="gY" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff9e00"/><stop offset=".28" stop-color="#ffd633"/><stop offset=".62" stop-color="#ffe97a"/><stop offset="1" stop-color="#fff3a8"/></linearGradient><linearGradient id="gP" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd23f"/><stop offset=".3" stop-color="#ffc6c2"/><stop offset=".62" stop-color="#f58fb0"/><stop offset="1" stop-color="#e85f93"/></linearGradient><linearGradient id="gM" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffc63f"/><stop offset=".3" stop-color="#e87aa0"/><stop offset=".62" stop-color="#c43c77"/><stop offset="1" stop-color="#97134f"/></linearGradient><linearGradient id="gR" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffbf33"/><stop offset=".3" stop-color="#f06a3a"/><stop offset=".62" stop-color="#d8392a"/><stop offset="1" stop-color="#ad1c1c"/></linearGradient><linearGradient id="gO" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd23f"/><stop offset=".3" stop-color="#ffb060"/><stop offset=".62" stop-color="#ff8a3c"/><stop offset="1" stop-color="#f4632a"/></linearGradient><linearGradient id="gS" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd84f"/><stop offset=".3" stop-color="#ffc39a"/><stop offset=".62" stop-color="#ff9e74"/><stop offset="1" stop-color="#f47e52"/></linearGradient><linearGradient id="gPe" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffe45a"/><stop offset=".3" stop-color="#ffd9a0"/><stop offset=".62" stop-color="#ffb784"/><stop offset="1" stop-color="#ff9d6e"/></linearGradient><linearGradient id="gL" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffe07a"/><stop offset=".3" stop-color="#f0d2e8"/><stop offset=".62" stop-color="#c79bd6"/><stop offset="1" stop-color="#9d6fc4"/></linearGradient><linearGradient id="gC" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd23f"/><stop offset=".3" stop-color="#ff9e72"/><stop offset=".62" stop-color="#fa6f5a"/><stop offset="1" stop-color="#e8463f"/></linearGradient><linearGradient id="gF" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd84f"/><stop offset=".3" stop-color="#ffb4d0"/><stop offset=".62" stop-color="#f570a8"/><stop offset="1" stop-color="#d62f7e"/></linearGradient><radialGradient id="center"><stop offset="0" stop-color="#fff0a0"/><stop offset="1" stop-color="#f6a821"/></radialGradient><linearGradient id="gGrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5aa83f"/><stop offset=".5" stop-color="#418a30"/><stop offset="1" stop-color="#2a6420"/></linearGradient><linearGradient id="gBlade" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#3c8c2b"/><stop offset="1" stop-color="#74c64e"/></linearGradient><linearGradient id="gBlade2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#327a26"/><stop offset="1" stop-color="#5db441"/></linearGradient><radialGradient id="gBush" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#5cab40"/><stop offset="1" stop-color="#2c6a22"/></radialGradient><radialGradient id="gBushHi" cx=".4" cy=".3" r=".7"><stop offset="0" stop-color="#9bd873"/><stop offset="1" stop-color="#9bd873" stop-opacity="0"/></radialGradient></defs>`;
+    // PERF: back/front leaves van cada uno en UN solo <g class="leaf-canopy"> (antes cada hoja
+    // individual llevaba su propia <g class="leafg">, ~106 en la
     svgMarkup=`<svg viewBox="0 0 1000 1300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Árbol de flor de mayo">${defs}<g class="groundg" id="groundBack">${groundBack.join("")}</g><g id="sway"><g id="branchLayer">${branchParts.join("")}</g><g id="canopySway"><g class="leaf-canopy">${backLeaves.join("")}</g><g class="flower-canopy">${flowerParts.join("")}</g><g class="leaf-canopy">${frontLeaves.join("")}</g></g>${nestMarkup}</g><g class="groundg" id="groundFront">${groundFront.join("")}</g></svg>`;
+    // Prefijo único por escena para IDs de <defs> (evita colisiones entre múltiples árboles en el mismo documento)
     if (SID) {
         const defIds = ["bark","gLeafB","gLeafM","gLeafF","gW","gY","gP","gM","gR","gO","gS","gPe","gL","gC","gF","center","gGrass","gBlade","gBlade2","gBush","gBushHi"];
         defIds.forEach(id => {
@@ -3006,7 +3732,7 @@ function setupPlumeria(cfg){
                                  .split(`url(#${id})`).join(`url(#${SID}_${id})`);
         });
     }
-    }
+    /* el montaje al stage lo decide mountSvg() según visibilidad */}
     function buildCritters(){if(!sky)return;let css="",html="";const bCols=[["#ff8a3c","#bd4f18"],["#5aa0ff","#2b5fcc"],["#ffd24a","#cf9314"],["#ff7bbf","#b83d80"],["#f4f4f4","#c9c9c9"],["#7be0c0","#2da683"],["#b98cff","#6c43c0"]];const nB=isRainyDay ? 0 : (2+ri(0,1));for(let i=0;i<nB;i++){const dir=Math.random()<0.5?1:-1,x0=dir>0?-14:114,x1=dir>0?114:-14,dx=x1-x0,yv=[r(30,90),r(26,92),r(34,86),r(26,92),r(30,90)].map(v=>Math.round(v)),n="plmbf"+SID+i;css+=`@keyframes ${n}{0%{transform:translate(${x0}cqw,${yv[0]}cqh)}25%{transform:translate(${Math.round(x0+dx*0.25)}cqw,${yv[1]}cqh)}50%{transform:translate(${Math.round(x0+dx*0.5)}cqw,${yv[2]}cqh)}75%{transform:translate(${Math.round(x0+dx*0.75)}cqw,${yv[3]}cqh)}100%{transform:translate(${x1}cqw,${yv[4]}cqh)}}`;const dur=r(11,19).toFixed(1),del=(-r(0,19)).toFixed(1),sc=r(0.7,1.15).toFixed(2),fl=r(.14,.24).toFixed(2),[c,e]=pick(bCols);const wings=`<svg class="bwings" width="26" height="22" viewBox="-13 -11 26 22" style="animation-duration:${fl}s"><path d="M0 -2 C -11 -13 -16 -3 -8 2 C -14 7 -5 11 0 4 Z" fill="${c}" stroke="${e}" stroke-width=".6"/><path d="M0 -2 C 11 -13 16 -3 8 2 C 14 7 5 11 0 4 Z" fill="${c}" stroke="${e}" stroke-width=".6"/><ellipse rx="1" ry="5.5" fill="#33240f"/></svg>`;html+=`<div class="butterfly" style="animation:${n} ${dur}s linear ${del}s infinite"><div class="bsize" style="transform:scale(${sc}) scaleX(${dir})">${wings}</div></div>`;}
     if(!isRainyDay){const bDir=Math.random()<0.5?1:-1,bx0=bDir>0?-12:112,bx1=bDir>0?112:-12,bdx=bx1-bx0,by0=r(2,10),byOff=[r(-2,4),r(-3,3),r(-2,4),r(-2,3)],bN=`birdFly${SID}`;const crossT=r(22,34),gapT=r(10,15),bDur=(crossT+gapT).toFixed(1);const Kf=(crossT/parseFloat(bDur))*100,kp=f=>(Kf*f).toFixed(1);css+=`@keyframes ${bN}{0%{transform:translate(${bx0}cqw,${by0.toFixed(1)}cqh)}${kp(0.25)}%{transform:translate(${(bx0+bdx*0.25).toFixed(0)}cqw,${(by0+byOff[0]).toFixed(1)}cqh)}${kp(0.5)}%{transform:translate(${(bx0+bdx*0.5).toFixed(0)}cqw,${(by0+byOff[1]).toFixed(1)}cqh)}${kp(0.75)}%{transform:translate(${(bx0+bdx*0.75).toFixed(0)}cqw,${(by0+byOff[2]).toFixed(1)}cqh)}${kp(1)}%{transform:translate(${bx1}cqw,${(by0+byOff[3]).toFixed(1)}cqh)}100%{transform:translate(${bx1}cqw,${(by0+byOff[3]).toFixed(1)}cqh)}}`;const bDel=(-r(0,parseFloat(bDur))).toFixed(1);const bSil="M23.5,56.5L27,55C30,48 35,49 38,51C34,38 30,28 25,23Q31,27 33,32L37,25Q39,30 40,35L45,29Q46,34 47,39L51,35Q50,42 51,47C61,37 72,29 82,24Q77,31 72,37L76,40Q71,44 67,47L71,51Q66,54 62,56L65,60Q60,62 57,63C59,70 63,75 67,78L71,79 66,81 69,84 64,85 65,88 60,89 60,91 54,83C42,87 29,75 25.5,61Q24,58 23.5,56.5Z";const bSvg1=`<svg class="fb-svg" viewBox="18 18 70 78" width="28" height="31" style="--flap:${r(0.7,1.0).toFixed(2)}s"><path d="${bSil}" fill="#2a1f15"/></svg>`;const bSvg2=`<svg class="fb-svg" viewBox="18 18 70 78" width="22" height="24" style="--flap:${r(0.75,1.05).toFixed(2)}s"><path d="${bSil}" fill="#3a2f22"/></svg>`;html+=`<div class="plumeria-flying-bird" style="animation:${bN} ${bDur}s linear ${bDel}s infinite"><div style="position:relative;transform:scaleX(${-bDir})">${bSvg1}<div style="position:absolute;top:18px;left:16px">${bSvg2}</div></div></div>`;}
     const st=document.createElement("style");st.textContent=css;document.head.appendChild(st);
@@ -3081,6 +3807,8 @@ function setupPlumeria(cfg){
                 <circle cx="3" cy="4" r="0.7" fill="#e0dacb" opacity="0.8" />
             </g>` : ""}
         </svg>`;
+        // Luna: posición ALEATORIA en el tercio superior; va a la capa z2 del wrap
+        // (entre el fondo y el árbol) para que asome DETRÁS de la copa de forma natural.
         const _wrap=sky.parentNode;
         moonEl.style.top=(2+Math.random()*22).toFixed(1)+"%";
         moonEl.style.left=(4+Math.random()*74).toFixed(1)+"%";
@@ -3089,6 +3817,7 @@ function setupPlumeria(cfg){
     }
     buildMoon();
     (function buildMountains(){
+        // 2 cordilleras ESTÁTICAS detrás del árbol (capa z2, entre cielo y árbol).
         const w=sky.parentNode, m=document.createElement("div");
         m.className="plumeria-mountains";
         m.setAttribute("aria-hidden","true");
@@ -3102,6 +3831,7 @@ function setupPlumeria(cfg){
         const wrap = sky.parentNode;
         if (!wrap) return;
 
+        // Si hoy llueve, agregamos la clase y creamos la lluvia de fondo
         if (isRainyDay) {
             if (page) page.classList.add("plumeria-rainy");
 
@@ -3149,6 +3879,7 @@ function setupPlumeria(cfg){
             skyBg.appendChild(cloudEl);
         }
 
+        // Agregar lluvia frontal en el primer plano
         if (isRainyDay) {
             const rainFront = document.createElement("div");
             rainFront.className = "plumeria-rain-front";
@@ -3160,11 +3891,15 @@ function setupPlumeria(cfg){
         document.head.appendChild(st);
     }
     buildClouds();
+    // Luciérnagas realistas — movimiento errático con JS, apagones reales
 const fireflyColors=[];
+// 50% verde/amarillo, 35% naranja/rojo, 15% blanco
 const cGreenYellow=["#a8ff44","#c6ff3a","#d4ff5a","#e8ff6a","#bfff30","#dcff50"];
 const cOrangeRed=["#ff8a3c","#ff6030","#ff4f2a","#ffae57","#f46a32","#ff7742"];
 const cWhite=["#ffffff","#fff8e8","#faf4ff","#fffdf0"];
 for(let i=0;i<50;i++) fireflyColors.push(Math.random()<0.50?pick(cGreenYellow):Math.random()<0.636?pick(cOrangeRed):pick(cWhite));
+// PERF: menos luciérnagas en la escena del LIBRO que en los overlays anchos
+// (orientación/gate), mismo criterio que ya se aplica a hojas/césped/arbustos
 const nF=isRainyDay ? (1+ri(0,1)) : (overlay ? (8+ri(0,3)) : (5+ri(0,2)));
 const fireflies=[];
 for(let i=0;i<nF;i++){
@@ -3181,42 +3916,54 @@ for(let i=0;i<nF;i++){
     fireflies.push({
         el,
         x:r(5,95), y:r(30,95),
+        // Velocidad en %/segundo
         vx:r(-5,5), vy:r(-4,4),
         lit:true,
         litTimer:r(1.5,4),
         darkDurations:[1,2,2.5],
         darkIdx:ri(0,2),
         phase:r(0,10),
-        op:0,        
+        op:0,        // opacidad actual guardada en JS (evita leerla del DOM cada frame)
         sz
     });
 }
 let lastFireflyTime=0,ffRunning=false;
 function tickFireflies(ts){
+    // Parar si la escena no se ve (overlay oculto, hoja lejana o volteada) o no es modo oscuro.
     if(!document.body.classList.contains("dark-mode") || !sceneVisible() || sky.offsetParent===null
-       || document.body.classList.contains("gestures-on")){   
+       || document.body.classList.contains("gestures-on")){   // gestos activos: liberar recursos
         lastFireflyTime=0; ffRunning=false; return;
     }
+    // Con una hoja girando (body.flipping) se congelan sin trabajar el frame;
+    // el bucle sigue vivo y reanudan solos al terminar el volteo.
     if(document.body.classList.contains("flipping")){
         lastFireflyTime=0; requestAnimationFrame(tickFireflies); return;
     }
+    // Tope ~30fps: se mueven lento y errático, imperceptible vs 60fps, y baja a
+    // la mitad el trabajo por frame (física + escrituras de estilo + recomposición).
     if(lastFireflyTime && (ts - lastFireflyTime) < 33){ requestAnimationFrame(tickFireflies); return; }
     if(!lastFireflyTime) lastFireflyTime=ts;
     const dt=Math.min((ts-lastFireflyTime)/1000,0.1);
     lastFireflyTime=ts;
     for(const f of fireflies){
         f.phase+=dt;
+        // Cambio de dirección suave (%/s² — aceleración aleatoria)
         f.vx+=r(-8,8)*dt; f.vy+=r(-6,6)*dt;
+        // Fricción ligera independiente del framerate (pierde ~15% de velocidad por segundo)
         const friction=Math.pow(0.85,dt);
         f.vx*=friction; f.vy*=friction;
+        // Tope de velocidad (~10 %/s — vuelo suave pero perceptible)
         const speed=Math.hypot(f.vx,f.vy);
         const maxSpd=10;
         if(speed>maxSpd){f.vx*=maxSpd/speed;f.vy*=maxSpd/speed;}
+        // Posición (Euler): x += v * dt
         f.x+=f.vx*dt; f.y+=f.vy*dt;
+        // Pueden salir y volver a entrar (empujón suave hacia el centro)
         if(f.x<-12) f.vx+=r(12,20)*dt;
         else if(f.x>112) f.vx-=r(12,20)*dt;
         if(f.y<20) f.vy+=r(10,16)*dt;
         else if(f.y>105) f.vy-=r(10,16)*dt;
+        // Ciclo encendido/apagado
         f.litTimer-=dt;
         if(f.litTimer<=0){
             if(f.lit){
@@ -3228,10 +3975,12 @@ function tickFireflies(ts){
                 f.litTimer=r(1.5,4.5);
             }
         }
+        // Opacidad: transición suave al encender/apagar (guardada en f.op, sin leer del DOM)
         const targetOp=f.lit?r(0.7,1.0):0;
         const newOp=f.op+(targetOp-f.op)*Math.min(1,dt*3.5);
         f.op=newOp;
         f.el.style.opacity=newOp.toFixed(3);
+        // PERF: transform (cqw/cqh) en vez de left/top.
         f.el.style.transform="translate("+f.x.toFixed(2)+"cqw,"+f.y.toFixed(2)+"cqh)";
     }
     requestAnimationFrame(tickFireflies);
@@ -3242,6 +3991,7 @@ function startFireflies(){
     requestAnimationFrame(tickFireflies);
 }
 resumeFireflies=startFireflies;
+// Arrancar/detener con dark mode (el propio tick se detiene solo al ocultarse)
 const ffObserver=new MutationObserver(()=>{
     if(document.body.classList.contains("dark-mode")) startFireflies();
 });
@@ -3250,9 +4000,11 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     let svgCache="",crittersBuilt=false,rasterCache="",rasterizing=false,nestBirdsOverlay="";
     function buildOnce(){if(svgCache)return;build();svgCache=svgMarkup;}
     function buildCrittersOnce(){if(crittersBuilt)return;crittersBuilt=true;buildCritters();}
+    // PRUEBA (técnica 1): rasterizar el árbol ESTÁTICO a PNG una vez.
     function rasterize(cb){
         if(rasterCache){cb(rasterCache);return;}
         if(!svgCache)buildOnce();
+        // El CSS externo (p.ej.
         const svg=svgCache
             .replace("<svg ", '<svg width="1000" height="1300" ')
             .replace('<g class="nest-birds">', '<g class="nest-birds" style="display:none">');
@@ -3265,6 +4017,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
                 const W=Math.round(1000*S), H=Math.round(1300*S);
                 const c=document.createElement("canvas"); c.width=W*scale; c.height=H*scale;
                 const ctx=c.getContext("2d"); ctx.scale(scale,scale); ctx.drawImage(img,0,0,W,H);
+                // WebP (mucho más liviano que PNG, ~1/8) con fallback a PNG.
                 let out=c.toDataURL("image/webp",0.86);
                 if(!out || out.indexOf("data:image/webp")!==0) out=c.toDataURL("image/png");
                 rasterCache=out;
@@ -3278,6 +4031,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     function mountSvg(){
         if(!svgCache)buildOnce();
         const tok=++mountToken;
+        // Si ya tenemos el PNG, monta el bitmap directo; si no, monta el SVG (para que
+        // el árbol se vea YA) y cámbialo a bitmap cuando el raster esté listo.
         if(rasterCache){
             stage.innerHTML='<div class="tree-bmp-grow"><div class="tree-bmp-sway"><img class="tree-bmp" src="'+rasterCache+'" alt="" draggable="false">'+nestBirdsOverlay+'</div></div>';
             return;
@@ -3288,7 +4043,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             if(png){
                 console.log("[treebmp] raster OK len="+png.length);
                 stage.innerHTML='<div class="tree-bmp-grow"><div class="tree-bmp-sway"><img class="tree-bmp" src="'+png+'" alt="" draggable="false">'+nestBirdsOverlay+'</div></div>';
-                if(page)page.classList.add("plumeria-grown"); 
+                if(page)page.classList.add("plumeria-grown"); // ya no hay entrada SVG que congelar
             }else{
                 console.log("[treebmp] raster FAIL (queda SVG)");
             }
@@ -3297,6 +4052,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     function unmountSvg(){mountToken++;stage.innerHTML="";}
     const idle=window.requestIdleCallback||(cb=>setTimeout(cb,1));
     if(overlay){
+        // Escenas de overlay (orientación / gate escritorio):
         let shown=overlay.classList.contains("show");
         const showScene=()=>{buildOnce();buildCrittersOnce();mountSvg();resumeFireflies();};
         const mo=new MutationObserver(()=>{
@@ -3308,7 +4064,11 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         mo.observe(overlay,{attributes:true,attributeFilter:["class"]});
         if(shown)showScene();
     } else {
+        // Hoja del libro: construir en idle, pero montar SOLO cuando la hoja esté cerca de la vista
+        // (.near), y DESMONTAR al alejarse.
         const paperOn=()=>!paper||(paper.style.display!=="none"&&paper.classList.contains("near"));
+        // Congela el árbol en su estado final ~6.5s tras verse por primera vez
+        // (crecimiento ya terminado). Ver .plumeria-grown en CSS.
         let grownTimer=null;
         const scheduleGrown=()=>{
             if(grownTimer||!page||page.classList.contains("plumeria-grown"))return;
@@ -3319,7 +4079,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             let last=paperOn();
             const mo=new MutationObserver(()=>{
                 const d=paperOn();
-                if(d){resumeFireflies();scheduleGrown();} 
+                if(d){resumeFireflies();scheduleGrown();} // idempotente: re-arranca al des-voltear/acercarse
                 if(d===last)return;
                 last=d;
                 if(!d)unmountSvg();
@@ -3328,14 +4088,15 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             mo.observe(paper,{attributes:true,attributeFilter:["style","class"]});
         }
     }
-} 
+} // === fin setupPlumeria (una escena) ===
 
+    // ── Invocar para las 3 escenas: página del libro + overlay orientación + gate escritorio ──
     setupPlumeria({
         stage: document.getElementById("plumeriaStage"),
         sky:   document.getElementById("plumeriaSky"),
         page:  document.querySelector("#pPlumeria .plumeria-page"),
         paper: document.getElementById("pPlumeria"),
-        id:    ""   
+        id:    ""   // sin sufijo → conserva IDs originales para no romper nada existente
     });
     setupPlumeria({
         stage: document.getElementById("orientationStage"),
@@ -3355,6 +4116,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     });
 })();
 
+// === Mariposas en páginas especiales ===
 (function setupPageButterflies(){
     var r=function(a,b){return a+Math.random()*(b-a);};var ri=function(a,b){return Math.floor(r(a,b+1));};var pick=function(a){return a[Math.floor(Math.random()*a.length)];};
     var WINGS=[{vb:"-17 -14 34 26",L:"M0 -2 C -11 -13 -16 -3 -8 2 C -14 7 -5 11 0 4 Z",R:"M0 -2 C 11 -13 16 -3 8 2 C 14 7 5 11 0 4 Z"},{vb:"-18 -17 36 27",L:"M0 -2 C -8 -16 -17 -8 -10 0 C -13 5 -4 9 0 4 Z",R:"M0 -2 C 8 -16 17 -8 10 0 C 13 5 4 9 0 4 Z"},{vb:"-18 -10 36 24",L:"M0 -1 C -13 -9 -17 0 -10 4 C -14 10 -4 13 0 5 Z",R:"M0 -1 C 13 -9 17 0 10 4 C 14 10 4 13 0 5 Z"},{vb:"-12 -10 24 19",L:"M0 -1 C -8 -9 -11 -2 -7 2 C -9 6 -3 8 0 3 Z",R:"M0 -1 C 8 -9 11 -2 7 2 C 9 6 3 8 0 3 Z"}];
@@ -3366,7 +4128,10 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     var st=document.createElement("style");st.textContent=css;document.head.appendChild(st);
 })();
 
+    // (La restauración de la página guardada ocurre arriba, en restoreInitialLocation,
+    // ANTES del primer updatePaperVisibility para que no sobrescriba el hash.)
 
+    // Escuchar cambios de hash para navegar con botones del navegador
     window.addEventListener("hashchange", () => {
         const targetLoc = getLocationForHash(window.location.hash);
         if (targetLoc !== currentLocation) {
@@ -3374,13 +4139,16 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     });
 
+    // ═══════════════════════════════════════════════════════════════════
+    // FASE 3 — Control Gestual con
+    // ═══════════════════════════════════════════════════════════════════
     const gestureBtn = document.querySelector("#gestureBtn");
     const gestureModal = document.querySelector("#gestureModal");
     const gmStep1 = document.querySelector("#gmStep1");
     const gmStep2 = document.querySelector("#gmStep2");
-    const gestureNextBtn = document.querySelector("#gestureNextBtn");   
-    const gestureBackBtn = document.querySelector("#gestureBackBtn");   
-    const gestureStartBtn = document.querySelector("#gestureStartBtn"); 
+    const gestureNextBtn = document.querySelector("#gestureNextBtn");   // paso 1 → guía
+    const gestureBackBtn = document.querySelector("#gestureBackBtn");   // guía → paso 1
+    const gestureStartBtn = document.querySelector("#gestureStartBtn"); // guía → activar
     const gestureCancelBtn = document.querySelector("#gestureCancelBtn");
 
     let gestureActive = false;
@@ -3390,39 +4158,75 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     let animationFrameId = null;
     let processingFrame = false;
 
-    let handHistory = [];        
-    let pointHistory = [];       
-    let lastPageTime = 0, lastScrollTime = 0, lastZoomTime = 0;
-    let lastPageDir = 0;         
-    let lastScrollDir = 0;       
-    let pinchActive = false, pinchRef = 0, pinchDir = 0;
-    const PINCH_STEP = 0.35;     
+    // ── Estado de gestos ────────────────────────────────────────────── Una FORMA DE MANO por
+    // acción (ver classifyPose):
+    let handHistory = [];        // posiciones de la palma abierta (swipe de página)
+    let pointHistory = [];       // posiciones del índice tumbado (swipe de scroll)
+    let lastPageTime = 0, lastScrollTime = 0;
+    let lastPageDir = 0;         // dirección del último cambio de página (bloqueo de reversa)
+    let lastScrollDir = 0;       // dirección del último scroll (bloqueo de reversa)
+    // Sesión de PELLIZCO (zoom en modo dial, ver handlePinchZoom).
+    let pinchActive = false, pinchRef = 0;
+    // Entrar al pellizco exige yemas CLARAMENTE juntas (evita falsos positivos con
+    // el índice señalando, donde el pulgar recogido queda lejos de la punta).
     const PINCH_ENTER = 0.60;
 
-    const SWIPE_MIN = 0.18;        
-    const SWIPE_CROSS_MAX = 0.14;  
+    // ★Umbrales en ANCHOS DE MANO, no en % del encuadre: así el gesto es el mismo de cerca
+    // que de lejos. 0.9 y no 1.4 porque con el móvil cerca (tocando guitarra) 1.4 no salía.
+    // vídeo") y ése era el motivo principal de que los gestos se
+    const SWIPE_MIN_HANDS = 0.9;        // era 0.18 del ancho; luego 1.4 (demasiado)
+    const SWIPE_CROSS_MAX_HANDS = 1.0;  // era 0.14 (trazo recto)
+    const SCROLL_MIN_HANDS = 0.55;      // era 0.09 del alto
     const SWIPE_TIME_LIMIT = 900;
-    const PAGE_COOLDOWN = 1200;    
-    const PAGE_REVERSE_LOCK = 1800; 
-    const SCROLL_MIN = 0.09;       
-    const SCROLL_COOLDOWN = 550;   
-    const SCROLL_REVERSE_LOCK = 900; 
-    const ZOOM_COOLDOWN = 350;
+    const PAGE_COOLDOWN = 1200;    // evita doble cambio de página accidental
+    const PAGE_REVERSE_LOCK = 1800; // ventana en la que NO se acepta la dirección contraria
+    const SCROLL_COOLDOWN = 550;   // permite scrollear encadenado
+    const SCROLL_REVERSE_LOCK = 900; // ventana en la que NO se acepta scroll contrario
 
     function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+
+    // ── Espacio de medida corregido por FORMA DEL ENCUADRE ──────────────────── MediaPipe entrega
+    // x e y de 0 a 1 sobre el frame, así que en un vídeo que
+    function frameAspect() {
+        const w = videoElement && videoElement.videoWidth;
+        const h = videoElement && videoElement.videoHeight;
+        return (w && h) ? (w / h) : (4 / 3);   // 4:3 mientras el vídeo no reporta tamaño
+    }
+    // Punto del landmark en unidades de altura de frame.
+    function pt(lm, i, aspect) { return { x: lm[i].x * aspect, y: lm[i].y }; }
+
+    // Tamaño de la mano = muñeca (0) → nudillo del dedo medio (9).
+    const HAND_SPAN_MIN = 0.04, HAND_SPAN_MAX = 0.60;
+    let handSpanSmooth = 0;
+    function handSpan(lm, aspect) {
+        const w = pt(lm, 0, aspect), k = pt(lm, 9, aspect);
+        let s = Math.hypot(k.x - w.x, k.y - w.y);
+        s = Math.min(HAND_SPAN_MAX, Math.max(HAND_SPAN_MIN, s || HAND_SPAN_MIN));
+        handSpanSmooth = handSpanSmooth ? (handSpanSmooth * 0.7 + s * 0.3) : s;
+        return handSpanSmooth;
+    }
+    // Dedo extendido: su punta está más lejos de la muñeca que su articulación media (PIP).
     function fingersUp(lm) {
         const w = lm[0];
         const up = (tip, pip) => dist(lm[tip], w) > dist(lm[pip], w) * 1.05;
         return { index: up(8, 6), middle: up(12, 10), ring: up(16, 14), pinky: up(20, 18) };
     }
 
+    // ★NO usar 👍/👎 para el zoom: esto se usa en misa, de cara a la gente, y un pulgar
+    // abajo se malinterpreta. La pinza es discreta. (Se probó y se descartó por eso.)
     function classifyPose(lm, f) {
+        // 1) PALMA (4 dedos extendidos) → cambiar de página.
         if (f.index && f.middle && f.ring && f.pinky) return "palm";
+        // 2) Anular o meñique fuera ⇒ no es pellizco ni índice señalando.
         if (f.ring || f.pinky) return "none";
         const handSize = dist(lm[0], lm[9]) || 0.0001;
-        const pinchRatio = dist(lm[4], lm[8]) / handSize;   
+        const pinchRatio = dist(lm[4], lm[8]) / handSize;   // apertura pulgar↔índice
+        // 3) Sesión de pellizco viva manda: al separar los dedos (zoom +) la apertura
+        //    crece y saldría de la pose, pero seguimos en el MISMO gesto hasta soltar.
         if (pinchActive) return "pinch";
+        // 4) PELLIZCO: yemas de pulgar e índice juntas.
         if (pinchRatio < PINCH_ENTER) return "pinch";
+        // 5) ÍNDICE señalando (pulgar recogido ⇒ apertura grande) y TUMBADO → scroll.
         if (f.index && !f.middle) {
             const dx = Math.abs(lm[8].x - lm[5].x);
             const dy = Math.abs(lm[5].y - lm[8].y);
@@ -3440,6 +4244,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             container.id = "toastContainer";
             document.body.appendChild(container);
         }
+        // Feedback de REPETICIÓN RÁPIDA (zoom/scroll por gestos):
         let toast = opts.key ? container.querySelector('.toast-message[data-key="' + opts.key + '"]') : null;
         if (toast) {
             clearTimeout(toast.__hideT); clearTimeout(toast.__rmT);
@@ -3480,11 +4285,14 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     function showScrollFeedback(dir) {
         showToast(dir === "down" ? "Desplazando ⬇️" : "Desplazando ⬆️", { key: "scroll", duration: 1100 });
     }
-    function showZoomFeedback(dir) {
-        showToast(dir === "in" ? "Zoom + 🔍" : "Zoom − 🔍", { key: "zoom", duration: 1100 });
+    // El dial no tiene "pasos", así que el aviso muestra el tamaño actual en vez de
+    // la dirección: es la referencia que el usuario necesita para saber dónde parar.
+    function showZoomFeedback(scale) {
+        showToast("Tamaño " + Math.round(scale * 100) + "% 🔍", { key: "zoom", duration: 1100 });
     }
 
-    function gestureScroll(dir) {   
+    // Desplaza el contenido del canto visible (mismo scrollTop que usa el touch).
+    function gestureScroll(dir) {   // dir: +1 hacia abajo, -1 hacia arriba
         const paper = papers[currentLocation - 1];
         const wrap = paper && paper.querySelector(".page-content-wrap, .dict-content");
         if (!wrap) return false;
@@ -3493,18 +4301,28 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return true;
     }
 
+    // PALMA ABIERTA: deslizar ←/→ para cambiar de página.
     function handleNavSwipe(lm, now) {
-        const pt = lm[9];
-        const x = pt.x, y = pt.y;
+        const aspect = frameAspect();
+        const span = handSpan(lm, aspect);          // la "regla" de esta muestra
+        const p = pt(lm, 9, aspect);
+        const x = p.x, y = p.y;
+        // Los umbrales se convierten a unidades de frame CON la mano de ahora: si
+        // el usuario se acerca o se aleja, el gesto exigido se ajusta solo.
+        const SWIPE_MIN = SWIPE_MIN_HANDS * span;
+        const SWIPE_CROSS_MAX = SWIPE_CROSS_MAX_HANDS * span;
         handHistory = handHistory.filter(h => now - h.time < SWIPE_TIME_LIMIT);
         handHistory.push({ x, y, time: now });
         if (handHistory.length < 2) return;
         for (const h of handHistory) {
             const dx = x - h.x, dy = y - h.y;
             const adx = Math.abs(dx), ady = Math.abs(dy);
+            // Horizontal → página (webcam espejada: mano der→izq física ⇒ dx>0)
             if (adx > SWIPE_MIN && ady < SWIPE_CROSS_MAX && adx > ady) {
                 if (now - lastPageTime < PAGE_COOLDOWN) return;
                 const dir = dx > 0 ? 1 : -1;
+                // Bloqueo de REVERSA: tras cambiar de página, la mano tiene que volver a su sitio y ese
+                // trayecto se leía como swipe contrario (avanzabas una y
                 if (dir !== lastPageDir && now - lastPageTime < PAGE_REVERSE_LOCK) {
                     handHistory = [];
                     return;
@@ -3517,23 +4335,33 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     }
 
+    // ÍNDICE HORIZONTAL (apuntando de lado): deslizar ↑/↓ para desplazar el canto.
+    // Pose propia y exclusiva → ya no compite con el cambio de página.
     function handlePointScroll(lm, now) {
-        const pt = lm[8];                                   
-        const x = pt.x, y = pt.y;
+        const aspect = frameAspect();
+        const span = handSpan(lm, aspect);
+        const p = pt(lm, 8, aspect);                        // punta del índice
+        const x = p.x, y = p.y;
+        const SCROLL_MIN = SCROLL_MIN_HANDS * span;
+        const SWIPE_CROSS_MAX = SWIPE_CROSS_MAX_HANDS * span;
         pointHistory = pointHistory.filter(h => now - h.time < SWIPE_TIME_LIMIT);
         pointHistory.push({ x, y, time: now });
         if (pointHistory.length < 2) return;
         for (const h of pointHistory) {
             const dx = x - h.x, dy = y - h.y;
             const adx = Math.abs(dx), ady = Math.abs(dy);
+            // SCROLL_MIN < SWIPE_MIN:
             if (ady > SCROLL_MIN && adx < SWIPE_CROSS_MAX && ady > adx) {
                 if (now - lastScrollTime < SCROLL_COOLDOWN) return;
-                const dir = dy < 0 ? 1 : -1;   
+                const dir = dy < 0 ? 1 : -1;   // +1 = contenido hacia abajo
+                // Bloqueo de REVERSA (igual que en las páginas):
                 if (dir !== lastScrollDir && now - lastScrollTime < SCROLL_REVERSE_LOCK) {
                     pointHistory = [];
                     return;
                 }
                 pointHistory = []; lastScrollTime = now; lastScrollDir = dir;
+                // Estilo táctil: subir la mano revela lo de abajo (imagen no
+                // espejada en Y ⇒ subir la mano da dy<0).
                 if (dir > 0) { showScrollFeedback("down"); gestureScroll(1); }
                 else { showScrollFeedback("up"); gestureScroll(-1); }
                 return;
@@ -3541,64 +4369,159 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     }
 
-    function resetPinch() { pinchActive = false; pinchDir = 0; }
+    // Fin de la sesión de pellizco (al abrir/bajar la mano): re-arma para el próximo.
+    function resetPinch() { pinchActive = false; pinchRatioSmooth = 0; }
+
+    // ★DIAL, no pasos: por pasos el zoom − era imposible (entrar exigía dedos juntos y no
+    // quedaba recorrido para juntar más, y la dirección se trababa). No volver a pasos.
+    // inalcanzable, no difícil.
+    const ZOOM_SENSITIVITY = 1.0;   // tamaño ganado por unidad de apertura. ★Subir si
+                                    // se siente lento; bajar si cuesta afinar.
+    const ZOOM_STEP = 0.05;         // el mismo escalón que usa el slider "Aa"
+    const ZOOM_HYSTERESIS = 1.2;    // escalones que hay que rebasar para saltar
+    let pinchBaseScale = 1;
+    let pinchRatioSmooth = 0;
 
     function handlePinchZoom(lm, now) {
         const handSize = dist(lm[0], lm[9]) || 0.0001;
-        const ratio = dist(lm[4], lm[8]) / handSize;
-        if (!pinchActive) { pinchActive = true; pinchRef = ratio; pinchDir = 0; return; }
+        const raw = dist(lm[4], lm[8]) / handSize;
+        // Suavizado: el dial sigue a los dedos en vivo, así que el temblor del modelo
+        // se vería como texto vibrando. Con pasos no se notaba (sólo movía el umbral).
+        pinchRatioSmooth = pinchRatioSmooth ? (pinchRatioSmooth * 0.7 + raw * 0.3) : raw;
+        const ratio = pinchRatioSmooth;
 
-        if (pinchDir === 0) {                          
-            const d0 = ratio - pinchRef;
-            if (Math.abs(d0) < PINCH_STEP) return;
-            pinchDir = d0 > 0 ? 1 : -1;
+        if (!pinchActive) {          // arranque: anclar aquí y no mover nada todavía
+            pinchActive = true;
+            pinchRef = ratio;
+            pinchBaseScale = (window.__cantoralZoomGet && window.__cantoralZoomGet()) || 1;
+            return;
         }
-        const signed = pinchDir * (ratio - pinchRef);  
-        if (signed >= PINCH_STEP) {
-            if (now - lastZoomTime >= ZOOM_COOLDOWN) {  
-                lastZoomTime = now;
-                if (pinchDir > 0) { if (window.__cantoralZoom && window.__cantoralZoom(1)) showZoomFeedback("in"); }
-                else { if (window.__cantoralZoom && window.__cantoralZoom(-1)) showZoomFeedback("out"); }
-                pinchRef = ratio;
-            }
-        } else if (signed < 0) {
-            pinchRef = ratio;                          
+        if (!window.__cantoralZoomSet || !window.__cantoralZoomGet) return;
+
+        // Objetivo CONTINUO: se mantiene sin redondear para que el gesto no pierda precisión por el
+        // camino (si se re-anclara en cada escalón, el error se
+        const target = pinchBaseScale + (ratio - pinchRef) * ZOOM_SENSITIVITY;
+        const current = window.__cantoralZoomGet();
+        const steps = (target - current) / ZOOM_STEP;
+
+        if (Math.abs(steps) >= ZOOM_HYSTERESIS) {
+            const applied = window.__cantoralZoomSet(current + Math.round(steps) * ZOOM_STEP);
+            showZoomFeedback(applied);         // sólo al cambiar de escalón: ya no
+                                               // hace falta throttle, el aviso no parpadea porque no se repite Tope alcanzado:
+            if (target > applied + ZOOM_STEP) { pinchBaseScale = applied + ZOOM_STEP; pinchRef = ratio; }
+            else if (target < applied - ZOOM_STEP) { pinchBaseScale = applied - ZOOM_STEP; pinchRef = ratio; }
         }
     }
 
-    function processHandLandmarks(landmarks) {
-        const now = Date.now();
-        const f = fingersUp(landmarks);
-        const pose = classifyPose(landmarks, f);
+    // ★Tolerar fallos sueltos del modelo: sin esto, perder la pose UNA muestra borraba el
+    // recorrido a medio gesto y el swipe no llegaba nunca.
+    const POSE_MISS_TOLERANCE = 2;
+    let stablePose = "none";
+    let poseMisses = 0;
+    let noHandCount = 0;         // muestras seguidas SIN mano en cuadro
 
+    function clearGestureState(pose) {
         if (pose !== "palm") handHistory = [];
         if (pose !== "point") pointHistory = [];
         if (pose !== "pinch") resetPinch();
+    }
 
+    // Despachador: UNA pose = UNA acción (ver classifyPose).
+    function processHandLandmarks(landmarks) {
+        const now = Date.now();
+        const f = fingersUp(landmarks);
+        const raw = classifyPose(landmarks, f);
+
+        if (raw === stablePose) {
+            poseMisses = 0;                    // sigue en la misma pose: todo normal
+        } else if (++poseMisses < POSE_MISS_TOLERANCE) {
+            return;                            // bache: conservar historial y esperar
+        } else {
+            stablePose = raw;                  // cambio confirmado
+            poseMisses = 0;
+            clearGestureState(stablePose);     // soltar lo del gesto anterior
+        }
+
+        const pose = stablePose;
         switch (pose) {
-            case "palm":                       
+            case "palm":                       // 🖐️ 4 dedos → cambiar de página
                 handleNavSwipe(landmarks, now);
                 break;
-            case "point":                      
+            case "point":                      // 👉 índice tumbado → scroll
                 handlePointScroll(landmarks, now);
                 break;
-            case "pinch":                      
+            case "pinch":                      // 🤏 pellizco → zoom
                 handlePinchZoom(landmarks, now);
                 break;
         }
     }
 
+    // ★OE_BETA va en unidades de VELOCIDAD: con valores pequeños (0.02) el filtro se queda
+    // cerrado y sólo añade retraso. Medido con 0.4/4.0: -76% de temblor y 90% de respuesta.
+    const OE_MIN_CUTOFF = 0.4;   // cuánto filtra en reposo (más bajo = más quieto)
+    const OE_BETA = 4.0;         // cuánto se abre al moverse (más alto = más ágil)
+
+    function CanalOneEuro(minCutoff, beta, dCutoff) {
+        let xPrev = null, dxPrev = 0, tPrev = null;
+        const alpha = (corte, te) => {
+            const tau = 1 / (2 * Math.PI * corte);
+            return 1 / (1 + tau / te);
+        };
+        this.filtrar = function (x, t) {
+            if (xPrev === null) { xPrev = x; tPrev = t; return x; }
+            let te = (t - tPrev) / 1000;
+            if (!(te > 0)) te = DETECT_INTERVAL / 1000;
+            tPrev = t;
+            const dx = (x - xPrev) / te;
+            const dxHat = dxPrev + alpha(dCutoff, te) * (dx - dxPrev);
+            dxPrev = dxHat;
+            const corte = minCutoff + beta * Math.abs(dxHat);
+            const xHat = xPrev + alpha(corte, te) * (x - xPrev);
+            xPrev = xHat;
+            return xHat;
+        };
+        this.reiniciar = function () { xPrev = null; dxPrev = 0; tPrev = null; };
+    }
+
+    let oeCanales = null;
+    function oeReiniciar() { if (oeCanales) oeCanales.forEach(c => { c.x.reiniciar(); c.y.reiniciar(); }); }
+    function suavizarLandmarks(lm) {
+        if (!oeCanales) {
+            oeCanales = [];
+            for (let i = 0; i < 21; i++) {
+                oeCanales.push({
+                    x: new CanalOneEuro(OE_MIN_CUTOFF, OE_BETA, 1.0),
+                    y: new CanalOneEuro(OE_MIN_CUTOFF, OE_BETA, 1.0)
+                });
+            }
+        }
+        const t = performance.now();
+        return lm.map((p, i) => ({
+            x: oeCanales[i].x.filtrar(p.x, t),
+            y: oeCanales[i].y.filtrar(p.y, t),
+            z: p.z
+        }));
+    }
+
     function onHandResults(results) {
         const detected = !!(results && results.multiHandLandmarks && results.multiHandLandmarks.length > 0);
+        // Feedback visual: el borde de la vista previa se pone verde cuando detecta una mano.
         const pc = document.getElementById("gesturePreview");
         if (pc) pc.classList.toggle("hand-detected", detected);
         if (detected) {
-            processHandLandmarks(results.multiHandLandmarks[0]);
-        } else {
+            noHandCount = 0;
+            processHandLandmarks(suavizarLandmarks(results.multiHandLandmarks[0]));
+        } else if (++noHandCount >= POSE_MISS_TOLERANCE) {
+            // Mano REALMENTE fuera de cuadro (bajada):
             handHistory = []; pointHistory = []; resetPinch();
+            stablePose = "none"; poseMisses = 0;
+            handSpanSmooth = 0;      // la próxima mano trae su propia regla
+            oeReiniciar();           // el filtro no arrastra la posición anterior
         }
     }
 
+    // ── Sampling rate de la IA ──────────────────────────────────────────────── El vídeo puede ir
+    // a 30-60 fps, pero NO hace falta pasar cada fotograma por
     const DETECT_INTERVAL = 140;
     let lastDetectTs = 0;
 
@@ -3622,14 +4545,15 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     }
 
+    // ★LOCAL, no CDN: son 12 MB que deben funcionar sin señal y sin depender de terceros.
+    const MP_BASE = "assets/mediapipe/";
     let mediaPipePromise = null;
     function loadMediaPipe() {
         if (window.Hands) return Promise.resolve();
         if (mediaPipePromise) return mediaPipePromise;
         mediaPipePromise = new Promise((resolve, reject) => {
             const s = document.createElement("script");
-            s.src = "https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js";
-            s.crossOrigin = "anonymous";
+            s.src = MP_BASE + "hands.js";
             s.onload = () => resolve();
             s.onerror = () => { mediaPipePromise = null; reject(new Error("no se pudo cargar MediaPipe")); };
             document.head.appendChild(s);
@@ -3637,6 +4561,30 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return mediaPipePromise;
     }
 
+    // ── Pantalla despierta mientras se usan los gestos ──────────────────────── Control SIN
+    // CONTACTO:
+    let wakeLockSentinel = null;
+    async function acquireWakeLock() {
+        if (!("wakeLock" in navigator)) return "unsupported";
+        try {
+            wakeLockSentinel = await navigator.wakeLock.request("screen");
+            // Si el sistema lo suelta por su cuenta, no dejar la referencia colgada.
+            wakeLockSentinel.addEventListener("release", () => { wakeLockSentinel = null; });
+            return "ok";
+        } catch (err) {
+            console.warn("Wake Lock no concedido:", err && err.name, err && err.message);
+            wakeLockSentinel = null;
+            return "failed";
+        }
+    }
+    function releaseWakeLock() {
+        if (!wakeLockSentinel) return;
+        try { wakeLockSentinel.release(); } catch (e) {}
+        wakeLockSentinel = null;
+    }
+
+    // Mensaje CORTO en español según el tipo de error de cámara (el navegador da
+    // err.message largo y en inglés, que no cabe bien en el toast).
     function cameraErrorMessage(err) {
         switch (err && err.name) {
             case "NotAllowedError":
@@ -3651,6 +4599,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     }
 
     async function turnOnGestures() {
+        // iOS/Safari: la cámara SOLO está disponible en contexto seguro (https:// o localhost).
+        // Por http:// o file:// navigator.mediaDevices es undefined y nada funciona.
         if (!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             showToast("La cámara necesita HTTPS 🔒");
             gestureBtn.classList.remove("active");
@@ -3658,25 +4608,27 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             return;
         }
 
+        // Cargar MediaPipe bajo demanda.
         try {
             await loadMediaPipe();
         } catch (e) {
-            showToast("Sin internet para cargar el detector 📶");
+            showToast("Falta descargar el detector 📶. Conéctate una vez y vuelve a intentarlo.", { duration: 4000 });
             gestureBtn.classList.remove("active");
             gestureActive = false;
             return;
         }
         if (!window.Hands) {
-            showToast("Sin internet para cargar el detector 📶");
+            showToast("Falta descargar el detector 📶. Conéctate una vez y vuelve a intentarlo.", { duration: 4000 });
             gestureBtn.classList.remove("active");
             gestureActive = false;
             return;
         }
 
         try {
+            // Calidad mínima de cámara y framerate limitado para evitar sobrecalentamiento del dispositivo
             videoStream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    facingMode: "user", 
+                    facingMode: "user", // Cámara frontal (selfie). Sin esto iOS puede abrir la trasera y nunca "ve" tu mano.
                     width: { ideal: 320 },
                     height: { ideal: 240 },
                     frameRate: { ideal: 10, max: 15 }
@@ -3693,11 +4645,13 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         if (!handsInstance) {
             try {
                 handsInstance = new Hands({
-                    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+                    // Mismo origen: el wasm, el .data y el modelo .tflite salen de assets/mediapipe/ (ver
+                    // MP_BASE).
+                    locateFile: (file) => MP_BASE + file
                 });
                 handsInstance.setOptions({
                     maxNumHands: 1,
-                    modelComplexity: 0, 
+                    modelComplexity: 0, // Modelo ultra-ligero para evitar calentamiento de dispositivos
                     minDetectionConfidence: 0.55,
                     minTrackingConfidence: 0.55
                 });
@@ -3710,6 +4664,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             }
         }
 
+        // Crear contenedor de vista previa en el DOM (iOS Safari requiere que esté en el DOM para actualizar frames)
         let previewContainer = document.getElementById("gesturePreview");
         if (!previewContainer) {
             previewContainer = document.createElement("div");
@@ -3737,10 +4692,15 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             previewContainer.classList.add("show");
             gestureActive = true;
             gestureBtn.classList.add("active");
+            // Sacrificar TODO lo ambiental para dedicar recursos a la detección:
             document.body.classList.add("gestures-on");
             if (window.__starfield) window.__starfield.update(false);
-            showToast("Control gestual activo ✋. Pasa tu mano.");
-            lastDetectTs = 0;          
+            // Pantalla despierta: sin esto el móvil se apaga a los ~30 s sin toques
+            // y habría que tocar el vidrio, justo lo que los gestos evitan.
+            const wl = await acquireWakeLock();
+            if (wl === "ok") showToast("Control gestual activo ✋. Pasa tu mano.");
+            else showToast("Control gestual activo ✋. Sube el bloqueo de pantalla de tu equipo.", { duration: 4000 });
+            lastDetectTs = 0;          // primera inferencia sin esperar el intervalo
             runDetectionLoop();
         } catch (err) {
             console.error("Error al reproducir video:", err);
@@ -3751,7 +4711,10 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
     function turnOffGestures(silent) {
         gestureActive = false;
-        
+        // Soltar la pantalla ANTES que nada: si no, el equipo se queda sin dormir
+        // aunque la cámara ya esté apagada.
+        releaseWakeLock();
+
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);
             animationFrameId = null;
@@ -3780,9 +4743,13 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
 
         gestureBtn.classList.remove("active");
+        // Reanudar lo ambiental:
         document.body.classList.remove("gestures-on");
         if (window.__starfield) window.__starfield.update(document.body.classList.contains("dark-mode"));
-        handHistory = [];
+        // Estado del reconocedor a cero:
+        handHistory = []; pointHistory = []; resetPinch();
+        stablePose = "none"; poseMisses = 0; noHandCount = 0; handSpanSmooth = 0;
+        oeReiniciar();
         processingFrame = false;
         if (!silent) showToast("Cámara apagada y recursos liberados 🚫");
     }
@@ -3792,7 +4759,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         if (gmStep2) gmStep2.hidden = (n !== 2);
     }
     function openGestureModal() {
-        showGestureStep(1);            
+        showGestureStep(1);            // siempre abre en el aviso
         gestureModal.classList.add("show");
         gestureModal.setAttribute("aria-hidden", "false");
     }
@@ -3803,17 +4770,23 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
     if (gestureBtn) {
         gestureBtn.addEventListener("click", () => {
-            showToast("Gestos próximamente ✋", { key: "gestos", duration: 1600 });
+            if (gestureActive) turnOffGestures();
+            else openGestureModal();
         });
     }
+    // Paso 1 → guía de gestos
     if (gestureNextBtn) gestureNextBtn.addEventListener("click", () => showGestureStep(2));
+    // Guía → volver al aviso
     if (gestureBackBtn) gestureBackBtn.addEventListener("click", () => showGestureStep(1));
+    // Guía → activar cámara
     if (gestureStartBtn) gestureStartBtn.addEventListener("click", () => {
         closeGestureModal();
         turnOnGestures();
     });
+    // Cancelar (paso 1)
     if (gestureCancelBtn) gestureCancelBtn.addEventListener("click", closeGestureModal);
 
+    // Segundo plano (cambiar de app / bloquear el teléfono / minimizar):
     let gesturesAutoOff = false;
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
@@ -3826,6 +4799,9 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
 })();
 
+// ═══════════════════════════════════════════════════════════════════
+// BLOQUEO DE ORIENTACIÓN HORIZONTAL + GATE DE ESCRITORIO Módulo independiente:
+// ═══════════════════════════════════════════════════════════════════
 (function setupScreenGates() {
     function isMobileDevice() {
         var shortSide = Math.min(window.innerWidth, window.innerHeight);
@@ -3834,7 +4810,10 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return shortSide <= 900 || touch;
     }
 
+    // Los targets #orientationStage/#desktopGateStage se pueblan por
+    // setupPlumeriaScene (más abajo) — misma escena completa que #pPlumeria.
 
+    // ── Control de orientación ──
     var orientOverlay = document.getElementById("orientationOverlay");
 
     function checkOrientation() {
@@ -3850,6 +4829,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     }
 
+    // ── Gate de escritorio (bloqueo permanente en pantallas grandes) ──
     var desktopGate = document.getElementById("desktopGate");
 
     function checkDesktopGate() {
@@ -3864,6 +4844,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     }
 
+    // ── Verificar al cargar y al cambiar tamaño/orientación ──
     function checkAll() {
         checkOrientation();
         checkDesktopGate();
@@ -3874,22 +4855,29 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     window.addEventListener("orientationchange", function () { setTimeout(checkAll, 120); });
 })();
 
+// ═══════════════════════════════════════════════════════════════════
+// Escala de fuente para el contenido de los cantos (A- / A+) La escala afecta solo a .song-
+// page vía var(--font-scale).
+// ═══════════════════════════════════════════════════════════════════
 (function initFontScale() {
     const STORAGE_KEY = "cantoral-font-scale";
     const MIN = 0.90;
-    const MAX = 1.35;   
+    const MAX = 1.40;   // una escala más (adultos mayores); acordes anclados + scroll evitan desborde
     const STEP = 0.05;
     const EPS  = 0.001;
 
-    const widget  = document.getElementById("fontControls");   
+    const widget  = document.getElementById("fontControls");   // panel deslizante (overlay global)
     const svg     = document.getElementById("zoomSlider");
     const btnDown = document.getElementById("fontDown");
     const btnUp   = document.getElementById("fontUp");
-    const hit     = document.getElementById("fontTrack");   
+    const hit     = document.getElementById("fontTrack");   // línea táctil ancha
     const thumb   = document.getElementById("fontThumb");
-    const fill    = document.getElementById("fontFill");    
+    const fill    = document.getElementById("fontFill");    // línea de progreso
+    // El botón "Aa" (.zoom-toggle) se renderiza dentro del pie de cada canto,
+    // así que hay uno por página y se gestiona por delegación.
     if (!widget || !svg || !btnDown || !btnUp || !hit || !thumb || !fill) return;
 
+    // Geometría del track en unidades del viewBox (0 0 220 40)
     const TRACK_X0 = 45, TRACK_X1 = 175, TRACK_W = TRACK_X1 - TRACK_X0;
 
     function readStored() {
@@ -3925,6 +4913,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         initialized = true;
     }
 
+    // Un paso de zoom para el control por gestos (pinch). dir: +1 aumenta, -1 reduce.
+    // Devuelve true si hubo cambio (para dar feedback solo cuando aplica).
     window.__cantoralZoom = function (dir) {
         const prev = scale;
         scale = Math.min(MAX, Math.max(MIN, +(scale + dir * STEP).toFixed(2)));
@@ -3933,6 +4923,18 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return true;
     };
 
+    // Escala ABSOLUTA, para el zoom por pellizco en modo "dial":
+    window.__cantoralZoomSet = function (value) {
+        const want = +value;
+        if (!isFinite(want)) return scale;
+        const next = Math.min(MAX, Math.max(MIN, +want.toFixed(2)));
+        if (Math.abs(next - scale) >= EPS) { scale = next; apply(); }
+        return scale;
+    };
+    window.__cantoralZoomGet = function () { return scale; };
+
+    // clientX -> escala, usando la matriz de pantalla del SVG (robusto ante
+    // cualquier escalado/letterboxing del viewBox).
     function scaleFromClientX(clientX) {
         const ctm = svg.getScreenCTM();
         if (!ctm) return scale;
@@ -3944,6 +4946,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return Math.min(MAX, Math.max(MIN, Math.round(raw / STEP) * STEP));
     }
 
+    // ── Apertura / colapso del slider ── Permanece ABIERTO hasta que el usuario toque FUERA (o el
+    // botón "Aa" de nuevo).
     let dragging = false;
 
     function isOpen()    { return widget.classList.contains("open"); }
@@ -3958,7 +4962,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     function open() {
         if (isOpen()) return;
         widget.classList.add("open");
-        document.body.classList.add("font-slider-open");   
+        document.body.classList.add("font-slider-open");   // bloquea cambio de página
         setToggleAria(true);
     }
 
@@ -3971,8 +4975,11 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         setToggleAria(false);
     }
 
+    // Expuesto para que updateFontControlsVisibility lo cierre al salir del canto.
     window.__closeFontSlider = close;
 
+    // "aA" ÚNICA del overlay: es el botón origen. Abre estando cerrado y colapsa
+    // todo (desde ella) estando abierto.
     const overlayAA = document.getElementById("overlayAA");
     if (overlayAA) {
         overlayAA.addEventListener("click", (e) => {
@@ -3982,6 +4989,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         });
     }
 
+    // Los botones "Aa" viven en el pie de cada canto: delegación en document.
     document.addEventListener("click", (e) => {
         const t = e.target.closest && e.target.closest(".zoom-toggle");
         if (!t) return;
@@ -3990,6 +4998,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         if (isOpen()) close(); else open();
     });
 
+    // Botones − / +
     btnDown.addEventListener("click", (e) => {
         e.stopPropagation();
         if (scale > MIN + EPS) {
@@ -4005,6 +5014,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     });
 
+    // ── Arrastre (track + bolita) ──
     function beginDrag(clientX) {
         dragging = true;
         widget.classList.add("dragging");
@@ -4012,6 +5022,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         apply();
     }
 
+    // Touch
     function onTrackTouchStart(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -4035,6 +5046,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     document.addEventListener("touchend", endTouchDrag);
     document.addEventListener("touchcancel", endTouchDrag);
 
+    // Ratón
     function onTrackMouseDown(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -4054,11 +5066,15 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         widget.classList.remove("dragging");
     });
 
+    // El panel (widget) y los botones "Aa" del pie cuentan como "dentro".
     function insideWidget(el) {
         return widget.contains(el) || (el.closest && el.closest(".zoom-toggle"));
     }
 
+    // Evita que el touch dentro del widget escale a swipe/scroll de página.
     widget.addEventListener("touchstart", (e) => e.stopPropagation(), { passive: false });
+    // El widget CORTA la propagación del touchmove; por eso el arrastre del slider debe resolverse
+    // AQUÍ.
     widget.addEventListener("touchmove", (e) => {
         e.stopPropagation();
         if (dragging && e.touches.length) {
@@ -4068,6 +5084,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         }
     }, { passive: false });
 
+    // Estando abierto: tocar FUERA lo colapsa (tocar dentro no hace nada especial, ya no hay
+    // temporizador que reiniciar).
     document.addEventListener("touchstart", (e) => {
         if (!isOpen()) return;
         if (insideWidget(e.target)) return;
@@ -4075,6 +5093,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         close();
     }, { passive: false });
 
+    // Desktop: captura el clic exterior para tragárselo (no dispara el control
+    // que haya debajo, p. ej. las flechas de navegación) y colapsar.
     document.addEventListener("click", (e) => {
         if (!isOpen()) return;
         if (insideWidget(e.target)) return;
@@ -4085,6 +5105,9 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     apply();
 })();
 
+// ═══════════════════════════════════════════════════════════════════
+// Control radial de estilo:
+// ═══════════════════════════════════════════════════════════════════
 (function initTextStyles() {
     const TOGGLES = [
         { id: "styleBold",   cls: "song-bold",   key: "cantoral-style-bold" },
@@ -4095,6 +5118,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         const btn = document.getElementById(t.id);
         if (!btn) return;
 
+        // Estado inicial desde localStorage.
         let on = false;
         try { on = localStorage.getItem(t.key) === "1"; } catch (e) {}
         document.body.classList.toggle(t.cls, on);
@@ -4113,8 +5137,12 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     });
 })();
 
+// ═══════════════════════════════════════════════════════════════════
+// Toggle del subrayado de TÍTULOS:
+// ═══════════════════════════════════════════════════════════════════
 (function initTitleUnderlineToggle() {
     const KEY = "cantoral-title-underline";
+    // El estado inicial ya se aplicó antes de render; aquí solo el listener.
     document.addEventListener("click", (e) => {
         const num = e.target.closest && e.target.closest(".song-num");
         if (!num) return;
@@ -4126,20 +5154,24 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     }, true);
 })();
 
+// ═══════════════════════════════════════════════════════════════════
+// Scroll manual con touch para .page-content-wrap El transform-style:
+// ═══════════════════════════════════════════════════════════════════
 (function initManualScroll() {
-    let target = null;      
-    let hasWrap = false;    
-    let inBook = false;     
+    let target = null;      // contenedor que SÍ desborda (o null si el canto cabe)
+    let hasWrap = false;    // el toque está sobre una página de CONTENIDO (canto/dicc/índice)
+    let inBook = false;     // el gesto empezó dentro del libro (.paper)
     let startX = 0, startY = 0, startScroll = 0;
-    let axis = null;        
+    let axis = null;        // 'v' | 'h' — se decide en el primer movimiento
 
     document.addEventListener("touchstart", (e) => {
         target = null; hasWrap = false; inBook = false; axis = null;
         if (e.touches.length !== 1) return;
+        // Solo dentro del libro; fuera (menú, búsqueda, modales) no tocamos nada.
         if (!(e.target.closest && e.target.closest(".paper"))) return;
         inBook = true;
         const wrap = e.target.closest(".page-content-wrap, .dict-content, .index-content, .search-results");
-        hasWrap = !!wrap;                 
+        hasWrap = !!wrap;                 // páginas de texto tienen contenedor; la plumeria NO
         if (wrap && wrap.scrollHeight > wrap.clientHeight) {
             target = wrap;
             startScroll = wrap.scrollTop;
@@ -4150,15 +5182,17 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
     document.addEventListener("touchmove", (e) => {
         if (!inBook || e.touches.length !== 1) return;
+        // Páginas SIN contenedor de texto (plumeria/portada):
         if (!hasWrap) return;
         const dx = e.touches[0].clientX - startX;
         const dy = e.touches[0].clientY - startY;
         if (!axis) {
-            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;   
+            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;   // aún sin dirección
             axis = Math.abs(dx) > Math.abs(dy) ? "h" : "v";
         }
-        if (axis === "h") return;            
-        if (Math.abs(dy) < 8) return;        
+        if (axis === "h") return;            // horizontal → lo maneja el swipe de página
+        if (Math.abs(dy) < 8) return;        // tap con micro-desliz: no cancelar el click
+        // Vertical real en página de texto:
         e.preventDefault();
         if (target) target.scrollTop = startScroll - dy;
     }, { passive: false });
@@ -4168,35 +5202,49 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     document.addEventListener("touchcancel", clear, { passive: true });
 })();
 
+// ═══════════════════════════════════════════════════════════════════
+// Scroll con la RUEDA del mouse.
+// ═══════════════════════════════════════════════════════════════════
 (function initWheelScroll() {
     document.addEventListener("wheel", (e) => {
-        if (e.ctrlKey) return;                         
-        if (!e.target.closest || !e.target.closest(".paper")) return;  
+        if (e.ctrlKey) return;                         // Ctrl+rueda = zoom, se maneja aparte
+        if (!e.target.closest || !e.target.closest(".paper")) return;  // solo dentro de la página
+        // Contenedor bajo el cursor; si el hit-test 3D falla o no desborda,
+        // caer al contenedor de la página actual.
         let wrap = e.target.closest(".page-content-wrap, .dict-content, .index-content");
         if (!wrap || wrap.scrollHeight <= wrap.clientHeight) {
             const paper = papers[currentLocation - 1];
             wrap = paper && paper.querySelector(".page-content-wrap, .dict-content, .index-content");
         }
-        if (!wrap || wrap.scrollHeight <= wrap.clientHeight) return;   
+        if (!wrap || wrap.scrollHeight <= wrap.clientHeight) return;   // nada que scrollear
+        // deltaMode: 0=pixeles, 1=lineas, 2=paginas
         const factor = e.deltaMode === 1 ? 16 : (e.deltaMode === 2 ? wrap.clientHeight : 1);
         wrap.scrollTop += e.deltaY * factor;
         e.preventDefault();
     }, { passive: false });
 })();
 
+// ═══════════════════════════════════════════════════════════════════
+// Desactivar zoom por gestos (pinch, doble-tap, Ctrl+rueda) El meta viewport (maximum-scale=1,
+// user-scalable=no) bloquea el zoom en Chrome/Firefox,
+// ═══════════════════════════════════════════════════════════════════
 (function disablePinchZoom() {
+    // iOS Safari: eventos no estándar de gesto (pinch)
     ["gesturestart", "gesturechange", "gestureend"].forEach(name => {
         document.addEventListener(name, e => e.preventDefault(), { passive: false });
     });
 
+    // Multi-touch: cancelar solo cuando hay 2+ dedos; el swipe de un dedo queda intacto
     document.addEventListener("touchmove", e => {
         if (e.touches && e.touches.length > 1) e.preventDefault();
     }, { passive: false });
 
+    // Desktop: Ctrl+rueda del mouse (o pinch en trackpad, que se emite como Ctrl+wheel)
     document.addEventListener("wheel", e => {
         if (e.ctrlKey) e.preventDefault();
     }, { passive: false });
 
+    // Doble-tap zoom en iOS: detectar dos taps rapidos y cancelar el segundo
     let lastTap = 0;
     document.addEventListener("touchend", e => {
         const now = Date.now();
@@ -4207,11 +5255,14 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     }, { passive: false });
 })();
 
+// ── Selector de fuente para cantos ──
 
 
 
 (function initFontPicker() {
     const STORAGE_KEY = "cantoral-font";
+    // Con los acordes ANCLADOS a la sílaba, el picker puede ofrecer fuentes PROPORCIONALES sin
+    // desalinear.
     const FONTS = [
         { label: "Orig.", name: "Courier New", family: '"Courier New", Courier, monospace' },
         { label: "Patrick", name: "Patrick Hand", family: '"Patrick Hand", "Segoe Script", cursive' },
@@ -4228,6 +5279,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         { label: "Lora", name: "Lora", family: '"Lora", Georgia, serif' },
         { label: "Lato", name: "Lato", family: '"Lato", "Segoe UI", sans-serif' },
         { label: "Mano", name: "Caveat", family: '"Caveat", "Segoe Script", cursive' },
+        // ── Más variedad (2026-07-14): proporcionales serif/sans + manuscritas ──
         { label: "Garamond", name: "EB Garamond", family: '"EB Garamond", Georgia, serif' },
         { label: "PT Serif", name: "PT Serif", family: '"PT Serif", Georgia, serif' },
         { label: "Bitter", name: "Bitter", family: '"Bitter", Georgia, serif' },
@@ -4251,6 +5303,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     const btn = document.getElementById("fontPickerBtn");
     if (!picker || !btn) return;
 
+    // ── Carga DIFERIDA de Google Fonts ────────────────────────────────── La fuente por defecto
+    // (Courier New) y "Serif"/"Sans" son de SISTEMA, así que al
     const SYSTEM_FONTS = new Set(["Courier New", "Georgia", "System Sans"]);
     const GF_URL = "https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Architects+Daughter&family=Bitter:ital,wght@0,400;0,700;1,400&family=Caveat:wght@400;700&family=Courier+Prime:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400;700&family=Domine:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Indie+Flower&family=Josefin+Sans:ital,wght@0,400;0,700;1,400&family=Kalam:wght@400;700&family=Lato:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,700;1,400&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Nunito:ital,wght@0,400;0,700;1,400&family=PT+Mono&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Patrick+Hand&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@400;700&family=Roboto+Mono:wght@400;700&family=Rubik:ital,wght@0,400;0,700;1,400&family=Shadows+Into+Light&family=Space+Mono:wght@400;700&family=Ubuntu+Mono:wght@400;700&family=Work+Sans:ital,wght@0,400;0,700;1,400&family=Zilla+Slab:ital,wght@0,400;0,700;1,400&display=swap";
     let gfInjected = false;
@@ -4268,9 +5322,12 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     if (saved !== null) {
         const idx = FONTS.findIndex(f => f.name === saved);
         if (idx >= 0) current = idx;
+        // Si la fuente guardada es de Google, cargarla ya para que se aplique bien.
         if (!SYSTEM_FONTS.has(saved)) ensureGoogleFonts();
     }
 
+    // Fuentes manuscritas/decorativas: los NOMBRES de acorde caen a un mono limpio
+    // (legibilidad); las demás (serif/sans/mono) sí se aplican también a los acordes.
     const HAND_FONTS = new Set([
         "Caveat", "Patrick Hand", "Shadows Into Light", "Kalam",
         "Dancing Script", "Amatic SC", "Indie Flower", "Architects Daughter",
@@ -4282,6 +5339,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         const f = FONTS[idx];
         const root = document.documentElement.style;
         root.setProperty("--song-font", f.family);
+        // Título y letra usan --song-font; los acordes usan --chord-font, que sigue
+        // la fuente elegida salvo si es manuscrita (ahí cae al mono legible).
         root.setProperty("--chord-font", HAND_FONTS.has(f.name) ? CHORD_FALLBACK : f.family);
         localStorage.setItem(STORAGE_KEY, f.name);
         picker.querySelectorAll(".font-picker-option").forEach((o, i) => {
@@ -4289,25 +5348,29 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         });
     }
 
+    // ── Apertura / colapso del selector ── Permanece ABIERTO hasta que el usuario toque FUERA (o
+    // el botón "F" de nuevo).
     function isOpen()    { return !picker.classList.contains("hidden"); }
 
+    // Centra el picker justo debajo del botón "F" (antes quedaba bajo el botón
+    // de menú, pegado al borde derecho de la pantalla).
     function positionPicker() {
         const tc = document.getElementById("topControls");
         if (!tc) return;
         const tcr = tc.getBoundingClientRect();
         const br = btn.getBoundingClientRect();
-        const pw = picker.offsetWidth;                 
+        const pw = picker.offsetWidth;                 // el picker está en layout aunque esté hidden
         const btnCenter = br.left + br.width / 2;
         let rightPx = tcr.right - (btnCenter + pw / 2);
-        rightPx = Math.max(4, Math.round(rightPx));    
+        rightPx = Math.max(4, Math.round(rightPx));    // sin desbordar el borde derecho
         picker.style.right = rightPx + "px";
     }
 
     function openPicker() {
-        ensureGoogleFonts();   
+        ensureGoogleFonts();   // al abrir el selector, traer las familias para las vistas previas
         positionPicker();
         picker.classList.remove("hidden");
-        btn.classList.add("fp-open");      
+        btn.classList.add("fp-open");      // marca la cuenta "F" como accionada (color litúrgico)
         btn.setAttribute("aria-expanded", "true");
     }
 
@@ -4321,6 +5384,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         const opt = document.createElement("button");
         opt.type = "button";
         opt.className = "font-picker-option" + (i === current ? " active" : "");
+        // Vista previa: la palabra "MAYO" escrita con la fuente de esa opción.
         opt.textContent = "MAYO";
         opt.title = f.label;
         opt.setAttribute("aria-label", "Fuente " + f.label);
@@ -4339,6 +5403,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         if (isOpen()) closePicker(); else openPicker();
     });
 
+    // Reposicionar si cambia el tamaño/orientación mientras está abierto.
     window.addEventListener("resize", () => { if (isOpen()) positionPicker(); });
 
     function isOutside(target) { return !picker.contains(target) && target !== btn; }
@@ -4346,6 +5411,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     document.addEventListener("click", (e) => {
         if (isOpen() && isOutside(e.target)) closePicker();
     });
+    // Móvil: touchstart además de click, mismo criterio que los otros widgets
+    // colapsables (más fiable que depender solo del click sintético).
     document.addEventListener("touchstart", (e) => {
         if (isOpen() && isOutside(e.target)) closePicker();
     }, { passive: true });
@@ -4364,6 +5431,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
     let step = 0;
     let timer = null;
+    let wasDark = true;   // tema real antes del "amanecer" del egg; se restaura al cerrar
 
     function reset() { step = 0; if (timer) { clearTimeout(timer); timer = null; } }
     function arm() { if (timer) clearTimeout(timer); timer = setTimeout(reset, WINDOW_MS); }
@@ -4374,6 +5442,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             .replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim();
     }
 
+    // Renderiza el texto por PÁRRAFOS:
     function renderEgg(txt) {
         const blocks = txt.split(/\n{2,}/)
             .map((b) => b.replace(/\s*\n\s*/g, " ").trim())
@@ -4382,8 +5451,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         blocks.forEach((b, i) => {
             const p = document.createElement("p");
             p.className = "egg-p";
-            if (i === 0) p.classList.add("egg-title");                 
-            else if (/^["“«]/.test(b)) p.classList.add("egg-quote");   
+            if (i === 0) p.classList.add("egg-title");                 // "El corazón de mayo"
+            else if (/^["“«]/.test(b)) p.classList.add("egg-quote");   // cita
             p.textContent = b;
             eggText.appendChild(p);
         });
@@ -4391,14 +5460,18 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
     function reveal() {
         renderEgg(decode(EGG_B64));
-        try { if (typeof closeSearch === "function") closeSearch(); } catch (e) {}
+        try { if (typeof window.__closeSearch === "function") window.__closeSearch(); } catch (e) {}
         if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
         eggPage.classList.add("show");
         eggPage.setAttribute("aria-hidden", "false");
     }
     function hide() {
         eggPage.classList.remove("show");
+        eggPage.classList.remove("dawn");
+        eggPage.style.background = "";   // restaura el scrim CSS por defecto
         eggPage.setAttribute("aria-hidden", "true");
+        // Vuelve a la noche (tema real) SIN persistir → preferencia guardada intacta.
+        if (wasDark && typeof window.__setTheme === "function") window.__setTheme(true, false);
     }
 
     function eggZoneAt(x, y) {
@@ -4437,29 +5510,59 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
 
     if (search) search.addEventListener("input", () => {
         if (step !== 3) return;
-        if (norm(search.value) === PHRASE) { reveal(); reset(); }
+        if (norm(search.value) === PHRASE) {
+            reset();
+            // Evento 1: AMANECE (claro sin persistir) recordando la noche real.
+            wasDark = isDark();
+            if (typeof window.__setTheme === "function") window.__setTheme(false, false);
+            eggPage.classList.add("dawn");   // velo claro: deja ver el amanecer detrás
+            // Fondo a sangre completa = el atardecer de esta carga (mismo que la
+            // plumeria) → sin márgenes beige, la hoja flota sobre el atardecer.
+            try { if (window.__sunsetBg) eggPage.style.background = window.__sunsetBg; } catch (e) {}
+            // Cierra el buscador YA: oculta la frase secreta + resultados y deja la
+            // plumeria de fondo (antes NO corría por scope → en móvil se veía la frase).
+            try { if (typeof window.__closeSearch === "function") window.__closeSearch(); } catch (e) {}
+            if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+            // Evento 2: tras el amanecer, entra la hoja de la dedicatoria.
+            setTimeout(reveal, 350);
+        }
     });
 
     if (eggClose) eggClose.addEventListener("click", hide);
     eggPage.addEventListener("click", (e) => { if (e.target === eggPage) hide(); });
 })();
 
+/* ─────────────────────────────────────────────────────────────────────────
+   PASTA LITÚRGICA — color de la portada según el tiempo litúrgico romano.
+   Automático para siempre (Opción B): la Pascua se calcula con el algoritmo
+   de Computus; de ella se derivan Ceniza, Cuaresma, Triduo, Pascua y
+   Pentecostés. El Adviento se ata a la Navidad (25-dic). Sin rosa. Rojo en
+   días sueltos: Domingo de Ramos, Viernes Santo y Pentecostés.
+
+   Colores = misma "piel mate" del verde salvia de producción (placeholders;
+   se afinan con la amiga). Cada color son sus 3 paradas [luz, base, sombra]
+   que alimentan las vars --cover-1/2/3 del degradado de .cover-page.
+   ───────────────────────────────────────────────────────────────────────── */
 (function initLiturgicalCover() {
+    // Colores de pasta por clave (luz, base, sombra) = vars --cover-1/2/3.
     const LIT_COLORS = {
-        verde:     ["#aab69f", "#97a78c", "#879979"], 
-        moradoAdv: ["#cebfd9", "#bfaccd", "#ac93be"], 
-        morado:    ["#ad9cba", "#9c87ab", "#886f9b"], 
-        blanco:    ["#fcfcfb", "#f3f2f0", "#e5e4e1"], 
-        rojo:      ["#c47468", "#b45549", "#9d3f38"], 
+        verde:     ["#aab69f", "#97a78c", "#879979"], // Tiempo Ordinario
+        moradoAdv: ["#cebfd9", "#bfaccd", "#ac93be"], // Adviento (morado SUAVE)
+        morado:    ["#ad9cba", "#9c87ab", "#886f9b"], // Cuaresma
+        blanco:    ["#fcfcfb", "#f3f2f0", "#e5e4e1"], // Navidad y Pascua (perla)
+        rojo:      ["#c47468", "#b45549", "#9d3f38"], // Ramos / V.Santo / Pentecostés (terracota intenso mate)
     };
+    // Silueta por tiempo (Ordinario = Virgen inline, sin inyección).
     const TIME_SIL = {
         ordinario:   null,
         adviento:    "assets/siluetaAdviento.svg?v=4",
         navidad:     "assets/siluetaNavidad.svg?v=4",
-        cuaresma:    "assets/siluetaCuaresma.svg?v=4",
+        cuaresma:    "assets/siluetaCuaresma.svg?v=7",
         pascua:      "assets/siluetaPascua.svg?v=4",
         pentecostes: "assets/siluetaPentecostes.svg?v=9",
     };
+    // Color base por tiempo (para el modo de PRUEBA forzado; el AUTO usa el color
+    // del día, que sí distingue los rojos de Ramos/V.Santo/Pentecostés).
     const TIME_COLOR = {
         ordinario: "verde", adviento: "moradoAdv", navidad: "blanco",
         cuaresma: "morado", pascua: "blanco", pentecostes: "rojo",
@@ -4468,10 +5571,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         ordinario: "Ordinario", adviento: "Adviento", navidad: "Navidad",
         cuaresma: "Cuaresma", pascua: "Pascua", pentecostes: "Pentecostés",
     };
-    const OVR_KEY = "cantoral-liturgy-override"; 
-    let advTestWeek = null; 
-
-    function easter(y) { 
+    // — Fechas (todo en UTC para no pelear con horario de verano) —
+    function easter(y) { // Meeus/Jones/Butcher (gregoriano)
         const a = y % 19, b = Math.floor(y / 100), c = y % 100,
               d = Math.floor(b / 4), e = b % 4,
               f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3),
@@ -4486,41 +5587,43 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     const DAY = 86400000;
     function ymd(t) { const dt = new Date(t); return dt.getUTCFullYear() * 10000 + (dt.getUTCMonth() + 1) * 100 + dt.getUTCDate(); }
     function off(t, n) { return ymd(t + n * DAY); }
-    function adventStartTs(Y) { 
+    function adventStartTs(Y) { // 1er Domingo de Adviento (timestamp UTC)
         const xmas = Date.UTC(Y, 11, 25);
-        const dow = new Date(xmas).getUTCDay();        
-        const delta = dow === 0 ? 7 : dow;             
-        return xmas - (delta + 21) * DAY;              
+        const dow = new Date(xmas).getUTCDay();        // 0=domingo
+        const delta = dow === 0 ? 7 : dow;             // Domingo antes de Navidad
+        return xmas - (delta + 21) * DAY;              // 3 domingos antes de ése
     }
     function adventStart(Y) { return ymd(adventStartTs(Y)); }
-    function baptismLord(Y) { 
+    function baptismLord(Y) { // Bautismo del Señor = domingo tras Epifanía (6-ene)
         const epi = Date.UTC(Y, 0, 6);
         const dow = new Date(epi).getUTCDay();
         const add = dow === 0 ? 1 : (7 - dow) % 7;
         return off(epi, add);
     }
 
+    // Tiempo litúrgico + color del día para (Y,M,D).
     function computeSeason(Y, M, D) {
         const today = Y * 10000 + M * 100 + D;
         const advN = adventStart(Y);
         if (today >= advN) {
             if (today <= Y * 10000 + 1224) return { time: "adviento", color: "moradoAdv" };
-            return { time: "navidad", color: "blanco" };               
+            return { time: "navidad", color: "blanco" };               // Navidad (25–31 dic)
         }
         const E = easter(Y);
         const bap = baptismLord(Y);
         const ash = off(E, -46), palm = off(E, -7), gf = off(E, -2),
               east = ymd(E), pent = off(E, 49);
-        if (today <= bap) return { time: "navidad", color: "blanco" };  
-        if (today < ash) return { time: "ordinario", color: "verde" };  
-        if (today === palm) return { time: "cuaresma", color: "rojo" }; 
-        if (today === gf) return { time: "cuaresma", color: "rojo" };   
-        if (today < east) return { time: "cuaresma", color: "morado" }; 
-        if (today < pent) return { time: "pascua", color: "blanco" };   
+        if (today <= bap) return { time: "navidad", color: "blanco" };  // hasta Bautismo
+        if (today < ash) return { time: "ordinario", color: "verde" };  // Ordinario I
+        if (today === palm) return { time: "cuaresma", color: "rojo" }; // Ramos (pasta roja)
+        if (today === gf) return { time: "cuaresma", color: "rojo" };   // Viernes Santo
+        if (today < east) return { time: "cuaresma", color: "morado" }; // Cuaresma
+        if (today < pent) return { time: "pascua", color: "blanco" };   // Pascua
         if (today === pent) return { time: "pentecostes", color: "rojo" };
-        return { time: "ordinario", color: "verde" };                   
+        return { time: "ordinario", color: "verde" };                   // Ordinario II
     }
 
+    // Semana de Adviento (1-4) de una fecha; 0 si no es Adviento.
     function adventWeek(Y, M, D) {
         const t = Date.UTC(Y, M - 1, D);
         const s1 = adventStartTs(Y);
@@ -4528,6 +5631,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return Math.max(1, Math.min(4, Math.floor((t - s1) / (7 * DAY)) + 1));
     }
 
+    // Fecha de hoy en la zona de México (independiente de la del dispositivo).
     function todayMX() {
         try {
             const s = new Intl.DateTimeFormat("en-CA", {
@@ -4550,25 +5654,46 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         return c;
     }
 
+    // Favicon DINÁMICO: la pasta del icono de pestaña acompaña al tiempo litúrgico (degradado
+    // luz→sombra = --cover-1→--cover-3, estilo A; la «M» de Mayo
+    function updateFavicon(c) {
+        const M = 'd="M25 74 L25 34 L50 59 L75 34 L75 74"';
+        const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
+            + '<defs><linearGradient id="p" x1="0" y1="0" x2="0" y2="1">'
+            + '<stop offset="0" stop-color="' + c[0] + '"/><stop offset="1" stop-color="' + c[2] + '"/>'
+            + '</linearGradient></defs>'
+            + '<rect width="100" height="100" rx="20" fill="url(#p)"/>'
+            + '<path ' + M + ' fill="none" stroke="#7c5b52" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.28" transform="translate(1.6,2.2)"/>'
+            + '<path ' + M + ' fill="none" stroke="#D0897C" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        const uri = "data:image/svg+xml," + encodeURIComponent(svg);
+        let link = document.querySelector('link[rel="icon"]');
+        if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
+        link.type = "image/svg+xml";
+        link.href = uri;
+    }
+
+    // — Silueta de la pasta por tiempo (inyecta la escena y oculta la Virgen) —
     const coverPage = document.querySelector(".cover-page");
     const coverLiturgy = document.getElementById("coverLiturgy");
     const svgCache = {};
     let curSil = "__init__";
     async function setSilhouette(time, week) {
+        // Clase del body por tiempo (para reglas como ocultar la estrella de la
+        // esquina en Navidad).
         [...document.body.classList].forEach((c) => {
             if (c.indexOf("lit-") === 0) document.body.classList.remove(c);
         });
         document.body.classList.add("lit-" + time);
 
         const src = TIME_SIL[time];
-        if (!src) {                                   
+        if (!src) {                                   // Ordinario → Virgen inline
             if (coverLiturgy) coverLiturgy.innerHTML = "";
             if (coverPage) coverPage.classList.remove("has-liturgy");
             curSil = "ordinario";
             return;
         }
         if (coverPage) coverPage.classList.add("has-liturgy");
-        if (curSil !== time) {                        
+        if (curSil !== time) {                        // inyectar sólo si cambió
             let txt = svgCache[src];
             if (txt == null) {
                 try { txt = await fetch(src).then((r) => r.text()); svgCache[src] = txt; }
@@ -4577,89 +5702,57 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             if (coverLiturgy) coverLiturgy.innerHTML = txt;
             curSil = time;
         }
+        // Adviento: encender las velas hasta la semana (acumulativo).
         if (time === "adviento" && coverLiturgy) {
-            const wk = (advTestWeek != null) ? advTestWeek : week; 
             coverLiturgy.querySelectorAll(".flame").forEach((f) => {
-                f.classList.toggle("on", (+f.dataset.week) <= wk);
+                f.classList.toggle("on", (+f.dataset.week) <= week);
             });
         }
     }
 
-    function getOverride() { try { return localStorage.getItem(OVR_KEY) || "auto"; } catch (e) { return "auto"; } }
-    function setOverride(v) { try { v === "auto" ? localStorage.removeItem(OVR_KEY) : localStorage.setItem(OVR_KEY, v); } catch (e) {} }
-
+    // Aplica el tiempo litúrgico AUTOMÁTICO del día (Computus). Los controles de
+    // prueba (#litTest / #candleTest) fueron PURGADOS al publicar.
     function refresh() {
-        const ovr = getOverride();
         const t = todayMX();
-        let time, color, week;
-        if (ovr === "auto") {
-            const s = computeSeason(t.Y, t.M, t.D);
-            time = s.time; color = s.color;
-            week = adventWeek(t.Y, t.M, t.D);
-        } else {
-            time = TIME_SIL.hasOwnProperty(ovr) ? ovr : "ordinario";
-            color = TIME_COLOR[time];
-            week = adventWeek(t.Y, t.M, t.D) || 4;
-        }
-        apply(color);
-        setSilhouette(time, week);
-        syncTest(ovr, time, color);
-    }
-
-    const CYCLE = ["auto", "ordinario", "adviento", "navidad", "cuaresma", "pascua", "pentecostes"];
-    const testBtn = document.getElementById("litTest");
-    const testLabel = document.getElementById("litTestLabel");
-    const testDot = document.getElementById("litTestDot");
-    function syncTest(ovr, time, color) {
-        if (testLabel) testLabel.textContent = (ovr === "auto" ? "Auto · " : "") + TIME_NAME[time];
-        if (testDot) testDot.style.background = (LIT_COLORS[color] || LIT_COLORS.verde)[1];
-    }
-    if (testBtn) {
-        testBtn.addEventListener("click", () => {
-            const cur = getOverride();
-            const next = CYCLE[(CYCLE.indexOf(cur) + 1) % CYCLE.length];
-            setOverride(next);
-            refresh();
-        });
-    }
-
-    const candleBtn = document.getElementById("candleTest");
-    const candleNum = document.getElementById("candleTestNum");
-    if (candleBtn) {
-        candleBtn.addEventListener("click", () => {
-            advTestWeek = (advTestWeek % 4) + 1; 
-            if (candleNum) candleNum.textContent = advTestWeek;
-            const flames = document.querySelectorAll("#coverLiturgy .flame");
-            if (getOverride() !== "adviento" || !flames.length) {
-                setOverride("adviento");
-                refresh();
-            } else {
-                flames.forEach((f) => f.classList.toggle("on", (+f.dataset.week) <= advTestWeek));
-            }
-        });
+        const s = computeSeason(t.Y, t.M, t.D);
+        const week = adventWeek(t.Y, t.M, t.D);
+        const cc = apply(s.color);
+        updateFavicon(cc);   // favicon acompaña al tiempo litúrgico (degradado luz→sombra)
+        setSilhouette(s.time, week);
     }
 
     refresh();
+    // Recalcular al volver a la pestaña / de madrugada (por si cruza medianoche).
     document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
-    setInterval(refresh, 3600000); 
+    setInterval(refresh, 3600000); // cada hora
 })();
 
 
+// ═══════════════════════════════════════════════════════════════════════════
+// CONTRAPORTADA — ESPIRAL DIAGONAL DE MARIPOSAS DE PAPEL Pegar al FINAL de script.js (fuera de
+// cualquier función; es un IIFE, corre solo).
+// ═══════════════════════════════════════════════════════════════════════════
 (function setupBackCoverButterflies() {
+    // Adaptado al cantoral:
     var back = document.querySelector("#pCoverBack .front.contraportada");
     if (!back) {
+        // El libro puede no estar armado todavía cuando corre este módulo (orden de ejecución).
         if ((setupBackCoverButterflies._tries = (setupBackCoverButterflies._tries || 0) + 1) < 120)
             requestAnimationFrame(setupBackCoverButterflies);
         return;
     }
 
-    var N      = 12;    
-    var LIFE   = 18;    
-    var TURNS  = 3;     
-    var RADIUS = 175;   
-    var RISE   = 535;   
-    var DRIFT  = 360;   
+    // ── Ajustes ──────────────────────────────────────────────────────────
+    var N      = 12;    // cuántas mariposas
+    var LIFE   = 18;    // s: del centro hasta desvanecerse arriba (más lento)
+    var TURNS  = 3;     // vueltas que da mientras sube
+    var RADIUS = 175;   // px: radio del giro con el embudo abierto (más ancho)
+    var RISE   = 535;   // px: cuánto sube (abarca la diagonal completa)
+    var DRIFT  = 360;   // px: cuánto se corre a la DERECHA (la diagonal más amplia).
+                        //     Negativo = diagonal hacia la izquierda.
 
+    // Sin color: alas de PAPEL, los mismos blancos del libro (--page-bg #fbf9f2)
+    // con el filo y las nervaduras en gris salvia. [tono, filo]
     var TONES = [
         ["#fbf9f2", "#818f74"],
         ["#f4efe1", "#78866b"],
@@ -4670,6 +5763,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     var r = function (a, b) { return a + Math.random() * (b - a); };
     var pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
 
+    // ── Un ALA (lado derecho).
     var WING =
         '<path d="M100 82 C 128 60 166 42 188 34 C 194 32 197 36 196 44 C 194 62 180 84 156 100 C 140 110 112 108 100 96 Z" fill="var(--w1)" stroke="var(--w2)" stroke-width="5.5" stroke-linejoin="round"/>' +
         '<path d="M100 100 C 126 98 152 110 163 126 C 172 140 166 160 146 168 C 128 175 107 166 100 142 Z" fill="var(--w1)" stroke="var(--w2)" stroke-width="5.5" stroke-linejoin="round"/>' +
@@ -4686,6 +5780,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             '<circle cx="161" cy="146" r="2.7"/><circle cx="150" cy="160" r="2.7"/><circle cx="132" cy="166" r="2.5"/>' +
         '</g>';
 
+    // Cuerpo: abdomen, tórax, cabeza y antenas con maza (va encima de las alas;
+    // con preserve-3d el ala que se acerca pasa por delante sola).
     var BODY =
         '<svg viewBox="0 0 200 200">' +
             '<path d="M100 158 C 94.5 138 94.5 110 100 90 C 105.5 110 105.5 138 100 158 Z" fill="#2b1c11"/>' +
@@ -4697,16 +5793,17 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             '<circle cx="67" cy="36" r="3.3" fill="#2b1c11"/><circle cx="133" cy="36" r="3.3" fill="#2b1c11"/>' +
         '</svg>';
 
+    // Para que se LEA la espiral y no un enjambre:
     var ORB = (LIFE / TURNS).toFixed(2);
     var html = "";
 
     for (var i = 0; i < N; i++) {
         var rx   = Math.round(RADIUS * r(0.9, 1.1));
-        var ry   = Math.round(rx * r(0.28, 0.33));      
+        var ry   = Math.round(rx * r(0.28, 0.33));      // achatado = espiral en perspectiva
         var rise = -Math.round(RISE * r(0.94, 1.06));
         var dx   = Math.round(DRIFT * r(0.9, 1.1));
         var sz   = Math.round(r(33, 47));
-        var del  = -(i * (LIFE / N) + r(0, 0.3)).toFixed(2);   
+        var del  = -(i * (LIFE / N) + r(0, 0.3)).toFixed(2);   // reparto a lo largo de la hélice
         var flap = r(0.16, 0.27).toFixed(2);
         var tone = pick(TONES);
 
@@ -4725,6 +5822,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
                 '</div>';
     }
 
+    // Resplandor del que nace la espiral (quita esta línea si no lo quieres).
     var glow = '<div class="cp-glow" aria-hidden="true"><i></i></div>';
 
     back.insertAdjacentHTML("beforeend", glow);
@@ -4735,10 +5833,12 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     sky.innerHTML = html;
     back.appendChild(sky);
 
+    // ── LUCIÉRNAGAS (SOLO modo oscuro):
     var FF_N = 18;
     var FF_COLS = ["#a6c93f", "#bcd24a", "#e0a62e", "#efb43e", "#93c23a"];
     var ffHtml = "";
     for (var j = 0; j < FF_N; j++) {
+        // Esparcidas por TODA la contraportada (no solo la mitad baja): se ve más bonito.
         ffHtml += '<i class="cp-ff" style="'
             + "left:" + Math.round(r(5, 95)) + "%;top:" + Math.round(r(6, 94)) + "%;"
             + "--sz:" + r(3, 5.4).toFixed(1) + "px;"
@@ -4754,6 +5854,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     ffSky.innerHTML = ffHtml;
     back.appendChild(ffSky);
 
+    // Volver a ver el cierre (opcional): reinicia todas las animaciones de la
+    // escena. Llámalo cuando el lector llegue a la contraportada.
     window.replayBackCover = function () {
         var nodes = back.querySelectorAll(".cp-sky, .cp-sky *, .cp-glow i");
         for (var k = 0; k < nodes.length; k++) {
@@ -4763,6 +5865,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     };
 })();
 
+// ═══ TOUR / TUTORIAL — luciérnaga guía, 1-vez, repetible desde 🪲 del menú ═════ NO es el
+// típico tour de flechas:
 (function initTour() {
     var DONE_KEY = "cantoral-tour-done";
     var idx = 0, root = null, hole = null, ff = null, card = null, stops = [];
@@ -4784,6 +5888,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             { sel: ".paper.onstage .zoom-toggle", title: "Tamaño de letra", text: "Toca la «aA» para hacer más o menos zoom a la letra del canto." },
             { sel: ".paper.onstage .chord-ix.has-diagram", title: "Acordes", text: "Toca un acorde y verás cómo se hace." },
             { sel: ".paper.onstage .guide-btn", title: "Guía de acordes", text: "Abre la lámina para aprender a colocar los dedos." },
+            { sel: ".paper.onstage .transpose-btn", title: "Transponer 🎵", text: "Toca la «T» y sube o baja el tono del canto. Cada canto guarda su ajuste." },
             { sel: "#ribbonHit", title: "Listones", text: "Tócalos y guarda tu página. Vuelve a tocarlo para regresar a ella. ¡Fija hasta 5 listones!" },
             { center: true, title: "Cambiar de página", text: "Desliza ⟵ ⟶ para avanzar o regresar." },
             { sel: "#installBtn", title: "Llévalo contigo 📲", text: "Instálalo como app. Repite este tour desde " + BUG + " en el menú.", last: true }
@@ -4831,6 +5936,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         hole.style.width = "0px"; hole.style.height = "0px";
         moveFirefly(cx, cy - 44);
     }
+    // El cartel va SIEMPRE fijo y centrado (no persigue al control):
     function positionCard() {
         var cw = card.offsetWidth, ch = card.offsetHeight;
         var vw = window.innerWidth, vh = window.innerHeight;
@@ -4860,6 +5966,8 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             var h = r.height + pad * 2;
             hole.style.left = x + "px"; hole.style.top = y + "px";
             hole.style.width = w + "px"; hole.style.height = h + "px";
+            // La luciérnaga se POSA junto al control iluminado, del lado que da hacia el CENTRO (nunca al
+            // borde, donde se cortaba), como si lo iluminara con el
             var cxc = x + w / 2;
             var ffx = (cxc > window.innerWidth / 2) ? (x - 10) : (x + w + 10);
             moveFirefly(ffx, y + h / 2);
@@ -4893,6 +6001,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     }
     window.__startTour = start;
 
+    // Reentrada: perla 🪲 al final del menú.
     var menu = document.getElementById("menuItems");
     if (menu && !document.getElementById("tourBtn")) {
         var b = document.createElement("button");
@@ -4907,6 +6016,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         });
     }
 
+    // Disparo 1-vez: al llegar al PRIMER canto (tras la plumeria).
     window.__tourMaybeStart = function () {
         if (!armed) return;
         try { if (localStorage.getItem(DONE_KEY)) { armed = false; return; } } catch (e) {}
