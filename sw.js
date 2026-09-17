@@ -1,6 +1,6 @@
 // Service Worker — Cantoral Mayo. Navegación: red primero con 2.5 s de espera; resto:
 // caché y refresco de fondo. Sube CACHE_VERSION para invalidar todo el precache.
-const CACHE_VERSION = "cantoral-ultopt227";
+const CACHE_VERSION = "cantoral-ultopt228";
 const NETWORK_TIMEOUT_MS = 2500;
 // Caché APARTE para el detector de gestos (assets/mediapipe/, ~12 MB en 7 archivos).
 const GESTURE_CACHE = "cantoral-gestos-v1";
