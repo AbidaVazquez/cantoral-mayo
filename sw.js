@@ -1,7 +1,22 @@
 // Service Worker — Cantoral Mayo. Navegación: red primero con 2.5 s de espera; resto:
 // caché y refresco de fondo. Sube CACHE_VERSION para invalidar todo el precache.
-const CACHE_VERSION = "cantoral-ultopt228";
+const CACHE_VERSION = "cantoral-ultopt229";
 const NETWORK_TIMEOUT_MS = 2500;
+// Conteo de visitas (Umami): SIEMPRE red, nunca caché. Si se guardara, la PWA se
+// quedaría con el script viejo hasta el siguiente cambio de CACHE_VERSION.
+const STATS_HOST = "stats.cantoralmayo.com";
+// ★Núcleo para abrir SIN internet. Se guarda ESTRICTO (si falta uno, la instalación
+// falla y el navegador reintenta después): antes todo era tolerante y una
+// actualización con la señal floja podía activarse SIN la página principal,
+// borrar la caché anterior y dejar la PWA en "sin conexión" (reportes Samsung).
+const CORE = [
+  "./",
+  "index.html",
+  "manifest.json",
+  "cantos.json",
+  "styles.css?v=256",
+  "script.js?v=274"
+];
 // Caché APARTE para el detector de gestos (assets/mediapipe/, ~12 MB en 7 archivos).
 const GESTURE_CACHE = "cantoral-gestos-v1";
 const GESTURE_PATH = "/assets/mediapipe/";
@@ -123,10 +138,13 @@ const PRECACHE = [
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_VERSION).then((cache) =>
-      // addAll falla si un solo recurso falla; usamos add individual tolerante.
-      Promise.all(PRECACHE.map((url) =>
-        cache.add(encodeURI(url).replace(/#/g, "%23")).catch(() => null)
-      ))
+      // El núcleo va con addAll (todo o nada); el resto, uno por uno y tolerante:
+      // que falte un acorde no debe tumbar la instalación.
+      cache.addAll(CORE).then(() =>
+        Promise.all(PRECACHE.filter((url) => !CORE.includes(url)).map((url) =>
+          cache.add(encodeURI(url).replace(/#/g, "%23")).catch(() => null)
+        ))
+      )
     )
   );
 });
@@ -165,16 +183,52 @@ function networkFirstWithTimeout(req, fallbackUrl) {
     // Una respuesta de error tampoco vale para MOSTRAR: si hay copia buena en
     // caché, se prefiere esa (el usuario ve el cantoral, no la pantalla de error).
     if (res && res.ok) return res;
-    return caches.match(req).then((hit) =>
-      hit || (fallbackUrl ? caches.match(fallbackUrl) : undefined) || network
-    );
+    if (!fallbackUrl) return caches.match(req).then((hit) => hit || network);
+    // Navegación: cualquier copia de la página sirve (con o sin ?parámetros, con o
+    // sin index.html). Se busca en TODAS las cachés, no sólo en la versión actual.
+    return caches.match(req, { ignoreSearch: true })
+      .then((hit) => hit || caches.match(fallbackUrl))
+      .then((hit) => hit || caches.match("./"))
+      .then((hit) => {
+        if (hit) return limpiarRedireccion(hit);
+        return res || network.then((r) => r || paginaSinCopia(), paginaSinCopia);
+      });
   });
+}
+
+// Chrome rechaza servir a una navegación una respuesta que vino de una redirección
+// (sale la pantalla de error del navegador). Se re-empaqueta sin esa marca.
+function limpiarRedireccion(res) {
+  if (!res.redirected) return res;
+  return res.blob().then((body) => new Response(body, {
+    status: res.status, statusText: res.statusText, headers: res.headers
+  }));
+}
+
+// Último recurso: sin red y sin copia guardada (p. ej. el teléfono borró los datos
+// del sitio por falta de espacio). Mejor un aviso propio que el dinosaurio.
+function paginaSinCopia() {
+  return new Response(
+    '<!doctype html><html lang="es"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<title>Cantoral Mayo</title></head>' +
+    '<body style="font-family:Georgia,serif;background:#fbf9f2;color:#3b2f22;' +
+    'text-align:center;padding:3rem 1.5rem;line-height:1.5">' +
+    '<h1 style="font-weight:normal">Cantoral Mayo ✨</h1>' +
+    '<p>Este teléfono no tiene guardada una copia del cantoral.</p>' +
+    '<p>Ábrelo <b>una vez con internet</b> y espera a que cargue completo; ' +
+    'después funcionará sin conexión.</p></body></html>',
+    { status: 200, headers: { "Content-Type": "text/html; charset=utf-8" } }
+  );
 }
 
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
+
+  // Umami: sin respondWith = el navegador va directo a la red, sin caché.
+  if (url.hostname === STATS_HOST) return;
 
   // Otros orígenes (Google Fonts, etc.): cache-first.
   if (url.origin !== self.location.origin) {

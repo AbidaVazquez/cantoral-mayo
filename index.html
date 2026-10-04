@@ -468,9 +468,18 @@
                     caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
                 }
             } else {
-                window.addEventListener("load", () => {
-                    navigator.serviceWorker.register("sw.js").then(registroListo).catch(() => {});
-                });
+                // ★Se registra YA, no en 'load': con señal lenta 'load' tarda (portada,
+                // fuentes) y si la persona cierra antes, el teléfono se queda sin copia
+                // offline aunque Chrome sí le haya dejado instalar la app.
+                navigator.serviceWorker.register("sw.js").then(registroListo).catch(() => {});
+                // ★Pide almacenamiento persistente: sin esto Chrome en Android puede
+                // BORRAR la copia offline cuando el teléfono anda corto de espacio.
+                // No muestra ningún aviso; Chrome decide solo (a la PWA instalada se lo da).
+                if (navigator.storage && navigator.storage.persist) {
+                    navigator.storage.persisted().then(function (ya) {
+                        if (!ya) return navigator.storage.persist();
+                    }).catch(function () {});
+                }
             }
         }
 
