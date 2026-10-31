@@ -9,6 +9,43 @@
     } catch (e) {}
 })();
 
+// ═══════════════════════════════════════════════════════════════════
+// DÍA DE MUERTOS (1-nov 2:00 → 3-nov 23:59, hora CDMX). Se decide antes del intro.
+// ═══════════════════════════════════════════════════════════════════
+function isDifuntosMX(M, D, h) {
+    const md = M * 100 + D;
+    return (md === 1101 && h >= 2) || (md >= 1102 && md <= 1103);
+}
+(function initDifuntosEarly() {
+    let M = 0, D = 0, h = 0;
+    try {
+        const p = {};
+        new Intl.DateTimeFormat("en-US", { timeZone: "America/Mexico_City",
+            month: "numeric", day: "numeric", hour: "numeric", hourCycle: "h23" })
+            .formatToParts(new Date()).forEach((x) => { p[x.type] = +x.value; });
+        M = p.month; D = p.day; h = p.hour;
+    } catch (e) { const n = new Date(); M = n.getMonth() + 1; D = n.getDate(); h = n.getHours(); }
+    const on = isDifuntosMX(M, D, h);
+    window.__isDifuntos = on;
+    if (!on) return;
+    const b = document.body;
+    if (b) b.classList.add("lit-difuntos");
+    // Pasta de cempasúchil desde el primer pintado (initLiturgicalCover la confirma después).
+    const r = document.documentElement.style;
+    r.setProperty("--cover-1", "#f7b04a");
+    r.setProperty("--cover-2", "#ee9426");
+    r.setProperty("--cover-3", "#d97a14");
+    // Título morado en la pasta y en el intro (mismo trazo que titulopasta.svg).
+    document.querySelectorAll("img.cover-title, #wiLightTitle").forEach((im) => {
+        im.src = "assets/titulo-muertos-a.svg";
+    });
+    // Cinzel (encabezados) SOLO en estos días: el resto del año no se descarga.
+    const lk = document.createElement("link");
+    lk.rel = "stylesheet";
+    lk.href = "https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap";
+    document.head.appendChild(lk);
+})();
+
 let BOOK_WAS_CLOSED = -1;
 let LAST_SAVED_HASH = "";
 try {
@@ -89,9 +126,84 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
     }
 
     // ─── Flores plumeria sobre libro ──────────────────────────────
+    // ─── Día de Muertos: plumeria + cempasúchil («más cempasúchil» 3+3+9+11) ───
+    // Cada flor es UNA <img> con el SVG en data URI (se rasteriza una vez).
+    function seedDifuntosFlowers(fCont) {
+        const R = (a, b) => a + Math.random() * (b - a);
+        const pick = (a) => a[Math.floor(Math.random() * a.length)];
+        const f1 = (n) => (+n).toFixed(1);
+        const CEMP = [
+            ["#a8400a", "#c4520a", "#de6a0c", "#f08410", "#fa9d1c", "#ffb530", "#ffc94a"],
+            ["#b8600a", "#d27a0c", "#e9930f", "#f6a816", "#fdbb22", "#ffcb3c", "#ffdc68"],
+            ["#93340a", "#b0450c", "#ca5a10", "#e27014", "#f0861a", "#fb9e28", "#ffb43e"]
+        ];
+        function scallop(r, n, dep, rot) {
+            let d = "";
+            for (let i = 0; i < n; i++) {
+                const a0 = rot + (i * 2 * Math.PI) / n, a1 = rot + ((i + 1) * 2 * Math.PI) / n,
+                      am = (a0 + a1) / 2, rc = r + dep;
+                if (!i) d += `M${f1(r * Math.cos(a0))} ${f1(r * Math.sin(a0))}`;
+                d += ` Q${f1(rc * Math.cos(am))} ${f1(rc * Math.sin(am))} ${f1(r * Math.cos(a1))} ${f1(r * Math.sin(a1))}`;
+            }
+            return d + "Z";
+        }
+        const img = (svg) => `<img alt="" draggable="false" style="width:100%;height:100%;display:block" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}">`;
+        function pluFlower() {
+            const g = pick(FLOWER_GRADS);
+            let p = "";
+            for (let k = 0; k < 5; k++) p += `<path d="${PETAL_PATH}" fill="url(#a)" transform="rotate(${k * 72})"/>`;
+            return img(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 200 200"><defs><linearGradient id="a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${g[0]}"/><stop offset=".3" stop-color="${g[1]}"/><stop offset=".62" stop-color="${g[2]}"/><stop offset="1" stop-color="${g[3]}"/></linearGradient><radialGradient id="c"><stop offset="0" stop-color="#fff0a0"/><stop offset="1" stop-color="#f6a821"/></radialGradient></defs>${p}<circle r="10" fill="url(#c)"/></svg>`);
+        }
+        function pluPetal() {
+            const g = pick(FLOWER_GRADS);
+            return img(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 -100 70 105"><defs><linearGradient id="a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${g[0]}"/><stop offset=".5" stop-color="${g[1]}"/><stop offset="1" stop-color="${g[2]}"/></linearGradient></defs><path d="${PETAL_PATH}" fill="url(#a)"/></svg>`);
+        }
+        function cempHead() {
+            const t = pick(CEMP);
+            const L = [[46, 22, 7], [39, 20, 7], [32, 17, 6], [25, 14, 5], [18, 11, 4.5], [11, 8, 3.5]];
+            let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-58 -58 116 116">`;
+            L.forEach(([r, n, d], i) => {
+                const rot = R(0, 6.28);
+                s += `<path d="${scallop(r, n, d, rot)}" fill="${t[i + 1]}" stroke="${t[0]}" stroke-opacity=".55" stroke-width="1.2" stroke-linejoin="round"/>`;
+                s += `<path d="${scallop(r - 4, n, d * 0.7, rot + Math.PI / n)}" fill="none" stroke="${t[0]}" stroke-opacity=".28" stroke-width="1"/>`;
+            });
+            return img(s + `<circle r="4.5" fill="${t[6]}" stroke="${t[0]}" stroke-opacity=".5"/></svg>`);
+        }
+        function cempPetal() {
+            const t = pick(CEMP);
+            return img(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="-13 -26 26 29"><defs><linearGradient id="a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${t[2]}"/><stop offset=".6" stop-color="${t[4]}"/><stop offset="1" stop-color="${t[6]}"/></linearGradient></defs><path d="M0 0C-5 -3 -9 -10 -9 -17Q-7 -21 -4.5 -18.5Q-2.5 -22.5 0 -19Q2.5 -22.5 4.5 -18.5Q7 -21 9 -17C9 -10 5 -3 0 0Z" fill="url(#a)" stroke="${t[0]}" stroke-opacity=".35" stroke-width=".6"/><path d="M0 -1V-16M-1 -3L-4 -14M1 -3L4 -14" stroke="${t[1]}" stroke-opacity=".45" stroke-width=".55" fill="none"/></svg>`);
+        }
+        const items = [];
+        for (let i = 0; i < 3; i++)  { const s = R(36, 60); items.push([pluFlower(), s, s, ""]); }
+        for (let i = 0; i < 3; i++)  { const s = R(16, 25); items.push([pluPetal(), s, s * 1.45, " cover-petal"]); }
+        for (let i = 0; i < 9; i++)  { const s = R(30, 50); items.push([cempHead(), s, s, " cemp"]); }
+        for (let i = 0; i < 11; i++) { const s = R(13, 20); items.push([cempPetal(), s, s * 1.12, " cover-petal cemp"]); }
+        for (let i = items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+        }
+        const n = items.length, frag = document.createDocumentFragment();
+        items.forEach(([html, w, h, cls], i) => {
+            const div = document.createElement("div");
+            div.className = "cover-flower" + cls;
+            div.style.left = f1((i + 0.5) * (96 / n) + R(-3, 3)) + "%";
+            div.style.width = Math.round(w) + "px";
+            div.style.height = Math.round(h) + "px";
+            // Misma ventana de caída que la lluvia normal (3.4–6 s tras el intro).
+            div.style.animation = `${Math.random() < 0.5 ? "covFallA" : "covFallB"} ${f1(R(5.4, 7.6))}s ease-in ${f1(R(3.4, 6))}s forwards`;
+            div.innerHTML = html;
+            frag.appendChild(div);
+        });
+        fCont.appendChild(frag);
+    }
+
     function seedCoverFlowers() {
         const fCont = document.getElementById("coverFlowers");
         if (!fCont) return;
+        if (window.__isDifuntos) {
+            if (!document.body.classList.contains("lite")) seedDifuntosFlowers(fCont);
+            return;
+        }
         const positions = [
             ["8%",  45, "covFallA", 6.0, 4.5],
             ["22%", 65, "covFallB", 6.5, 4.8],
@@ -300,7 +412,7 @@ const INITIAL_HASH = BOOK_WAS_CLOSED >= 0 ? "" : (window.location.hash || LAST_S
             const dispW = (intro.clientWidth || window.innerWidth) * 0.55;
             const rw = Math.max(600, Math.round(dispW * 2.5));
             const rh = Math.round(rw / (507 / 353));
-            fetch("assets/titulopasta.svg").then(res => res.text()).then(txt => {
+            fetch(window.__isDifuntos ? "assets/titulo-muertos-a.svg" : "assets/titulopasta.svg").then(res => res.text()).then(txt => {
                 const sized = txt.replace(/<svg\b([^>]*)>/, (m, a) =>
                     "<svg" + a.replace(/\s(width|height)="[^\"]*"/g, "") + ` width="${rw}" height="${rh}">`);
                 const url = URL.createObjectURL(new Blob([sized], { type: "image/svg+xml" }));
@@ -3711,7 +3823,46 @@ function setupPlumeria(cfg){
     if(overlay)for(let x=1015;x<2050;x+=r(30,48))groundBack.push(grassBlade(x,top+r(-4,9),r(20,46),r(-11,11),Math.random()<0.5?"gBlade":"gBlade2"));
     // Arbustos: en el libro solo dentro del viewBox y en la cantidad que en
     // promedio caía visible antes (~40% de 7-12), para conservar el aspecto.
-    const nB=overlay?ri(7,12):ri(3,5);for(let i=0;i<nB;i++){const bx=overlay?r(-900,1900):r(-60,1060);if(Math.abs(bx-baseX)<70)continue;groundBack.push(bush(bx,top+r(2,20),r(55,112),r(40,82),Math.random()<0.58));}for(let i=0;i<14;i++){const x=baseX+r(-95,95);groundFront.push(grassBlade(x,baseY+r(-8,8),r(24,58),r(-12,12),Math.random()<0.5?"gBlade":"gBlade2"));}}
+    const nB=overlay?ri(7,12):ri(3,5);for(let i=0;i<nB;i++){const bx=overlay?r(-900,1900):r(-60,1060);if(Math.abs(bx-baseX)<70)continue;groundBack.push(bush(bx,top+r(2,20),r(55,112),r(40,82),Math.random()<0.58));}for(let i=0;i<14;i++){const x=baseX+r(-95,95);groundFront.push(grassBlade(x,baseY+r(-8,8),r(24,58),r(-12,12),Math.random()<0.5?"gBlade":"gBlade2"));}
+    if(window.__isDifuntos)buildCempasuchil();}
+    // ── DÍA DE MUERTOS: suelo de cempasúchil + camino de pétalos ─────────────
+    // Todo queda dentro del SVG que se RASTERIZA a bitmap (rasterize()): sin "pop" por flor.
+    const CEMP=[["#a8400a","#c4520a","#de6a0c","#f08410","#fa9d1c","#ffb530","#ffc94a"],["#b8600a","#d27a0c","#e9930f","#f6a816","#fdbb22","#ffcb3c","#ffdc68"],["#93340a","#b0450c","#ca5a10","#e27014","#f0861a","#fb9e28","#ffb43e"]];
+    const CP=SID?SID+"_":"";   // prefijo propio de ids (los <use href> no pasan por el renombrado de defIds)
+    // Camino: centro x = 372 − 210t + 46·sin(1.5πt), ancho medio 80(1−t)+7, t=(1306−y)/114.
+    const pT=y=>(1306-y)/114, pcx=y=>{const t=pT(y);return 372-210*t+46*Math.sin(t*Math.PI*1.5);}, phw=y=>80*(1-pT(y))+7;
+    function cempSideSymbol(id,t){
+        // Pompón de perfil: hileras de arriba (luz) a abajo (sombra).
+        const rows=[{y:-25,xs:[-4,4],r:4.6,c:t[5]},{y:-21,xs:[-11,-3.7,3.7,11],r:4.8,c:t[5]},{y:-16,xs:[-15.5,-9.3,-3.1,3.1,9.3,15.5],r:4.9,c:t[4]},{y:-11,xs:[-17.5,-10.5,-3.5,3.5,10.5,17.5],r:5,c:t[3]},{y:-6,xs:[-15.5,-9.3,-3.1,3.1,9.3,15.5],r:5,c:t[2]},{y:-1,xs:[-11,-5.5,0,5.5,11],r:4.8,c:t[1]}];
+        let s=`<symbol id="${id}" viewBox="-24 -32 48 40" overflow="visible"><ellipse cx="0" cy="-12" rx="20" ry="16.5" fill="${t[0]}"/>`;
+        rows.forEach(rw=>rw.xs.forEach(x0=>{const x=x0+r(-0.8,0.8),R=rw.r,y=rw.y+r(-0.6,0.6);const top=Math.random()<0.5?`M${(x-R).toFixed(1)} ${y.toFixed(1)}Q${(x-R).toFixed(1)} ${(y-R*1.25).toFixed(1)} ${x.toFixed(1)} ${(y-R*0.82).toFixed(1)}Q${(x+R).toFixed(1)} ${(y-R*1.25).toFixed(1)} ${(x+R).toFixed(1)} ${y.toFixed(1)}`:`M${(x-R).toFixed(1)} ${y.toFixed(1)}a${R} ${(R*0.95).toFixed(1)} 0 0 1 ${(R*2).toFixed(1)} 0`;s+=`<path d="${top}q${(-R).toFixed(1)} ${(R*0.55).toFixed(1)} ${(-R*2).toFixed(1)} 0Z" fill="${rw.c}" stroke="${t[0]}" stroke-width=".7"/>`;}));
+        return s+`<path d="M-8 3Q0 8 8 3L5 0H-5Z" fill="#2f6a1f"/></symbol>`;
+    }
+    function cempDefs(){return cempSideSymbol(CP+"cempA",CEMP[0])+cempSideSymbol(CP+"cempB",CEMP[1])+cempSideSymbol(CP+"cempC",CEMP[2])+`<linearGradient id="${CP}gPath" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9720f"/><stop offset="1" stop-color="#f39a1e"/></linearGradient>`;}
+    function buildCempasuchil(){
+        const syms=["cempA","cempB","cempC"];
+        const cemp=(x,y,s,sym)=>`<use href="#${CP}${sym||pick(syms)}" x="-24" y="-32" width="48" height="40" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${s.toFixed(2)})"/>`;
+        const cempLeaf=(x,y,s,rot)=>`<path d="M0 0C-5 -8 -6 -20 0 -30C6 -20 5 -8 0 0Z" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rot.toFixed(1)}) scale(${s.toFixed(2)})" fill="url(#gLeafM)"/>`;
+        // Camino de pétalos (va ANTES de las hileras: las del frente lo bordean por encima).
+        let L="",Rr="";for(let y=1306;y>=1192;y-=6){L+=`${L?"L":"M"}${(pcx(y)-phw(y)).toFixed(1)} ${y}`;Rr=`L${(pcx(y)+phw(y)).toFixed(1)} ${y}`+Rr;}
+        const pathBack=[`<path d="${L}${Rr}Z" fill="url(#${CP}gPath)"/>`];
+        const PT="M0 0C-3 -2 -5 -6 -5 -10Q-2.5 -12 0 -10.5Q2.5 -12 5 -10C5 -6 3 -2 0 0Z";
+        for(let b=0;b<12;b++){const y0=1306-b*9.5,n=Math.round(10+20*(1-pT(y0)));for(let k=0;k<n;k++){const y=y0-r(0,9.5),s=0.45+1.1*(1-pT(y)),t=pick(CEMP);pathBack.push(`<path d="${PT}" transform="translate(${(pcx(y)+r(-0.92,0.92)*phw(y)).toFixed(1)} ${y.toFixed(1)}) rotate(${ri(0,360)}) scale(${s.toFixed(2)})" fill="${pick([t[3],t[4],t[5],t[6]])}" stroke="${t[0]}" stroke-opacity=".45" stroke-width=".6"/>`);}}
+        // 7 hileras [y, escala, paso] de fondo a frente; las 2 últimas, delante del tronco.
+        const ROWS=[[1176,.5,24,"cempC"],[1188,.6,28,"cempC"],[1203,.74,32],[1220,.9,38],[1240,1.06,44],[1262,1.26,52],[1290,1.52,62]];
+        const back=[],front=[];
+        ROWS.forEach(([y,s,step,sym],ri2)=>{
+            const arr=ri2>=5?front:back;
+            for(let x=-20+r(0,step);x<1030;x+=step*r(0.8,1.15)){
+                if(y>1190&&Math.abs(x-pcx(y))<phw(y)+(ri2>=5?26*s:2))continue;   // el camino queda libre
+                if(Math.random()<0.55)arr.push(cempLeaf(x+r(-10,10),y+4,s*r(0.8,1.1),r(-50,50)));
+                arr.push(cemp(x+r(-step*0.3,step*0.3),y+r(-4,4),s*r(0.88,1.12),sym&&Math.random()<0.6?sym:null));
+            }
+            if(ri2===4)back.push(...pathBack);   // camino entre las hileras de atrás y las del frente
+        });
+        groundBack.push(`<g class="cemp-field">${back.join("")}</g>`);
+        groundFront.push(`<g class="cemp-field">${front.join("")}</g>`);
+    }
     let svgMarkup="";
     function build(){const baseX=500,baseY=1255,forkX=500,forkY=940;buildGround(baseX,baseY);drawBranch(baseX,baseY,baseX+r(-12,12),(baseY+forkY)/2,forkX,forkY,96,70);const limbs=Math.random()<0.5?2:3,angs=limbs===2?[-26,24]:[-32,-2,28];angs.forEach(a=>grow(forkX,forkY,a+r(-4,4),r(235,290),r(46,56),4));grow(forkX-10,forkY+40,-58,r(150,190),34,3);grow(forkX+10,forkY+40,56,r(150,190),34,3);const cx=500,cy=560,rx=415,ry=350,greensBack=["gLeafB","gLeafM"],greensFront=["gLeafF","gLeafM"];for(let i=0;i<60;i++){const p=ellipsePt(cx,cy,rx,ry),out=Math.atan2(p.y-cy,p.x-cx)*180/Math.PI+90+r(-32,32);backLeaves.push(leafStr(p.x,p.y,out,r(72,118),pick(greensBack),(1.2+r(0,1.3)).toFixed(2),r(4.5,7).toFixed(1),r(0,4).toFixed(1),0.95));}for(let i=0;i<30;i++){const a=r(0,Math.PI*2),rad=r(0.82,1.04),px=cx+Math.cos(a)*rx*rad,py=cy+Math.sin(a)*ry*rad,out=a*180/Math.PI+90+r(-28,28);backLeaves.push(leafStr(px,py,out,r(70,108),pick(greensBack),(1.2+r(0,1.3)).toFixed(2),r(4.5,7).toFixed(1),r(0,4).toFixed(1),0.95));}
     const cols=["gW","gY","gP","gM","gR","gO","gS","gPe","gL","gC","gF"],pts=[];const COLS=6,ROWS=5,stepX=rx*2/COLS,stepY=ry*2/ROWS;for(let i=0;i<COLS;i++)for(let j=0;j<ROWS;j++){const px=cx-rx+stepX*(i+0.5)+r(-stepX*0.5,stepX*0.5),py=cy-ry+stepY*(j+0.5)+r(-stepY*0.5,stepY*0.5),nx=(px-cx)/rx,ny=(py-cy)/ry;if(nx*nx+ny*ny>1.08)continue;if(Math.random()<0.85)pts.push({x:px,y:py});}tips.forEach(t=>{const nx=(t.x-cx)/rx,ny=(t.y-cy)/ry;if(nx*nx+ny*ny<1.25&&Math.random()<0.35)pts.push({x:t.x,y:t.y});});pts.forEach(p=>{const bicolor=Math.random()<0.32,cA=pick(cols),cB=bicolor?pick(cols):cA,n=ri(3,5);let g=`<g class="flowerg" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})">`;for(let k=0;k<n;k++)g+=flowerStr(r(-28,28),r(-24,24),r(0.5,0.82).toFixed(2),ri(0,72),(k%2&&bicolor)?cB:cA,(2.0+r(0,1.8)).toFixed(2));if(Math.random()<0.5)g+=budStr(r(-30,30),r(-26,26),r(0.6,0.9).toFixed(2),ri(0,360),cA,(2.0+r(0,1.8)).toFixed(2));g+="</g>";flowerParts.push(g);});
@@ -3723,7 +3874,7 @@ function setupPlumeria(cfg){
     const defs=`<defs><linearGradient id="bark" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#37261a"/><stop offset=".5" stop-color="#6b4d31"/><stop offset="1" stop-color="#2c1d12"/></linearGradient><linearGradient id="gLeafB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#0b3414"/><stop offset="1" stop-color="#1b6224"/></linearGradient><linearGradient id="gLeafM" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#114d1c"/><stop offset="1" stop-color="#2a8a36"/></linearGradient><linearGradient id="gLeafF" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#176c23"/><stop offset="1" stop-color="#3cab48"/></linearGradient><linearGradient id="gW" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffcf3f"/><stop offset=".2" stop-color="#fff0b0"/><stop offset=".55" stop-color="#fffdf3"/><stop offset="1" stop-color="#ffffff"/></linearGradient><linearGradient id="gY" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff9e00"/><stop offset=".28" stop-color="#ffd633"/><stop offset=".62" stop-color="#ffe97a"/><stop offset="1" stop-color="#fff3a8"/></linearGradient><linearGradient id="gP" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd23f"/><stop offset=".3" stop-color="#ffc6c2"/><stop offset=".62" stop-color="#f58fb0"/><stop offset="1" stop-color="#e85f93"/></linearGradient><linearGradient id="gM" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffc63f"/><stop offset=".3" stop-color="#e87aa0"/><stop offset=".62" stop-color="#c43c77"/><stop offset="1" stop-color="#97134f"/></linearGradient><linearGradient id="gR" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffbf33"/><stop offset=".3" stop-color="#f06a3a"/><stop offset=".62" stop-color="#d8392a"/><stop offset="1" stop-color="#ad1c1c"/></linearGradient><linearGradient id="gO" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd23f"/><stop offset=".3" stop-color="#ffb060"/><stop offset=".62" stop-color="#ff8a3c"/><stop offset="1" stop-color="#f4632a"/></linearGradient><linearGradient id="gS" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd84f"/><stop offset=".3" stop-color="#ffc39a"/><stop offset=".62" stop-color="#ff9e74"/><stop offset="1" stop-color="#f47e52"/></linearGradient><linearGradient id="gPe" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffe45a"/><stop offset=".3" stop-color="#ffd9a0"/><stop offset=".62" stop-color="#ffb784"/><stop offset="1" stop-color="#ff9d6e"/></linearGradient><linearGradient id="gL" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffe07a"/><stop offset=".3" stop-color="#f0d2e8"/><stop offset=".62" stop-color="#c79bd6"/><stop offset="1" stop-color="#9d6fc4"/></linearGradient><linearGradient id="gC" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd23f"/><stop offset=".3" stop-color="#ff9e72"/><stop offset=".62" stop-color="#fa6f5a"/><stop offset="1" stop-color="#e8463f"/></linearGradient><linearGradient id="gF" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd84f"/><stop offset=".3" stop-color="#ffb4d0"/><stop offset=".62" stop-color="#f570a8"/><stop offset="1" stop-color="#d62f7e"/></linearGradient><radialGradient id="center"><stop offset="0" stop-color="#fff0a0"/><stop offset="1" stop-color="#f6a821"/></radialGradient><linearGradient id="gGrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5aa83f"/><stop offset=".5" stop-color="#418a30"/><stop offset="1" stop-color="#2a6420"/></linearGradient><linearGradient id="gBlade" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#3c8c2b"/><stop offset="1" stop-color="#74c64e"/></linearGradient><linearGradient id="gBlade2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#327a26"/><stop offset="1" stop-color="#5db441"/></linearGradient><radialGradient id="gBush" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#5cab40"/><stop offset="1" stop-color="#2c6a22"/></radialGradient><radialGradient id="gBushHi" cx=".4" cy=".3" r=".7"><stop offset="0" stop-color="#9bd873"/><stop offset="1" stop-color="#9bd873" stop-opacity="0"/></radialGradient></defs>`;
     // PERF: back/front leaves van cada uno en UN solo <g class="leaf-canopy"> (antes cada hoja
     // individual llevaba su propia <g class="leafg">, ~106 en la
-    svgMarkup=`<svg viewBox="0 0 1000 1300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Árbol de flor de mayo">${defs}<g class="groundg" id="groundBack">${groundBack.join("")}</g><g id="sway"><g id="branchLayer">${branchParts.join("")}</g><g id="canopySway"><g class="leaf-canopy">${backLeaves.join("")}</g><g class="flower-canopy">${flowerParts.join("")}</g><g class="leaf-canopy">${frontLeaves.join("")}</g></g>${nestMarkup}</g><g class="groundg" id="groundFront">${groundFront.join("")}</g></svg>`;
+    svgMarkup=`<svg viewBox="0 0 1000 1300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Árbol de flor de mayo">${window.__isDifuntos?defs.replace("</defs>",cempDefs()+"</defs>"):defs}<g class="groundg" id="groundBack">${groundBack.join("")}</g><g id="sway"><g id="branchLayer">${branchParts.join("")}</g><g id="canopySway"><g class="leaf-canopy">${backLeaves.join("")}</g><g class="flower-canopy">${flowerParts.join("")}</g><g class="leaf-canopy">${frontLeaves.join("")}</g></g>${nestMarkup}</g><g class="groundg" id="groundFront">${groundFront.join("")}</g></svg>`;
     // Prefijo único por escena para IDs de <defs> (evita colisiones entre múltiples árboles en el mismo documento)
     if (SID) {
         const defIds = ["bark","gLeafB","gLeafM","gLeafF","gW","gY","gP","gM","gR","gO","gS","gPe","gL","gC","gF","center","gGrass","gBlade","gBlade2","gBush","gBushHi"];
@@ -5551,6 +5702,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         morado:    ["#ad9cba", "#9c87ab", "#886f9b"], // Cuaresma
         blanco:    ["#fcfcfb", "#f3f2f0", "#e5e4e1"], // Navidad y Pascua (perla)
         rojo:      ["#c47468", "#b45549", "#9d3f38"], // Ramos / V.Santo / Pentecostés (terracota intenso mate)
+        cempasuchil: ["#f7b04a", "#ee9426", "#d97a14"], // Día de Muertos (1-nov → 3-nov)
     };
     // Silueta por tiempo (Ordinario = Virgen inline, sin inyección).
     const TIME_SIL = {
@@ -5560,16 +5712,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         cuaresma:    "assets/siluetaCuaresma.svg?v=7",
         pascua:      "assets/siluetaPascua.svg?v=4",
         pentecostes: "assets/siluetaPentecostes.svg?v=9",
-    };
-    // Color base por tiempo (para el modo de PRUEBA forzado; el AUTO usa el color
-    // del día, que sí distingue los rojos de Ramos/V.Santo/Pentecostés).
-    const TIME_COLOR = {
-        ordinario: "verde", adviento: "moradoAdv", navidad: "blanco",
-        cuaresma: "morado", pascua: "blanco", pentecostes: "rojo",
-    };
-    const TIME_NAME = {
-        ordinario: "Ordinario", adviento: "Adviento", navidad: "Navidad",
-        cuaresma: "Cuaresma", pascua: "Pascua", pentecostes: "Pentecostés",
+        difuntos:    "assets/siluetaOfrenda.svg?v=2",   // + capa _luz (ver setSilhouette)
     };
     // — Fechas (todo en UTC para no pelear con horario de verano) —
     function easter(y) { // Meeus/Jones/Butcher (gregoriano)
@@ -5602,8 +5745,10 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     }
 
     // Tiempo litúrgico + color del día para (Y,M,D).
-    function computeSeason(Y, M, D) {
+    function computeSeason(Y, M, D, h) {
         const today = Y * 10000 + M * 100 + D;
+        // Día de Muertos: 1-nov 2:00 → 3-nov 23:59 (antes que Adviento; éste empieza ≥ 27-nov).
+        if (isDifuntosMX(M, D, h)) return { time: "difuntos", color: "cempasuchil" };
         const advN = adventStart(Y);
         if (today >= advN) {
             if (today <= Y * 10000 + 1224) return { time: "adviento", color: "moradoAdv" };
@@ -5634,15 +5779,16 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     // Fecha de hoy en la zona de México (independiente de la del dispositivo).
     function todayMX() {
         try {
-            const s = new Intl.DateTimeFormat("en-CA", {
+            const p = {};
+            new Intl.DateTimeFormat("en-US", {
                 timeZone: "America/Mexico_City",
-                year: "numeric", month: "2-digit", day: "2-digit",
-            }).format(new Date());
-            const [Y, M, D] = s.split("-").map(Number);
-            return { Y, M, D };
+                year: "numeric", month: "numeric", day: "numeric",
+                hour: "numeric", hourCycle: "h23",
+            }).formatToParts(new Date()).forEach((x) => { p[x.type] = +x.value; });
+            return { Y: p.year, M: p.month, D: p.day, h: p.hour };
         } catch (e) {
             const n = new Date();
-            return { Y: n.getFullYear(), M: n.getMonth() + 1, D: n.getDate() };
+            return { Y: n.getFullYear(), M: n.getMonth() + 1, D: n.getDate(), h: n.getHours() };
         }
     }
     function apply(colorKey) {
@@ -5685,7 +5831,24 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
         });
         document.body.classList.add("lit-" + time);
 
+        // Título de la pasta: morado en Día de Muertos, el de siempre el resto del año.
+        const titleSrc = time === "difuntos" ? "assets/titulo-muertos-a.svg" : "assets/titulopasta.svg";
+        document.querySelectorAll("img.cover-title").forEach((im) => {
+            if (im.getAttribute("src") !== titleSrc) im.src = titleSrc;
+        });
+
         const src = TIME_SIL[time];
+        // Día de Muertos: la ofrenda (~740 trazos) va como 2 <img> (base + _luz), no SVG inline.
+        if (time === "difuntos") {
+            if (coverPage) coverPage.classList.add("has-liturgy");
+            if (curSil !== time && coverLiturgy) {
+                coverLiturgy.innerHTML =
+                    '<img class="of-base" src="' + src + '" alt="" draggable="false">' +
+                    '<img class="of-luz lit-overlay" src="assets/siluetaOfrenda_luz.svg?v=2" alt="" draggable="false">';
+            }
+            curSil = time;
+            return;
+        }
         if (!src) {                                   // Ordinario → Virgen inline
             if (coverLiturgy) coverLiturgy.innerHTML = "";
             if (coverPage) coverPage.classList.remove("has-liturgy");
@@ -5714,7 +5877,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     // prueba (#litTest / #candleTest) fueron PURGADOS al publicar.
     function refresh() {
         const t = todayMX();
-        const s = computeSeason(t.Y, t.M, t.D);
+        const s = computeSeason(t.Y, t.M, t.D, t.h);
         const week = adventWeek(t.Y, t.M, t.D);
         const cc = apply(s.color);
         updateFavicon(cc);   // favicon acompaña al tiempo litúrgico (degradado luz→sombra)
@@ -5724,7 +5887,10 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     refresh();
     // Recalcular al volver a la pestaña / de madrugada (por si cruza medianoche).
     document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
-    setInterval(refresh, 3600000); // cada hora
+    // Cada hora EN PUNTO (+2 s), para que cambios como 1-nov 2:00 caigan a tiempo.
+    (function tick() {
+        setTimeout(() => { refresh(); tick(); }, 3600000 - (Date.now() % 3600000) + 2000);
+    })();
 })();
 
 
