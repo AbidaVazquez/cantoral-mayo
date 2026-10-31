@@ -1,0 +1,512 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Cantoral Mayo ✨</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#fbf9f2" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#161616" media="(prefers-color-scheme: dark)">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mayo">
+    <link rel="stylesheet" href="styles.css?v=228">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Dancing Script (negrita) para el texto de cierre de la contraportada (.bc-blurb). display=swap = no bloquea el arranque. -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <!-- Las fuentes de Google se cargan BAJO DEMANDA (initFontPicker en script.js):
+         la fuente por defecto es de sistema (Courier New), así el arranque no espera
+         la descarga/parseo de decenas de familias. Se traen al abrir el selector o si
+         hay una fuente Google guardada. -->
+</head>
+<body>
+    <!-- Símbolo reusable del ícono "Guía de Acordes" (guitarra caoba + tapa clara
+         + signo ? en #BF4646, paleta del ukulele). Colores fijos → seguro con <use>. -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+      <symbol id="guideIcon" viewBox="0 0 880 512">
+        <path fill="#e6d4ac" d="M248 151 L269 159 L293 177 L227 243 L216 243 L204 246 L195 251 L184 262 L179 271 L176 282 L176 296 L179 307 L189 322 L200 330 L215 335 L229 335 L237 333 L250 326 L259 317 L265 307 L268 295 L268 284 L336 219 L348 235 L358 255 L361 269 L360 283 L355 295 L346 305 L335 311 L307 321 L293 330 L281 343 L272 364 L264 406 L258 425 L249 443 L236 460 L222 473 L207 481 L195 484 L171 483 L152 477 L122 460 L103 445 L66 408 L45 380 L34 359 L27 334 L27 315 L30 304 L38 289 L52 274 L73 259 L94 250 L143 240 L156 236 L172 227 L184 214 L194 195 L201 174 L209 162 L217 156 L229 151 Z"/>
+        <path fill="#96603a" fill-rule="evenodd" d="M105 322 L90 337 L91 344 L167 420 L174 421 L189 406 L188 399 L112 323 Z M476 4 L468 0 L460 0 L453 3 L441 14 L434 8 L426 9 L422 13 L421 19 L427 29 L422 34 L415 28 L408 28 L402 33 L402 42 L407 49 L399 59 L399 71 L312 157 L288 139 L270 130 L249 124 L228 124 L216 127 L197 137 L184 150 L177 162 L167 190 L161 200 L155 206 L141 213 L104 220 L69 231 L54 239 L40 249 L18 271 L6 292 L0 317 L1 341 L6 361 L18 387 L40 419 L68 449 L97 475 L124 493 L145 503 L170 510 L195 511 L210 508 L231 499 L245 489 L262 471 L276 450 L284 432 L291 407 L298 370 L304 357 L314 348 L359 329 L373 316 L383 299 L388 277 L385 252 L379 236 L372 223 L354 198 L440 112 L452 112 L462 104 L464 104 L469 109 L478 109 L483 103 L483 96 L477 89 L483 84 L487 88 L495 90 L498 89 L503 83 L503 77 L497 69 L508 58 L510 54 L510 40 L507 35 Z M248 151 L269 159 L293 177 L227 243 L216 243 L204 246 L195 251 L184 262 L179 271 L176 282 L176 296 L179 307 L189 322 L200 330 L215 335 L229 335 L237 333 L250 326 L259 317 L265 307 L268 295 L268 284 L336 219 L348 235 L358 255 L361 269 L360 283 L355 295 L346 305 L335 311 L307 321 L293 330 L281 343 L272 364 L264 406 L258 425 L249 443 L236 460 L222 473 L207 481 L195 484 L171 483 L152 477 L122 460 L103 445 L66 408 L45 380 L34 359 L27 334 L27 315 L30 304 L38 289 L52 274 L73 259 L94 250 L143 240 L156 236 L172 227 L184 214 L194 195 L201 174 L209 162 L217 156 L229 151 Z M486 43 L489 49 L487 53 L447 93 L440 94 L437 91 L437 85 L479 43 Z M466 23 L469 27 L468 32 L426 74 L420 74 L417 71 L418 64 L458 24 Z"/>
+        <text x="700" y="425" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="560" text-anchor="middle" fill="#BF4646">?</text>
+      </symbol>
+    </defs></svg>
+
+    <div id="starfield" aria-hidden="true"><div class="sf-band sf-top"></div><div class="sf-band sf-bottom"></div></div>
+
+    <!-- Overlay de bienvenida: dark=estrella cayendo, light=mariposas+atardecer -->
+    <div id="welcomeIntro" aria-hidden="true">
+        <!-- Modo oscuro: cielo estrellado + estrella con picos -->
+        <div class="wi-sky-stars"></div>
+        <div class="wi-trail"></div>
+        <div class="wi-lead-star">
+            <div class="wi-spike wi-spike-v"></div>
+            <div class="wi-spike wi-spike-h"></div>
+        </div>
+        <!-- Modo claro: canvas + título SVG -->
+        <canvas id="wiLightCanvas" style="display:none;position:absolute;inset:0;pointer-events:none;"></canvas>
+        <img id="wiLightTitle" src="assets/titulopasta.svg" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:55%;opacity:0;pointer-events:none;z-index:2;" alt="" />
+    </div>
+
+    <div class="morning-star" id="morningStar" aria-hidden="true"><div class="ms-core"></div><div class="ms-halo"></div><div class="ms-spike ms-spike-v"></div><div class="ms-spike ms-spike-h"></div></div>
+
+    <!-- Pista de "desliza para avanzar": aparece en la portada al terminar el intro
+         (una vez, hasta que el usuario avanza). No bloquea el gesto (pointer-events:none). -->
+    <div id="swipeHint" class="swipe-hint" aria-hidden="true" role="status">
+        <div class="sh-gesture">
+            <span class="sh-chev">‹</span><span class="sh-chev sh-chev2">‹</span>
+            <span class="sh-dot"></span>
+        </div>
+        <div class="sh-text">Desliza para avanzar</div>
+    </div>
+
+    <div class="top-controls" id="topControls">
+        <div class="top-bar">
+            <button id="litTest" class="lit-test" type="button" title="Prueba: color litúrgico de la pasta">
+                <span class="lit-test-tag">TEST</span>
+                <span class="lit-test-dot" id="litTestDot"></span>
+                <span class="lit-test-label" id="litTestLabel">Auto</span>
+            </button>
+            <!-- TEST: botón de vela de Adviento (enciende una por toque, 1→4→1). PURGAR junto con #litTest al publicar. -->
+            <button id="candleTest" class="lit-test candle-test" type="button" title="Prueba: encender velas de Adviento (una por toque)">
+                <span class="lit-test-tag">🕯️</span>
+                <span class="lit-test-label" id="candleTestNum">0</span>
+            </button>
+            <button class="search-btn" id="searchBtn" type="button" aria-label="Buscar canto" title="Buscar canto">🔎</button>
+            <button class="font-picker-toggle hidden" id="fontPickerBtn" type="button" aria-label="Cambiar fuente" title="Cambiar fuente">F</button>
+            <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú" aria-expanded="false" title="Menú">☰</button>
+        </div>
+        <div class="menu-items" id="menuItems">
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar modo de lectura" title="Cambiar modo de lectura">
+                <span class="theme-toggle-track">
+                    <span class="theme-toggle-thumb">
+                        <span class="theme-emoji light">✨</span>
+                        <span class="theme-emoji dark">🌚</span>
+                    </span>
+                </span>
+            </button>
+            <button class="index-btn" id="indexBtn" type="button" aria-label="Ir al índice" title="Ir al índice">📑</button>
+            <button class="index-btn" id="dictBtn" type="button" aria-label="Ir al diccionario de acordes" title="Diccionario de acordes">🎼</button>
+            <button class="gesture-toggle" id="gestureBtn" type="button" aria-label="Control gestual" title="Control por gestos">
+                <span class="gesture-toggle-track">
+                    <span class="gesture-toggle-thumb">
+                        <span class="gesture-emoji on">✋</span>
+                        <span class="gesture-emoji off">🚫</span>
+                    </span>
+                </span>
+            </button>
+            <!-- Modo LIGERO: apaga todas las animaciones y decorativos (para equipos
+                 muy modestos / 2015). Deja lo funcional (zoom, tema, buscar, índice,
+                 navegar). Reusa .index-btn. -->
+            <button class="index-btn" id="liteBtn" type="button" aria-pressed="false" aria-label="Modo ligero (apagar animaciones)" title="Modo ligero (apagar animaciones)">🐢</button>
+            <!-- Última cuenta: COMPARTIR. Reusa .index-btn (hereda el estilo perla +
+                 tinte litúrgico). De la cuenta sale la nube con los destinos. -->
+            <div class="share-widget" id="shareWidget">
+                <button class="index-btn share-btn" id="shareBtn" type="button" aria-label="Compartir el cantoral" aria-expanded="false" title="Compartir">📤</button>
+                <div class="share-cloud" id="shareCloud" role="menu" aria-label="Compartir en">
+                    <button class="share-dot wa" data-net="wa" type="button" role="menuitem" aria-label="Compartir por WhatsApp" title="WhatsApp">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.3A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.2 14.8l-.5-.3-2.7.7.7-2.6-.3-.5A8 8 0 0 1 12 4zM8.9 7.6c-.2 0-.4.1-.6.3-.2.2-.7.7-.7 1.7s.7 2 .8 2.1c.1.2 1.5 2.4 3.8 3.4 1.9.8 2.3.6 2.7.6.4 0 1.3-.5 1.5-1 .2-.5.2-1 .1-1.1 0-.1-.2-.2-.5-.3l-1.3-.6c-.2-.1-.4-.1-.5.1l-.6.8c-.1.1-.2.2-.4.1-.2-.1-.9-.4-1.7-1-.6-.5-1-1.2-1.2-1.4-.1-.2 0-.3.1-.4l.3-.4c.1-.1.1-.2.2-.4 0-.1 0-.3 0-.4l-.6-1.5c-.2-.4-.4-.4-.5-.4z"/></svg>
+                    </button>
+                    <button class="share-dot fb" data-net="fb" type="button" role="menuitem" aria-label="Compartir en Facebook" title="Facebook">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7h2.4l.4-2.8h-2.8V9.4c0-.8.2-1.4 1.4-1.4h1.5V5.5c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2H8v2.8h2.2V21z"/></svg>
+                    </button>
+                    <button class="share-dot ig" data-net="ig" type="button" role="menuitem" aria-label="Compartir en Instagram" title="Instagram">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+                    </button>
+                    <button class="share-dot link" id="shareCopy" data-net="link" type="button" role="menuitem" aria-label="Copiar enlace" title="Copiar enlace">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+                    </button>
+                    <button class="share-dot qr" id="shareQR" data-net="qr" type="button" role="menuitem" aria-label="Mostrar código QR" title="Código QR">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 3h7v7H3zm2 2v3h3V5zm-2 9h7v7H3zm2 2v3h3v-3zm9-13h7v7h-7zm2 2v3h3V5zM14 14h2v2h-2zm0 3h2v2h-2zm3-3h2v2h-2zm0 3h2v4h-4v-2h2z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="font-picker hidden" id="fontPicker"></div>
+    </div>
+
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-top">
+            <div class="search-box">
+                <input class="search-input" id="searchInput" type="text" placeholder="Buscar letras o títulos..." autocomplete="off" spellcheck="false">
+            </div>
+            <!-- Perla de cierre: FUERA de la caja, cierra la búsqueda. -->
+            <button class="search-clear" id="searchClear" type="button" aria-label="Cerrar búsqueda" title="Cerrar búsqueda">×</button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="container">
+        <!-- FX de bienvenida alrededor del libro (se remueven al primer avance) -->
+        <div class="cover-flowers" id="coverFlowers" aria-hidden="true"></div>
+        <div class="book" id="book">
+            <div class="paper" id="pCoverFront">
+                <div class="front cover-page">
+                    <div class="cover-butterflies" id="coverButterflies" aria-hidden="true"></div>
+                    <img class="cover-title" src="assets/titulopasta.svg" alt="">
+                    <svg class="cover-silhouette" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 628 657" aria-hidden="true">
+                        <defs>
+                            <mask id="virgin-mask-cover">
+                                <rect width="100%" height="100%" fill="#ffffff"/>
+                                <path fill="#000000" d="M 351,78 L 333,78 L 326,80 L 318,84 L 314,87 L 309,92 L 304,99 L 300,107 L 300,109 L 298,112 L 295,121 L 292,133 L 292,136 L 286,157 L 277,184 L 275,187 L 274,192 L 272,195 L 272,197 L 270,200 L 263,221 L 260,234 L 257,254 L 251,320 L 251,332 L 246,387 L 242,420 L 235,464 L 231,484 L 225,509 L 214,545 L 212,548 L 212,550 L 210,556 L 207,561 L 207,563 L 205,566 L 205,568 L 202,573 L 202,575 L 187,605 L 187,608 L 194,611 L 207,614 L 226,614 L 235,612 L 243,608 L 255,600 L 263,594 L 277,582 L 296,561 L 307,546 L 308,543 L 310,541 L 312,538 L 313,535 L 315,533 L 316,530 L 318,528 L 327,510 L 327,508 L 330,503 L 330,501 L 332,498 L 332,496 L 334,493 L 334,491 L 336,488 L 342,469 L 346,454 L 350,434 L 354,406 L 357,365 L 357,315 L 358,295 L 360,282 L 362,278 L 357,283 L 352,293 L 352,295 L 350,298 L 345,315 L 340,339 L 340,344 L 336,365 L 333,375 L 330,374 L 330,369 L 336,323 L 341,299 L 343,296 L 343,294 L 345,291 L 346,288 L 340,290 L 333,294 L 323,304 L 320,309 L 315,311 L 315,308 L 318,301 L 325,291 L 332,285 L 340,281 L 342,281 L 344,280 L 341,275 L 339,273 L 338,270 L 336,268 L 334,263 L 332,261 L 331,258 L 329,256 L 328,253 L 326,251 L 325,248 L 323,245 L 325,243 L 334,252 L 337,257 L 340,260 L 341,262 L 340,260 L 340,256 L 337,244 L 334,235 L 325,218 L 323,213 L 325,213 L 333,221 L 335,224 L 336,227 L 338,229 L 342,237 L 342,239 L 344,242 L 348,254 L 351,267 L 351,272 L 355,278 L 358,277 L 369,268 L 373,266 L 368,249 L 364,242 L 364,240 L 362,236 L 360,234 L 356,225 L 354,223 L 349,212 L 345,206 L 345,208 L 348,211 L 348,215 L 344,215 L 333,209 L 319,194 L 298,214 L 295,218 L 289,229 L 289,231 L 287,234 L 283,248 L 280,269 L 278,293 L 276,345 L 276,383 L 272,443 L 268,474 L 262,505 L 259,517 L 255,518 L 255,512 L 257,500 L 259,493 L 261,480 L 265,444 L 267,405 L 268,362 L 268,316 L 269,292 L 271,266 L 275,241 L 279,228 L 284,218 L 291,208 L 322,177 L 326,171 L 327,168 L 329,166 L 335,154 L 335,152 L 338,147 L 338,145 L 340,142 L 340,140 L 346,129 L 346,127 L 349,123 L 351,118 L 358,108 L 369,97 L 373,94 L 379,91 L 376,89 L 373,88 L 371,86 L 363,82 Z"/>
+                            </mask>
+                        </defs>
+                        <g class="virgin-stars" mask="url(#virgin-mask-cover)"><g class="virgin-orbit">
+                            <path fill="#E0FFFF" d="M 350,24 L 341,23 L 340,21 L 340,19 L 338,16 L 335,23 L 326,26 L 332,31 L 332,33 L 330,39 L 332,39 L 336,36 L 339,35 L 342,38 L 344,39 L 346,39 L 346,37 L 344,33 L 344,31 Z">
+                            </path>
+                            <path fill="#E0FFFF" d="M 400,37.4 L 391,36.4 L 390,34.4 L 390,32.4 L 388,29.4 L 385,36.4 L 376,39.4 L 382,44.4 L 382,46.4 L 380,52.4 L 382,52.4 L 386,49.4 L 389,48.4 L 392,51.4 L 394,52.4 L 396,52.4 L 396,50.4 L 394,46.4 L 394,44.4 Z">
+                            </path>
+                            <path fill="#E0FFFF" d="M 436.6,74 L 427.6,73 L 426.6,71 L 426.6,69 L 424.6,66 L 421.6,73 L 412.6,76 L 418.6,81 L 418.6,83 L 416.6,89 L 418.6,89 L 422.6,86 L 425.6,85 L 428.6,88 L 430.6,89 L 432.6,89 L 432.6,87 L 430.6,83 L 430.6,81 Z">
+                            </path>
+                            <path fill="#E0FFFF" d="M 450,124 L 441,123 L 440,121 L 440,119 L 438,116 L 435,123 L 426,126 L 432,131 L 432,133 L 430,139 L 432,139 L 436,136 L 439,135 L 442,138 L 444,139 L 446,139 L 446,137 L 444,133 L 444,131 Z">
+                            </path>
+                            <path fill="#E0FFFF" d="M 436.6,174 L 427.6,173 L 426.6,171 L 426.6,169 L 424.6,166 L 421.6,173 L 412.6,176 L 418.6,181 L 418.6,183 L 416.6,189 L 418.6,189 L 422.6,186 L 425.6,185 L 428.6,188 L 430.6,189 L 432.6,189 L 432.6,187 L 430.6,183 L 430.6,181 Z">
+                            </path>
+                            <path fill="#E0FFFF" d="M 400,210.6 L 391,209.6 L 390,207.6 L 390,205.6 L 388,202.6 L 385,209.6 L 376,212.6 L 382,217.6 L 382,219.6 L 380,225.6 L 382,225.6 L 386,222.6 L 389,221.6 L 392,224.6 L 394,225.6 L 396,225.6 L 396,223.6 L 394,219.6 L 394,217.6 Z">
+                            </path>
+                            <path fill="#E0FFFF" d="M 350,224 L 341,223 L 340,221 L 340,219 L 338,216 L 335,223 L 326,226 L 332,231 L 332,233 L 330,239 L 332,239 L 336,236 L 339,235 L 342,238 L 344,239 L 346,239 L 346,237 L 344,233 L 344,231 Z">
+                            </path>
+                            <path fill="#E0FFFF" d="M 300,210.6 L 291,209.6 L 290,207.6 L 290,205.6 L 288,202.6 L 285,209.6 L 276,212.6 L 282,217.6 L 282,219.6 L 280,225.6 L 282,225.6 L 286,222.6 L 289,221.6 L 292,224.6 L 294,225.6 L 296,225.6 L 296,223.6 L 294,219.6 L 294,217.6 Z">
+                            </path>
+                            <path fill="#E0FFFF" d="M 263.4,174 L 254.4,173 L 253.4,171 L 253.4,169 L 251.4,166 L 248.4,173 L 239.4,176 L 245.4,181 L 245.4,183 L 243.4,189 L 245.4,189 L 249.4,186 L 252.4,185 L 255.4,188 L 257.4,189 L 259.4,189 L 259.4,187 L 257.4,183 L 257.4,181 Z">
+                            </path>
+                            <path fill="#E0FFFF" d="M 250,124 L 241,123 L 240,121 L 240,119 L 238,116 L 235,123 L 226,126 L 232,131 L 232,133 L 230,139 L 232,139 L 236,136 L 239,135 L 242,138 L 244,139 L 246,139 L 246,137 L 244,133 L 244,131 Z">
+                            </path>
+                            <path fill="#E0FFFF" d="M 263.4,74 L 254.4,73 L 253.4,71 L 253.4,69 L 251.4,66 L 248.4,73 L 239.4,76 L 245.4,81 L 245.4,83 L 243.4,89 L 245.4,89 L 249.4,86 L 252.4,85 L 255.4,88 L 257.4,89 L 259.4,89 L 259.4,87 L 257.4,83 L 257.4,81 Z">
+                            </path>
+                            <path fill="#E0FFFF" d="M 300,37.4 L 291,36.4 L 290,34.4 L 290,32.4 L 288,29.4 L 285,36.4 L 276,39.4 L 282,44.4 L 282,46.4 L 280,52.4 L 282,52.4 L 286,49.4 L 289,48.4 L 292,51.4 L 294,52.4 L 296,52.4 L 296,50.4 L 294,46.4 L 294,44.4 Z">
+                            </path>
+                        </g></g>
+                        <path class="virgin-stroke" fill-rule="evenodd" d="M 351,608 L 359,604 L 363,603 L 372,603 L 379,608 L 380,612 L 378,613 L 361,613 L 356,612 Z M 301,559 L 302,561 L 298,565 L 297,563 Z M 367,275 L 368,278 L 366,282 L 364,295 L 364,365 L 363,382 L 359,421 L 354,449 L 349,469 L 343,487 L 341,490 L 340,495 L 338,498 L 338,500 L 335,505 L 335,507 L 326,525 L 324,527 L 321,534 L 309,552 L 302,560 L 301,558 L 306,552 L 314,540 L 315,537 L 317,535 L 318,532 L 320,530 L 330,510 L 330,508 L 333,503 L 333,501 L 336,496 L 339,487 L 339,485 L 341,482 L 350,449 L 356,413 L 359,381 L 360,363 L 360,309 L 361,293 L 363,282 L 365,277 Z M 379,267 L 383,271 L 386,277 L 391,293 L 394,309 L 395,320 L 395,343 L 397,343 L 397,339 L 399,333 L 400,321 L 399,301 L 398,294 L 396,288 L 396,284 L 398,280 L 400,278 L 402,281 L 405,300 L 408,325 L 410,354 L 410,413 L 409,426 L 406,453 L 400,490 L 396,509 L 394,515 L 392,496 L 392,475 L 386,386 L 382,348 L 380,343 L 379,368 L 382,439 L 384,462 L 386,511 L 386,536 L 387,557 L 389,585 L 391,597 L 390,602 L 388,603 L 383,603 L 376,601 L 362,601 L 356,603 L 341,611 L 332,614 L 319,617 L 306,619 L 273,619 L 242,615 L 239,613 L 255,605 L 257,603 L 260,602 L 270,595 L 282,585 L 296,571 L 303,563 L 310,554 L 322,536 L 324,531 L 326,529 L 338,505 L 338,503 L 340,500 L 340,498 L 342,495 L 342,493 L 344,490 L 350,472 L 355,453 L 359,433 L 362,412 L 365,380 L 366,358 L 366,293 L 367,286 L 370,276 L 373,270 L 375,268 L 376,268 L 377,267 Z M 383,265 L 387,269 L 391,276 L 396,293 L 398,309 L 397,322 L 396,310 L 394,298 L 391,286 L 388,277 L 385,271 L 381,266 Z M 341,244 L 344,250 L 347,262 L 350,282 L 353,285 L 349,293 L 344,308 L 344,311 L 342,316 L 341,310 L 345,296 L 347,293 L 347,291 L 349,288 L 349,285 L 347,285 L 338,288 L 336,290 L 333,291 L 330,293 L 326,297 L 325,295 L 331,289 L 334,287 L 340,284 L 342,284 L 348,282 L 344,276 L 343,273 L 341,271 L 340,268 L 338,266 L 338,262 L 342,267 L 343,270 L 346,273 L 344,262 L 342,257 L 340,248 Z M 416,213 L 417,218 L 416,221 L 414,224 L 414,226 L 412,229 L 412,231 L 409,236 L 409,240 L 414,231 L 414,229 L 416,226 L 416,224 L 419,219 L 420,223 L 418,230 L 414,240 L 414,244 L 417,239 L 417,237 L 419,234 L 420,231 L 421,235 L 417,248 L 415,251 L 415,253 L 412,259 L 410,261 L 409,264 L 405,269 L 399,275 L 395,281 L 390,270 L 388,267 L 384,263 L 386,258 L 386,246 L 387,242 L 390,237 L 390,235 L 392,232 L 392,230 L 393,228 L 396,228 L 395,233 L 393,236 L 393,238 L 392,240 L 394,240 L 400,231 L 401,228 L 403,226 L 404,223 L 408,217 L 411,214 L 411,217 L 406,227 L 406,229 L 403,234 L 404,236 L 413,219 L 413,217 L 414,215 Z M 345,205 L 347,211 L 344,208 Z M 304,161 L 305,164 L 304,167 L 297,181 L 295,183 L 295,180 L 301,168 L 301,166 Z M 317,121 L 315,121 L 315,123 L 311,137 L 307,149 L 305,152 L 305,154 L 303,157 L 303,159 L 301,162 L 301,164 L 288,190 L 286,192 L 279,206 L 279,208 L 276,213 L 276,215 L 274,218 L 273,221 L 273,224 L 274,227 L 275,225 L 275,223 L 278,218 L 278,216 L 280,212 L 282,210 L 284,205 L 286,203 L 287,200 L 289,198 L 290,195 L 292,193 L 293,190 L 295,188 L 296,185 L 298,183 L 305,169 L 305,167 L 307,164 L 312,149 L 316,131 Z M 386,108 L 387,114 L 387,127 L 385,133 L 383,136 L 382,139 L 382,146 L 384,152 L 384,155 L 385,157 L 383,159 L 379,159 L 377,161 L 377,165 L 374,167 L 373,171 L 370,173 L 370,178 L 368,180 L 362,180 L 352,176 L 349,176 L 346,179 L 344,183 L 341,194 L 342,204 L 341,207 L 339,205 L 331,200 L 321,191 L 328,183 L 333,176 L 334,173 L 336,171 L 342,159 L 342,157 L 346,150 L 346,148 L 352,137 L 360,129 L 369,123 L 372,122 L 378,118 L 383,113 L 384,110 Z M 384,97 L 385,101 L 384,104 L 374,114 L 359,125 L 359,122 L 360,119 L 365,112 L 376,101 L 379,99 Z M 382,95 L 378,97 L 374,100 L 364,110 L 359,117 L 358,120 L 356,122 L 347,140 L 347,142 L 345,145 L 345,147 L 342,152 L 342,154 L 333,172 L 327,181 L 321,188 L 295,213 L 289,222 L 287,226 L 287,228 L 285,231 L 282,240 L 279,254 L 276,282 L 274,323 L 274,358 L 272,407 L 270,423 L 269,398 L 271,306 L 274,264 L 277,244 L 280,233 L 282,230 L 282,228 L 287,218 L 291,212 L 298,204 L 322,181 L 328,173 L 329,170 L 331,168 L 337,156 L 337,154 L 341,147 L 341,145 L 343,142 L 343,140 L 353,120 L 359,111 L 372,98 L 379,94 Z M 351,77 L 363,81 L 371,85 L 373,87 L 376,88 L 379,90 L 379,93 L 377,93 L 373,95 L 369,98 L 359,108 L 352,118 L 350,123 L 347,127 L 347,129 L 341,140 L 341,142 L 339,145 L 339,147 L 336,152 L 336,154 L 330,166 L 328,168 L 327,171 L 323,177 L 292,208 L 285,218 L 280,228 L 276,241 L 272,266 L 270,292 L 269,316 L 269,362 L 268,405 L 266,444 L 262,480 L 260,493 L 258,500 L 256,512 L 256,518 L 258,517 L 258,514 L 260,509 L 263,496 L 267,474 L 271,443 L 275,383 L 275,345 L 277,293 L 279,269 L 282,248 L 286,234 L 288,231 L 288,229 L 294,218 L 297,214 L 314,197 L 319,193 L 333,208 L 336,210 L 344,214 L 348,214 L 348,210 L 350,212 L 355,223 L 357,225 L 361,234 L 363,236 L 365,240 L 365,242 L 369,249 L 374,266 L 372,268 L 369,269 L 358,278 L 353,280 L 351,278 L 349,262 L 343,242 L 341,239 L 341,237 L 337,229 L 335,227 L 334,224 L 332,221 L 325,214 L 323,214 L 328,221 L 335,235 L 338,244 L 341,256 L 341,263 L 336,257 L 333,252 L 325,244 L 324,246 L 326,248 L 327,251 L 329,253 L 330,256 L 332,258 L 333,261 L 335,263 L 337,268 L 339,270 L 340,273 L 342,275 L 345,280 L 332,286 L 323,295 L 317,305 L 316,308 L 316,311 L 319,309 L 322,304 L 333,293 L 336,291 L 343,288 L 346,289 L 346,291 L 344,294 L 344,296 L 342,299 L 338,317 L 332,360 L 331,374 L 333,374 L 333,370 L 335,365 L 335,360 L 344,315 L 349,298 L 351,295 L 351,293 L 356,283 L 361,278 L 362,281 L 360,287 L 359,295 L 358,315 L 358,365 L 355,406 L 351,434 L 347,454 L 343,469 L 337,488 L 335,491 L 335,493 L 333,496 L 333,498 L 331,501 L 331,503 L 328,508 L 328,510 L 319,528 L 317,530 L 316,533 L 314,535 L 313,538 L 309,543 L 308,546 L 297,561 L 277,583 L 263,595 L 255,601 L 243,609 L 235,613 L 226,615 L 207,615 L 194,612 L 187,609 L 186,605 L 201,575 L 201,573 L 204,568 L 204,566 L 206,563 L 206,561 L 209,556 L 211,550 L 211,548 L 213,545 L 224,509 L 228,493 L 234,464 L 240,427 L 245,387 L 250,332 L 250,320 L 256,254 L 259,234 L 262,221 L 269,200 L 271,197 L 271,195 L 273,192 L 274,187 L 276,184 L 285,157 L 291,136 L 291,133 L 294,121 L 297,112 L 299,109 L 299,107 L 303,99 L 308,92 L 314,86 L 318,83 L 326,79 L 333,77 Z M 387,92 L 381,88 L 378,87 L 376,85 L 371,83 L 369,81 L 367,80 L 365,80 L 362,78 L 353,75 L 348,74 L 336,74 L 330,75 L 324,77 L 318,80 L 310,86 L 307,89 L 301,97 L 296,107 L 291,122 L 288,134 L 288,137 L 282,158 L 274,182 L 272,185 L 271,190 L 269,193 L 269,195 L 267,198 L 265,204 L 265,206 L 263,209 L 261,215 L 256,237 L 254,250 L 251,279 L 248,315 L 248,328 L 241,402 L 232,462 L 226,491 L 217,525 L 209,549 L 207,552 L 207,554 L 205,557 L 205,559 L 203,562 L 203,564 L 200,569 L 200,571 L 196,578 L 196,580 L 186,600 L 179,602 L 171,602 L 135,607 L 96,614 L 44,625 L 39,627 L 35,627 L 11,632 L 0,635 L 0,637 L 2,637 L 44,628 L 49,626 L 107,614 L 149,607 L 180,603 L 184,604 L 182,607 L 183,609 L 188,612 L 190,612 L 193,614 L 200,616 L 206,617 L 227,617 L 232,616 L 240,616 L 248,618 L 271,621 L 291,622 L 307,621 L 325,618 L 336,615 L 345,611 L 360,615 L 378,615 L 381,614 L 383,612 L 383,609 L 380,606 L 378,605 L 381,604 L 388,605 L 391,604 L 393,602 L 398,602 L 427,605 L 456,609 L 480,613 L 519,621 L 571,634 L 606,645 L 610,647 L 627,653 L 627,650 L 625,650 L 588,637 L 560,629 L 528,621 L 491,613 L 457,607 L 419,602 L 410,602 L 400,601 L 393,599 L 391,584 L 388,534 L 388,510 L 386,463 L 384,441 L 383,418 L 384,396 L 385,409 L 387,422 L 391,494 L 391,525 L 392,528 L 394,527 L 395,523 L 395,519 L 397,510 L 399,505 L 402,491 L 409,446 L 412,415 L 412,352 L 411,335 L 409,313 L 406,291 L 403,278 L 403,274 L 409,268 L 413,262 L 418,252 L 424,233 L 424,228 L 422,225 L 421,216 L 418,215 L 418,211 L 411,211 L 409,212 L 404,219 L 400,226 L 398,228 L 396,224 L 392,225 L 390,229 L 390,231 L 388,232 L 388,235 L 387,239 L 384,244 L 382,262 L 379,264 L 375,264 L 375,260 L 372,250 L 370,247 L 370,243 L 368,242 L 368,240 L 366,238 L 362,229 L 360,227 L 355,216 L 353,214 L 351,209 L 343,198 L 343,195 L 345,187 L 347,184 L 347,182 L 349,179 L 354,179 L 357,180 L 360,182 L 364,183 L 367,183 L 369,182 L 372,179 L 372,175 L 379,167 L 381,161 L 384,161 L 386,160 L 387,154 L 384,144 L 384,140 L 389,129 L 390,124 L 390,115 L 392,112 L 392,104 L 388,98 L 388,94 Z"/>
+                    </svg>
+                    <!-- Silueta litúrgica: el motor (initLiturgicalCover) inyecta
+                         aquí la escena del tiempo actual (Adviento/Navidad/…) y
+                         oculta la Virgen. Vacío = Tiempo Ordinario (Virgen). -->
+                    <div class="cover-liturgy" id="coverLiturgy" aria-hidden="true"></div>
+                </div>
+                <div class="back cover-page"></div>
+            </div>
+
+            <div class="paper" id="m1">
+                <div class="front image-page">
+                    <img class="page-image" src="assets/portada.png" alt="Portada Cantoral Mayo">
+                </div>
+                <div class="back blank-page"></div>
+            </div>
+
+            <!-- Dedicatoria / presentación: páginas SIN encabezado ni número, entre
+                 la portada (imagen) y la plumeria. BORRADOR (pendiente de ediciones).
+                 Puede crecer/reducirse añadiendo o quitando .paper .dedication-page. -->
+            <div class="paper" id="pDedication1">
+                <div class="front dedication-page">
+                    <div class="header">Presentación</div>
+                    <div class="dedication-body">
+                    <div class="dedication-content">
+                        <p class="ded-h">DEDICATORIA.</p>
+                        <p>Al Buen Dios, para que cada alabanza resuene en la eternidad.</p>
+                        <p class="ded-quote">“La liturgia es el principal lugar del encuentro entre Dios y los hombres, de Cristo con su Iglesia.”</p>
+                        <p class="ded-cite">— San Juan Pablo II</p>
+                        <p>La liturgia es el culto público que rinde la Iglesia. En ella, el canto y la música ocupan un lugar privilegiado, pues revisten de una belleza aún mayor nuestra confesión de fe, nuestra súplica y nuestra acción de gracias.</p>
+                        <p>En el presente cantoral proponemos una cuidadosa selección de cantos destinados a diversas celebraciones, actos de piedad y encuentros en la fe, la cual integra:</p>
+                        <ul>
+                            <li>Música litúrgica: obras musicales creadas específicamente para acompañar la celebración Eucarística. Incluye cantos de entrada, Kyrie eleison, himno del Gloria, aclamación antes del Evangelio (Aleluya, Honor y Gloria), Presentación de Dones, Santo, Padre Nuestro, Cordero de Dios y cantos de comunión.</li>
+                            <li>Música sacra: composiciones que inspiran devoción, promueven la fe y se dirigen a Dios o a los santos. Esta sección abarca cantos marianos, vocacionales, de adoración, al Espíritu Santo, procesionales, así como repertorio propio para Navidad y Cuaresma, entre otros.</li>
+                        </ul>
+                    </div>
+                    </div>
+                    <button class="zoom-toggle zoom-toggle-loose" type="button" aria-label="Ajustar tamaño de letra" aria-expanded="false"><span class="aa-glyph"><span class="zoom-toggle-a small">A</span><span class="zoom-toggle-a big">A</span></span></button>
+                </div>
+                <div class="back blank-page"></div>
+            </div>
+
+            <div class="paper" id="pDedication2">
+                <div class="front dedication-page">
+                    <div class="header">Presentación</div>
+                    <div class="dedication-body">
+                    <div class="dedication-content">
+                        <p>Cantoral Mayo ha sido concebido como una herramienta práctica y dinámica para el ministerio del canto. Sus funciones e íconos permiten que la búsqueda, la elección de cantos y la navegación entre secciones sean experiencias ágiles e intuitivas. Para garantizar una lectura cómoda, cuenta con modo claro y oscuro, opción de zoom y diversas tipografías. Su estilo, paleta de colores y animaciones están profundamente inspirados en la Santísima Virgen María, en la riqueza de los tiempos litúrgicos y en la contemplación de la creación.</p>
+                        <p>La selección de los cantos ha sido realizada por Eriberta Vázquez Castro y Abidahí Vázquez Castro, quienes, por la gracia de Dios, sirven como cantoras en nuestra comunidad parroquial. Por su parte, el desarrollo y el diseño de este libro animado han sido entregados como una ofrenda silenciosa al servicio de este ministerio; labor de unas manos que prefieren trabajar desde la discreción, buscando únicamente la mayor gloria de Dios.</p>
+                        <p class="ded-quote">“Diseñar para el Señor es entregar el alma en cada trazo y detalle, transformando el trabajo en un acto genuino de amor y adoración.”</p>
+                    </div>
+                    </div>
+                    <button class="zoom-toggle zoom-toggle-loose" type="button" aria-label="Ajustar tamaño de letra" aria-expanded="false"><span class="aa-glyph"><span class="zoom-toggle-a small">A</span><span class="zoom-toggle-a big">A</span></span></button>
+                </div>
+                <div class="back blank-page"></div>
+            </div>
+
+            <div class="paper" id="pPlumeria">
+                <div class="front plumeria-page">
+                    <div class="plumeria-wrap">
+                        <div class="plumeria-stage" id="plumeriaStage"></div>
+                        <div class="plumeria-sky" id="plumeriaSky"></div>
+                    </div>
+                    <div class="egg-trunk-hit" aria-hidden="true"></div>
+                </div>
+                <div class="back blank-page"></div>
+            </div>
+
+            <!-- Todas las demás páginas se generan desde cantos.json -->
+
+            <!-- LISTONES (separadores). Capa GLOBAL dentro de .book y por DEBAJO
+                 de las hojas (z-index 0): la hoja tapa el listón y sólo asoma el
+                 fragmento que sobresale del borde superior — es el "corte" del
+                 boceto. Al desplegar, la capa sube por encima y los listones caen
+                 sobre la página. El botón de toque es aparte (.ribbon-hit) porque
+                 el fragmento visible es demasiado pequeño para el dedo. -->
+            <div class="ribbon-layer" id="ribbonLayer" aria-hidden="true">
+                <button class="rib" type="button" data-slot="0" tabindex="-1"><span class="rib-num"></span><span class="rib-tip"></span><span class="rib-x" role="button" aria-label="Quitar listón">×</span></button>
+                <button class="rib" type="button" data-slot="1" tabindex="-1"><span class="rib-num"></span><span class="rib-tip"></span><span class="rib-x" role="button" aria-label="Quitar listón">×</span></button>
+                <button class="rib" type="button" data-slot="2" tabindex="-1"><span class="rib-num"></span><span class="rib-tip"></span><span class="rib-x" role="button" aria-label="Quitar listón">×</span></button>
+                <button class="rib" type="button" data-slot="3" tabindex="-1"><span class="rib-num"></span><span class="rib-tip"></span><span class="rib-x" role="button" aria-label="Quitar listón">×</span></button>
+                <button class="rib" type="button" data-slot="4" tabindex="-1"><span class="rib-num"></span><span class="rib-tip"></span><span class="rib-x" role="button" aria-label="Quitar listón">×</span></button>
+                <!-- Cerrar el libro: guarda la página del listón y vuelve a la
+                     pasta. Sólo aparece con el panel desplegado y con al menos un
+                     listón puesto. -->
+                <button class="rib-close hidden" id="ribbonClose" type="button" aria-label="Cerrar el libro y guardar tu página" title="Cerrar libro">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5 4.5h11a2.5 2.5 0 0 1 2.5 2.5v12.5H7.5A2.5 2.5 0 0 1 5 17V4.5Z"/>
+                        <path d="M5 17a2.5 2.5 0 0 1 2.5-2.5h11"/>
+                    </svg>
+                    <span class="rib-close-label">Cerrar</span>
+                </button>
+                <!-- Elegir color de los listones: activa el modo pintar; tocar un
+                     listón abre su paleta de 20 tonos. -->
+                <button class="rib-paint hidden" id="ribbonPaint" type="button" aria-pressed="false" aria-label="Cambiar color de los listones" title="Color de listones">🎨</button>
+                <!-- Paleta de 20 colores (se llena por JS). -->
+                <div class="rib-palette" id="ribbonPalette" role="listbox" aria-label="Colores de listón"></div>
+            </div>
+            <button class="ribbon-hit" id="ribbonHit" type="button" aria-label="Listones separadores" aria-expanded="false"></button>
+
+            <!-- Zoom de fuente: panel deslizante GLOBAL (overlay). El botón "Aa"
+                 que lo abre vive dentro del pie de cada canto (footerHtml en
+                 script.js) para que voltee con la hoja y no parezca que flota. -->
+            <div class="zoom-widget hidden" id="fontControls" aria-label="Ajustes de letra">
+                <!-- Control tipo PÍLDORA (mockup del usuario): al abrir aparecen DOS
+                     píldoras del mismo ancho apiladas sobre la aA del pie — arriba el
+                     zoom, abajo la fila C · aA · N (un solo fondo). La aA del pie se
+                     oculta y su lugar lo toma el centro de la píldora, así todo
+                     surge/colapsa desde la aA. -->
+                <div class="zoom-slider-panel" id="fontSliderPanel">
+                    <svg class="zoom-slider" id="zoomSlider" viewBox="0 0 220 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <!-- Botón menos -->
+                        <g id="fontDown" class="zs-btn" role="button" aria-label="Reducir tamaño">
+                            <circle cx="20" cy="20" r="15" fill="transparent"/>
+                            <line class="zs-ink" x1="12" y1="20" x2="28" y2="20"/>
+                        </g>
+                        <!-- Track base -->
+                        <line class="zs-track-base" x1="45" y1="20" x2="175" y2="20"/>
+                        <!-- Progreso -->
+                        <line class="zs-progress" id="fontFill" x1="45" y1="20" x2="110" y2="20"/>
+                        <!-- Área táctil -->
+                        <line class="zs-hit" id="fontTrack" x1="45" y1="20" x2="175" y2="20"/>
+                        <!-- Bolita -->
+                        <circle class="zs-thumb" id="fontThumb" cx="110" cy="20" r="9"/>
+                        <!-- Botón más -->
+                        <g id="fontUp" class="zs-btn" role="button" aria-label="Aumentar tamaño">
+                            <circle cx="200" cy="20" r="15" fill="transparent"/>
+                            <line class="zs-ink" x1="192" y1="20" x2="208" y2="20"/>
+                            <line class="zs-ink" x1="200" y1="12" x2="200" y2="28"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="pill-row" id="pillRow">
+                    <button class="pill-btn radial-italic" id="styleItalic" type="button" aria-label="Cursiva" aria-pressed="false">C</button>
+                    <button class="pill-btn radial-bold" id="styleBold" type="button" aria-label="Negrita" aria-pressed="false">N</button>
+                </div>
+                <!-- ÚNICA "aA": origen fijo. Cerrado = solo la aA; al abrir aparece el
+                     círculo gris a su alrededor y nacen las píldoras desde aquí. -->
+                <button class="pill-center" id="overlayAA" type="button" aria-label="Ajustar tamaño de letra" aria-expanded="false">
+                    <span class="aa-glyph"><span class="zoom-toggle-a small">A</span><span class="zoom-toggle-a big">A</span></span>
+                </button>
+            </div>
+        </div>
+
+        <button id="prevBtn" class="btn-nav" type="button">❮</button>
+        <button id="nextBtn" class="btn-nav" type="button">❯</button>
+    </div>
+
+    <!-- FAB INSTALAR — fijo FUERA del libro, centro-abajo (libre de las zonas de
+         volteo de las esquinas y del número de página). Consciente de plataforma:
+         Android/escritorio dispara el instalador nativo (beforeinstallprompt);
+         iOS abre pasos ilustrados (Safari no tiene prompt). Si ya está instalado
+         (standalone) o tras instalar, se OCULTA. Lógica en wireInstall() de script.js. -->
+    <button id="installBtn" class="install-fab" type="button" hidden aria-label="Instalar el cantoral como app">
+        <span class="install-fab-ico" aria-hidden="true">📲</span><span class="install-fab-txt">Instalar</span>
+    </button>
+
+    <template id="indexSource"></template>
+
+    <!-- Modal de confirmación para control gestual -->
+    <!-- Aviso de MODO LIGERO: explica la función antes de activarla (reusa el estilo
+         del modal de gestos). -->
+    <!-- Overlay de la lámina "Guía Para Acordes" (se abre desde el ícono guía). -->
+    <div class="guide-modal" id="guideModal" aria-hidden="true" role="dialog" aria-label="Guía para acordes">
+        <div class="guide-pop">
+            <img class="guide-sheet" src="assets/guia_acordes.svg?v=2" alt="Guía para acordes: mano izquierda con dedos numerados 1 a 4 y símbolos ◯ cuerda al aire, ✕ no tocar, barra cejilla">
+            <button class="guide-flip" id="guideFlip" type="button" aria-label="Cambiar guía para zurdos" title="Cambiar para zurdos (mano derecha)">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <g fill="none" stroke="#23221c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 24 A15 15 0 0 1 34 12.8"/>
+                        <polyline points="34 5 34 13 26 13"/>
+                        <path d="M39 24 A15 15 0 0 1 14 35.2"/>
+                        <polyline points="14 43 14 35 22 35"/>
+                    </g>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="gesture-modal" id="liteModal" aria-hidden="true" role="dialog" aria-label="Modo ligero">
+        <div class="gesture-modal-content">
+            <h3>Modo ligero 🐢</h3>
+            <p>Apaga las animaciones y los efectos (árbol, estrellas, mariposas y el giro 3D de página) para que el cantoral corra <strong>fluido en equipos modestos o antiguos</strong>.</p>
+            <p class="gesture-modal-note">Se conserva todo lo esencial: tamaño de letra, modo claro/oscuro, búsqueda, índice, diccionario y navegación.</p>
+            <p class="gesture-modal-note">Puedes apagarlo cuando quieras con el mismo botón 🐢.</p>
+            <div class="gesture-modal-buttons">
+                <button class="gesture-modal-btn cancel" id="liteCancelBtn" type="button">Cancelar</button>
+                <button class="gesture-modal-btn confirm" id="liteConfirmBtn" type="button">Activar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pasos ILUSTRADOS para instalar en iOS (Safari no permite instalar por
+         código). Se reabre siempre desde el FAB 📲 (reentrada permanente). -->
+    <div class="gesture-modal" id="iosInstallModal" aria-hidden="true" role="dialog" aria-label="Añadir a la pantalla de inicio">
+        <div class="gesture-modal-content">
+            <h3>Añadir a tu inicio 📲</h3>
+            <p>Abre el cantoral como una app: sin la barra del navegador y disponible aunque no tengas internet.</p>
+            <ol class="ios-steps">
+                <li>Toca <strong>Compartir</strong> <span class="ios-share-ico" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/></svg>
+                </span> abajo en Safari.</li>
+                <li>Elige <strong>“Añadir a pantalla de inicio”</strong> <span aria-hidden="true">➕</span>.</li>
+                <li>Confirma con <strong>“Añadir”</strong> arriba a la derecha.</li>
+            </ol>
+            <p class="gesture-modal-note">Aparecerá el ícono del cantoral junto a tus apps.</p>
+            <div class="gesture-modal-buttons">
+                <button class="gesture-modal-btn confirm" id="iosInstallCloseBtn" type="button">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="gesture-modal" id="gestureModal" aria-hidden="true">
+        <div class="gesture-modal-content">
+            <!-- Paso 1: aviso de cámara + sacrificio de animaciones -->
+            <div class="gm-step" id="gmStep1">
+                <h3>Activar Control Gestual ✋</h3>
+                <p>Usa la cámara para pasar las páginas moviendo la mano en el aire.</p>
+                <p class="gesture-modal-note">⚡ Para que corra fluido en cualquier equipo, mientras esté activo se <strong>pausan todas las animaciones</strong> (solo sigue el paso de página).</p>
+                <p class="gesture-modal-note">🔒 El video se procesa solo en tu dispositivo; nada sale de él.</p>
+                <div class="gesture-modal-buttons">
+                    <button class="gesture-modal-btn cancel" id="gestureCancelBtn">Cancelar</button>
+                    <button class="gesture-modal-btn confirm" id="gestureNextBtn">Siguiente</button>
+                </div>
+            </div>
+            <!-- Paso 2: guía de gestos -->
+            <div class="gm-step" id="gmStep2" hidden>
+                <h3>Guía de gestos ✋</h3>
+                <ul class="gesture-legend">
+                    <li><span class="gl-icon">🖐️</span><span><strong>Palma abierta</strong> y desliza <strong>←/→</strong>: cambiar de página</span></li>
+                    <li><span class="gl-icon">👉</span><span><strong>Índice de lado</strong> y desliza <strong>↑/↓</strong>: desplazar el canto</span></li>
+                    <li><span class="gl-icon">🤏</span><span><strong>Pellizca</strong> y separa / junta los dedos: zoom <strong>+ / −</strong></span></li>
+                </ul>
+                <p class="gesture-modal-note">📏 Colócate a <strong>50–80 cm</strong> de la cámara, con la mano dentro del encuadre y bien iluminada.</p>
+                <div class="gesture-modal-buttons">
+                    <button class="gesture-modal-btn cancel" id="gestureBackBtn">Atrás</button>
+                    <button class="gesture-modal-btn confirm" id="gestureStartBtn">Activar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay: bloqueo de orientación horizontal (móvil) -->
+    <div id="orientationOverlay" aria-hidden="true">
+        <div class="orientation-bg plumeria-page">
+            <div class="plumeria-wrap">
+                <div class="plumeria-stage" id="orientationStage"></div>
+                <div class="plumeria-sky" id="orientationSky"></div>
+            </div>
+        </div>
+        <div class="orientation-dim"></div>
+        <div class="orientation-card">
+            <div class="orientation-icon">📱</div>
+            <h2>¡Gira tu pantalla!</h2>
+            <p>Regresa al <strong>modo vertical</strong> para continuar</p>
+        </div>
+    </div>
+
+    <!-- Overlay: gate de escritorio (sin botón, muestra plumeria) -->
+    <div id="desktopGate" aria-hidden="true">
+        <div class="orientation-bg plumeria-page">
+            <div class="plumeria-wrap">
+                <div class="plumeria-stage" id="desktopGateStage"></div>
+                <div class="plumeria-sky" id="desktopGateSky"></div>
+            </div>
+        </div>
+        <div class="orientation-dim"></div>
+        <div class="orientation-card">
+            <div class="orientation-icon">📱</div>
+            <h2>Versión sólo para móvil</h2>
+            <p>Este cantoral fue diseñado para disfrutarse en un <strong>dispositivo móvil</strong>. Ábrelo desde tu celular para vivir la experiencia completa.</p>
+        </div>
+    </div>
+
+    <div id="eggPage" class="egg-page" aria-hidden="true">
+        <div class="egg-inner">
+            <div class="header">Dedicatoria Especial</div>
+            <div class="egg-text" id="eggText"></div>
+        </div>
+        <button class="egg-close" id="eggClose" type="button" aria-label="Cerrar">×</button>
+    </div>
+
+    <!-- LITURGY TEST (temporal): movido a la .top-bar (junto a 🔎) para no tapar el
+         control de zoom abajo-centro. QUITAR antes de publicar (botón en top-bar +
+         CSS .lit-test + wiring "PASTA LITÚRGICA" en script.js). -->
+
+    <!-- Compartir: modal con el código QR de cantoralmayo.com (asset local, offline) -->
+    <div class="qr-modal" id="qrModal" aria-hidden="true" role="dialog" aria-label="Código QR del cantoral">
+        <div class="qr-card">
+            <img class="qr-img" src="assets/qr_cantoralmayo.svg?v=2" alt="Código QR de cantoralmayo.com" width="220" height="220">
+            <p class="qr-url">cantoralmayo.com</p>
+            <p class="qr-note">Escanea para abrir el Cantoral</p>
+            <button class="qr-close" id="qrClose" type="button">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Aviso breve de "copiado", compartido por los botones de la nube -->
+    <div class="share-toast" id="shareToast" role="status" aria-live="polite"></div>
+
+    <!-- MediaPipe (control por gestos) se carga BAJO DEMANDA desde script.js
+         (loadMediaPipe, sólo al activar los gestos), no en cada arranque. -->
+    <!-- PARTITURA (piloto): abcjs (render de notación) + mapa de partituras ABC.
+         abcjs es local (MIT), autocontenido; solo se USA al encender el toggle. -->
+    <script src="assets/abcjs-basic-min.js?v=1"></script>
+    <script src="assets/Tone.js?v=1"></script>
+    <script src="assets/partituras.js?v=3"></script>
+    <script src="script.js?v=238"></script>
+    <script>
+        // Registro del Service Worker (offline / instalable). No bloquea el arranque.
+        // En DESARROLLO (localhost / 127.0.0.1 / file:) NO se registra y se
+        // desregistra cualquier SW previo + se limpia su caché: así Live Server
+        // muestra los cambios al instante sin quedar servido desde caché del SW.
+        if ("serviceWorker" in navigator) {
+            var host = location.hostname;
+            var isDev = host === "localhost" || host === "127.0.0.1" ||
+                        host === "" || host === "[::1]";
+            if (isDev) {
+                navigator.serviceWorker.getRegistrations()
+                    .then((rs) => rs.forEach((r) => r.unregister())).catch(() => {});
+                if (window.caches) {
+                    caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
+                }
+            } else {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker.register("sw.js").catch(() => {});
+                });
+            }
+        }
+    </script>
+</body>
+</html>
