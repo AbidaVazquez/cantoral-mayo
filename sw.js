@@ -1,6 +1,6 @@
 // Service Worker — Cantoral Mayo. Navegación: red primero con 2.5 s de espera; resto:
 // caché y refresco de fondo. Sube CACHE_VERSION para invalidar todo el precache.
-const CACHE_VERSION = "cantoral-ultopt231";
+const CACHE_VERSION = "cantoral-ultopt232";
 const NETWORK_TIMEOUT_MS = 2500;
 // Conteo de visitas (Umami): SIEMPRE red, nunca caché. Si se guardara, la PWA se
 // quedaría con el script viejo hasta el siguiente cambio de CACHE_VERSION.
@@ -15,7 +15,7 @@ const CORE = [
   "manifest.json",
   "cantos.json",
   "styles.css?v=259",
-  "script.js?v=276"
+  "script.js?v=277"
 ];
 // Caché APARTE para el detector de gestos (assets/mediapipe/, ~12 MB en 7 archivos).
 const GESTURE_CACHE = "cantoral-gestos-v1";
@@ -44,7 +44,7 @@ const PRECACHE = [
   "assets/hojasdis.png",
   "cantos.json",
   "styles.css?v=259",
-  "script.js?v=276",
+  "script.js?v=277",
   "assets/qr_cantoralmayo.svg?v=2",
   "assets/guia_acordes.svg?v=2",
   "assets/guia_acordes_zurdo.svg?v=1",

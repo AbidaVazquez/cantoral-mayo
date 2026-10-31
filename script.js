@@ -10,21 +10,21 @@
 })();
 
 // ═══════════════════════════════════════════════════════════════════
-// DÍA DE MUERTOS (1-nov 2:00 → 3-nov 23:59, hora CDMX). Se decide antes del intro.
+// DÍA DE MUERTOS (31-oct 3:30 → 3-nov 23:59, hora CDMX). Se decide antes del intro.
 // ═══════════════════════════════════════════════════════════════════
-function isDifuntosMX(M, D, h) {
+function isDifuntosMX(M, D, h) {   // h con minutos en decimal (3:30 = 3.5)
     const md = M * 100 + D;
-    return (md === 1101 && h >= 2) || (md >= 1102 && md <= 1103);
+    return (md === 1031 && h >= 3.5) || (md >= 1101 && md <= 1103);
 }
 (function initDifuntosEarly() {
     let M = 0, D = 0, h = 0;
     try {
         const p = {};
         new Intl.DateTimeFormat("en-US", { timeZone: "America/Mexico_City",
-            month: "numeric", day: "numeric", hour: "numeric", hourCycle: "h23" })
+            month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", hourCycle: "h23" })
             .formatToParts(new Date()).forEach((x) => { p[x.type] = +x.value; });
-        M = p.month; D = p.day; h = p.hour;
-    } catch (e) { const n = new Date(); M = n.getMonth() + 1; D = n.getDate(); h = n.getHours(); }
+        M = p.month; D = p.day; h = p.hour + p.minute / 60;
+    } catch (e) { const n = new Date(); M = n.getMonth() + 1; D = n.getDate(); h = n.getHours() + n.getMinutes() / 60; }
     const on = isDifuntosMX(M, D, h);
     window.__isDifuntos = on;
     if (!on) return;
@@ -5747,7 +5747,7 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     // Tiempo litúrgico + color del día para (Y,M,D).
     function computeSeason(Y, M, D, h) {
         const today = Y * 10000 + M * 100 + D;
-        // Día de Muertos: 1-nov 2:00 → 3-nov 23:59 (antes que Adviento; éste empieza ≥ 27-nov).
+        // Día de Muertos: 31-oct 3:30 → 3-nov 23:59 (antes que Adviento; éste empieza ≥ 27-nov).
         if (isDifuntosMX(M, D, h)) return { time: "difuntos", color: "cempasuchil" };
         const advN = adventStart(Y);
         if (today >= advN) {
@@ -5783,12 +5783,12 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
             new Intl.DateTimeFormat("en-US", {
                 timeZone: "America/Mexico_City",
                 year: "numeric", month: "numeric", day: "numeric",
-                hour: "numeric", hourCycle: "h23",
+                hour: "numeric", minute: "numeric", hourCycle: "h23",
             }).formatToParts(new Date()).forEach((x) => { p[x.type] = +x.value; });
-            return { Y: p.year, M: p.month, D: p.day, h: p.hour };
+            return { Y: p.year, M: p.month, D: p.day, h: p.hour + p.minute / 60 };
         } catch (e) {
             const n = new Date();
-            return { Y: n.getFullYear(), M: n.getMonth() + 1, D: n.getDate(), h: n.getHours() };
+            return { Y: n.getFullYear(), M: n.getMonth() + 1, D: n.getDate(), h: n.getHours() + n.getMinutes() / 60 };
         }
     }
     function apply(colorKey) {
@@ -5887,9 +5887,9 @@ if(document.body.classList.contains("dark-mode")) startFireflies();}
     refresh();
     // Recalcular al volver a la pestaña / de madrugada (por si cruza medianoche).
     document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
-    // Cada hora EN PUNTO (+2 s), para que cambios como 1-nov 2:00 caigan a tiempo.
+    // Cada media hora EN PUNTO (+2 s), para que cambios como 31-oct 3:30 caigan a tiempo.
     (function tick() {
-        setTimeout(() => { refresh(); tick(); }, 3600000 - (Date.now() % 3600000) + 2000);
+        setTimeout(() => { refresh(); tick(); }, 1800000 - (Date.now() % 1800000) + 2000);
     })();
 })();
 
